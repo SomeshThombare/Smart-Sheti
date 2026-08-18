@@ -1,0 +1,576 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Disease Dashboard - Smart Sheti</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #1b5e20;
+            --text: #2f3a33;
+            --muted: #6b7280;
+            --white: #ffffff;
+            --border: #dbe8dc;
+            --shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+            --radius-xl: 26px;
+            --transition: all 0.35s ease;
+            --danger: #dc3545;
+            --success: #198754;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(129, 199, 132, 0.14), transparent 18%),
+                radial-gradient(circle at bottom left, rgba(46, 125, 50, 0.08), transparent 20%),
+                linear-gradient(180deg, #f8fcf8 0%, #eff6f0 100%);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            background: rgba(46, 125, 50, 0.96);
+            color: var(--white);
+            padding: 16px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
+            animation: fadeDown 0.8s ease;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            font-size: 15px;
+            font-weight: 700;
+            padding: 10px 14px;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        nav a.active {
+            background: var(--white);
+            color: var(--primary);
+            font-weight: 900;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .dashboard-section {
+            padding: 45px 20px 60px;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: auto;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .page-title h1 {
+            color: var(--primary-dark);
+            font-size: 36px;
+            font-weight: 900;
+        }
+
+        .page-title p {
+            color: var(--muted);
+            font-size: 15px;
+            font-weight: 500;
+            margin-top: 6px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+            margin-bottom: 38px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 28px 22px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            right: -40px;
+            top: -40px;
+            border-radius: 50%;
+            background: rgba(46, 125, 50, 0.08);
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 36px rgba(46, 125, 50, 0.16);
+        }
+
+        .card-icon {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: #e8f5e9;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .card h2 {
+            font-size: 38px;
+            color: var(--primary-dark);
+            font-weight: 900;
+        }
+
+        .card p {
+            font-weight: 800;
+            color: var(--muted);
+            margin-top: 6px;
+            font-size: 15px;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 26px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .section-header h2 {
+            color: var(--primary-dark);
+            font-size: 26px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .view-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 11px 18px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 14px;
+            transition: var(--transition);
+            box-shadow: 0 10px 24px rgba(46, 125, 50, 0.20);
+        }
+
+        .view-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(46, 125, 50, 0.28);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            min-width: 900px;
+            border-collapse: collapse;
+            background: var(--white);
+        }
+
+        th {
+            background: var(--primary);
+            color: var(--white);
+            padding: 15px 14px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #edf3ee;
+            text-align: center;
+            font-size: 15px;
+            color: #111827;
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: #f8fcf8;
+        }
+
+        .crop-img {
+            width: 66px;
+            height: 66px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 1px solid #dcebdd;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .no-img {
+            width: 66px;
+            height: 66px;
+            border-radius: 14px;
+            background: #eef6ef;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .farmer-name {
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        .badge {
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 900;
+            display: inline-block;
+        }
+
+        .badge-success {
+            background: #e8f5e9;
+            color: var(--success);
+            border: 1px solid #b8dfbd;
+        }
+
+        .badge-failed {
+            background: #fdecea;
+            color: var(--danger);
+            border: 1px solid #f5c2c7;
+        }
+
+        .empty-box {
+            text-align: center;
+            padding: 30px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        footer {
+            background: linear-gradient(180deg, #243227 0%, #1e2a20 100%);
+            color: var(--white);
+            padding: 20px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 14px;
+            color: #d7e0d8;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(35px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            header {
+                padding: 14px 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 16px;
+                justify-content: center;
+                text-align: center;
+                flex-direction: column;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .page-title h1 {
+                font-size: 28px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .content-card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+{% include 'accounts/admin/admin_sidebar.html' %}
+
+<main class="main-content">
+
+<header>
+    <a href="/disease/admin/disease-dashboard/" class="logo">
+        <span><i class="fa-solid fa-seedling"></i></span>
+        Smart Sheti
+    </a>
+
+    <nav>
+        <a href="{% url 'admin_dashboard' %}" class="active">
+            <i class="fa-solid fa-table-columns"></i>
+            Dashboard
+        </a>
+
+        <a href="/disease/admin/disease-predictions/">
+            <i class="fa-solid fa-leaf"></i>
+            Predictions
+        </a>
+    </nav>
+</header>
+
+<section class="dashboard-section">
+    <div class="container">
+
+        <div class="page-title">
+            <h1>
+                <i class="fa-solid fa-seedling"></i>
+                Admin Disease Dashboard
+            </h1>
+            <p>Crop disease prediction summary and recent farmer uploads</p>
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <h2>{{ total_predictions|default:0 }}</h2>
+                <p>Total Predictions</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h2>{{ healthy_count|default:0 }}</h2>
+                <p>Healthy Crops</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fa-solid fa-bug"></i>
+                </div>
+                <h2>{{ disease_count|default:0 }}</h2>
+                <p>Disease Detected</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h2>{{ failed_count|default:0 }}</h2>
+                <p>Failed Predictions</p>
+            </div>
+
+        </div>
+
+        <div class="content-card">
+
+            <div class="section-header">
+                <h2>
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    Recent Predictions
+                </h2>
+
+                <a href="/disease/admin/disease-predictions/" class="view-btn">
+                    View All Predictions
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Farmer</th>
+                            <th>Crop</th>
+                            <th>Disease</th>
+                            <th>Confidence</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for p in recent_predictions %}
+                        <tr>
+                            <td>
+                                {% if p.image %}
+                                    <img src="{{ p.image.url }}" class="crop-img" alt="Crop Image">
+                                {% else %}
+                                    <span class="no-img">No Image</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <span class="farmer-name">
+                                    {% if p.user %}
+                                        {% if p.user.first_name or p.user.last_name %}
+                                            {{ p.user.first_name }} {{ p.user.last_name }}
+                                        {% else %}
+                                            {{ p.user.username }}
+                                        {% endif %}
+                                    {% else %}
+                                        Unknown Farmer
+                                    {% endif %}
+                                </span>
+                            </td>
+
+                            <td>{{ p.crop_name|default:"-" }}</td>
+                            <td>{{ p.disease_name|default:"-" }}</td>
+                            <td>{{ p.confidence|default:0 }}%</td>
+
+                            <td>
+                                {% if p.status == "SUCCESS" %}
+                                    <span class="badge badge-success">SUCCESS</span>
+                                {% else %}
+                                    <span class="badge badge-failed">FAILED</span>
+                                {% endif %}
+                            </td>
+
+                            <td>{{ p.created_at|date:"d M Y h:i A" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-box">
+                                    <i class="fa-solid fa-folder-open"></i>
+                                    No recent predictions found.
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    <div class="footer-bottom">
+        © 2026 Smart Sheti. All Rights Reserved.
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,521 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% if scheme %}Update Government Scheme{% else %}Create Government Scheme{% endif %} - Smart Sheti
+    </title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="{% static 'schemes/css/admin_government_scheme_form.css' %}?v=2">
+</head>
+
+<body>
+
+{% include 'accounts/admin/admin_sidebar.html' %}
+
+<div class="main-content">
+
+    <header class="top-header">
+
+        <div class="header-left">
+            <a href="/" class="logo">
+                <span>
+                    <i class="fa-solid fa-seedling"></i>
+                </span>
+                Smart Sheti
+            </a>
+        </div>
+
+        <nav>
+
+            <a href="{% url 'government_scheme:admin-scheme-dashboard' %}">
+                <i class="fa-solid fa-gauge-high"></i>
+                Dashboard
+            </a>
+
+            <a href="{% url 'government_scheme:admin_government_scheme_list' %}">
+                <i class="fa-solid fa-file-lines"></i>
+                Schemes
+            </a>
+
+            <a href="{% url 'government_scheme:admin_government_scheme_create_form' %}"
+               class="active">
+                <i class="fa-solid fa-plus"></i>
+                Add Scheme
+            </a>
+
+        </nav>
+
+    </header>
+
+    <main class="page">
+
+        <section class="topbar">
+
+            <div>
+                <span class="page-badge">
+                    Government Scheme Management
+                </span>
+
+                <h1>
+                    {% if scheme %}Update Government Scheme{% else %}Create Government Scheme{% endif %}
+                </h1>
+
+                <p>
+                    Manage government scheme details, eligibility, documents, official links and publishing status.
+                </p>
+            </div>
+
+            <div class="topbar-actions">
+
+                <a href="{% url 'government_scheme:admin-scheme-dashboard' %}"
+                   class="btn btn-dashboard">
+
+                    <i class="fa-solid fa-gauge-high"></i>
+                    Dashboard
+
+                </a>
+
+                <a href="{% url 'government_scheme:admin_government_scheme_list' %}"
+                   class="btn btn-secondary">
+
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to List
+
+                </a>
+
+            </div>
+
+        </section>
+
+        <section class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>
+                        {% if scheme %}Edit Scheme Details{% else %}Add New Government Scheme{% endif %}
+                    </h2>
+
+                    <p>
+                        Fill all required information carefully before saving.
+                    </p>
+                </div>
+
+                <div class="card-header-actions">
+
+                    <a href="{% url 'government_scheme:admin-scheme-dashboard' %}"
+                       class="btn btn-dashboard">
+
+                        <i class="fa-solid fa-house"></i>
+                        Dashboard
+
+                    </a>
+
+                    <a href="{% url 'government_scheme:admin_government_scheme_list' %}"
+                       class="btn btn-secondary">
+
+                        <i class="fa-solid fa-list"></i>
+                        Scheme List
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="card-body">
+
+                {% if message and success %}
+                    <div class="message message-success">
+                        <i class="fa-solid fa-circle-check"></i>
+                        {{ message }}
+                    </div>
+                {% endif %}
+
+                {% if errors %}
+                    <div class="message message-error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        {{ errors }}
+                    </div>
+                {% endif %}
+
+                <form id="schemeForm"
+                      method="post"
+                      enctype="multipart/form-data"
+                      action="{% if scheme %}{% url 'government_scheme:admin_government_scheme_detail' scheme.scheme_code %}{% else %}{% url 'government_scheme:admin_government_scheme_list' %}{% endif %}">
+
+                    {% csrf_token %}
+
+                    {% if scheme %}
+                        <input type="hidden"
+                               name="_method"
+                               value="PUT">
+                    {% endif %}
+
+                    <div class="section">
+
+                        <div class="section-title">
+                            Basic Information
+                        </div>
+
+                        <div class="section-body">
+
+                            <div class="grid">
+
+                                <div class="field">
+                                    <label>
+                                        Scheme Name
+                                        <span class="required">*</span>
+                                    </label>
+                                    {{ form.scheme_name }}
+                                </div>
+
+                                <div class="field">
+                                    <label>
+                                        Scheme Code
+                                        <span class="required">*</span>
+                                    </label>
+                                    {{ form.scheme_code }}
+
+                                    <div class="help">
+                                        Example: PMKISAN2025
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label>
+                                        Category
+                                        <span class="required">*</span>
+                                    </label>
+                                    {{ form.category }}
+                                </div>
+
+                                <div class="field">
+                                    <label>
+                                        Status
+                                        <span class="required">*</span>
+                                    </label>
+                                    {{ form.status }}
+                                </div>
+
+                                <div class="field full">
+                                    <label>
+                                        Short Description
+                                    </label>
+                                    {{ form.short_description }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="section">
+
+                        <div class="section-title">
+                            Scheme Details
+                        </div>
+
+                        <div class="section-body">
+
+                            <div class="grid">
+
+                                <div class="field full">
+                                    <label>
+                                        Description
+                                        <span class="required">*</span>
+                                    </label>
+                                    {{ form.description }}
+                                </div>
+
+                                <div class="field full">
+                                    <label>
+                                        Benefits
+                                        <span class="required">*</span>
+                                    </label>
+                                    {{ form.benefits }}
+                                </div>
+
+                                <div class="field full">
+                                    <label>
+                                        Eligibility
+                                        <span class="required">*</span>
+                                    </label>
+                                    {{ form.eligibility }}
+                                </div>
+
+                                <div class="field full">
+                                    <label>
+                                        Required Documents
+                                    </label>
+                                    {{ form.required_documents }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="section">
+
+                        <div class="section-title">
+                            Location and Timeline
+                        </div>
+
+                        <div class="section-body">
+
+                            <div class="grid">
+
+                                <div class="field">
+                                    <label id="stateLabel">
+                                        State
+                                    </label>
+                                    {{ form.state }}
+
+                                    <div class="help">
+                                        Required only for State Government schemes.
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label>
+                                        Country
+                                        <span class="required">*</span>
+                                    </label>
+                                    {{ form.country }}
+                                </div>
+
+                                <div class="field">
+                                    <label>
+                                        Start Date
+                                        <span class="required">*</span>
+                                    </label>
+                                    {{ form.start_date }}
+                                </div>
+
+                                <div class="field">
+                                    <label>
+                                        End Date
+                                    </label>
+                                    {{ form.end_date }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="section">
+
+                        <div class="section-title">
+                            Links and Contact
+                        </div>
+
+                        <div class="section-body">
+
+                            <div class="grid">
+
+                                <div class="field">
+                                    <label>
+                                        Official Link
+                                    </label>
+                                    {{ form.official_link }}
+                                </div>
+
+                                <div class="field">
+                                    <label>
+                                        Apply Link
+                                    </label>
+                                    {{ form.apply_link }}
+                                </div>
+
+                                <div class="field">
+                                    <label>
+                                        Contact Person
+                                    </label>
+                                    {{ form.contact_person }}
+                                </div>
+
+                                <div class="field">
+                                    <label>
+                                        Contact Number
+                                    </label>
+                                    {{ form.contact_number }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="section">
+
+                        <div class="section-title">
+                            Media and Publishing
+                        </div>
+
+                        <div class="section-body">
+
+                            <div class="grid">
+
+                                <div class="field">
+
+                                    <label>
+                                        Scheme Image
+                                    </label>
+
+                                    {% if scheme and scheme.scheme_image %}
+                                        <div class="help">
+                                            Current Scheme Image
+                                        </div>
+
+                                        <img class="preview-img"
+                                             src="{{ scheme.scheme_image.url }}"
+                                             alt="Scheme Image">
+                                    {% endif %}
+
+                                    <input type="file"
+                                           name="scheme_image"
+                                           id="id_scheme_image"
+                                           accept="image/jpeg,image/png,image/webp">
+
+                                    <div class="help">
+                                        Allowed: JPG, JPEG, PNG, WEBP. Max size: 2 MB.
+                                    </div>
+
+                                    <img id="selectedImagePreview"
+                                         class="preview-img hidden"
+                                         src=""
+                                         alt="Selected Image Preview">
+
+                                </div>
+
+                                <div class="field">
+
+                                    <label>
+                                        Scheme Document
+                                    </label>
+
+                                    {% if scheme and scheme.scheme_document %}
+                                        <a href="{{ scheme.scheme_document.url }}"
+                                           target="_blank"
+                                           class="document-link">
+
+                                            <i class="fa-solid fa-file-pdf"></i>
+                                            View Scheme Document
+
+                                        </a>
+                                    {% endif %}
+
+                                    <input type="file"
+                                           name="scheme_document"
+                                           id="id_scheme_document"
+                                           accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+
+                                    <div class="help">
+                                        Allowed: PDF, DOC, DOCX. Max size: 5 MB.
+                                    </div>
+
+                                </div>
+
+                                <div class="field full">
+
+                                    <label>
+                                        Featured Scheme
+                                    </label>
+
+                                    <div class="checkbox-box">
+                                        {{ form.is_featured }}
+                                        <span>
+                                            Mark this scheme as featured
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% if form.non_field_errors %}
+                        <div class="message message-error">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="actions">
+
+                        <button type="submit"
+                                id="submitBtn"
+                                class="btn btn-primary">
+
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            {% if scheme %}
+                                Update Scheme
+                            {% else %}
+                                Save Scheme
+                            {% endif %}
+
+                        </button>
+
+                        <a href="{% url 'government_scheme:admin_government_scheme_list' %}"
+                           class="btn btn-secondary">
+
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Back to List
+
+                        </a>
+
+                        <a href="{% url 'government_scheme:admin-scheme-dashboard' %}"
+                           class="btn btn-dashboard">
+
+                            <i class="fa-solid fa-gauge-high"></i>
+                            Dashboard
+
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-bottom">
+            © 2026 Smart Sheti. All rights reserved.
+        </div>
+    </footer>
+
+</div>
+
+<script src="{% static 'schemes/js/admin_government_scheme_form.js' %}?v=2"></script>
+
+</body>
+</html>

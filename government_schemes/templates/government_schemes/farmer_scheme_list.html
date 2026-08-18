@@ -1,0 +1,453 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Government Schemes - Smart Sheti</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="stylesheet"
+      href="{% static 'schemes/css/farmer_scheme_list.css' %}?v=999999">
+</head>
+
+<body>
+
+{% include 'accounts/farmer/farmer_sidebar.html' %}
+
+<div class="main-content">
+
+    <header>
+
+        <a href="/" class="logo">
+            <div class="logo-icon">
+                <i class="fa-solid fa-seedling"></i>
+            </div>
+            Smart Sheti
+        </a>
+
+        <nav>
+
+            <a href="{% url 'government_scheme:farmer-scheme-dashboard' %}">
+                <i class="fa-solid fa-gauge-high"></i>
+                Dashboard
+            </a>
+
+            <a href="{% url 'government_scheme:farmer_government_scheme_list' %}" class="active">
+                <i class="fa-solid fa-file-lines"></i>
+                Schemes
+            </a>
+
+        </nav>
+
+    </header>
+
+    <main class="container page-wrapper">
+
+        <section class="page-header">
+
+            <div class="page-header-content">
+
+                <span class="mini-badge">
+                    <i class="fa-solid fa-landmark"></i>
+                    Government Benefits
+                </span>
+
+                <h1 class="page-title">
+                    Government Schemes
+                </h1>
+
+                <p class="page-subtitle">
+                    Explore active government schemes, subsidies, eligibility, required documents and official apply links.
+                </p>
+
+                <div class="page-actions">
+
+                    <a href="{% url 'government_scheme:farmer-scheme-dashboard' %}"
+                       class="btn-dashboard">
+
+                        <i class="fa-solid fa-gauge-high"></i>
+                        Dashboard
+
+                    </a>
+
+                    <a href="{% url 'government_scheme:farmer_government_scheme_list' %}"
+                       class="btn-dashboard active">
+
+                        <i class="fa-solid fa-list"></i>
+                        All Schemes
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="content-card">
+
+            {% if message and success %}
+                <div id="successMessage" class="message-box message-success">
+                    <i class="fa-solid fa-circle-check"></i>
+                    {{ message }}
+                </div>
+            {% endif %}
+
+            {% if errors %}
+                <div id="errorMessage" class="message-box message-error">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    {{ errors }}
+                </div>
+            {% endif %}
+
+            {% if schemes %}
+
+                <div class="top-bar">
+
+                    <div>
+                        <h2 class="section-title">
+                            Available Schemes
+                        </h2>
+
+                        <p class="section-subtitle">
+                            Find, filter and apply through official government portals.
+                        </p>
+                    </div>
+
+                    <span class="scheme-count">
+                        <i class="fa-solid fa-list-check"></i>
+                        Total Schemes: {{ schemes|length }}
+                    </span>
+
+                </div>
+
+                <div class="filter-panel">
+
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input type="text"
+                               id="searchInput"
+                               placeholder="Search by scheme name, code, category or state...">
+                    </div>
+
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">All Categories</option>
+
+                        {% for scheme in schemes %}
+                            {% if scheme.category %}
+                                <option value="{{ scheme.category|lower }}">
+                                    {{ scheme.category }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+
+                    <select id="stateFilter" class="filter-select">
+                        <option value="">All States</option>
+
+                        {% for scheme in schemes %}
+                            {% if scheme.state %}
+                                <option value="{{ scheme.state|lower }}">
+                                    {{ scheme.state }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="featured">Featured</option>
+                    </select>
+
+                    <button type="button"
+                            id="clearFilters"
+                            class="btn-clear">
+
+                        <i class="fa-solid fa-rotate-right"></i>
+                        Clear
+
+                    </button>
+
+                </div>
+
+                <div class="row g-4" id="schemeContainer">
+
+                    {% for scheme in schemes %}
+
+                        <div class="col-12 col-md-6 col-xl-4 scheme-item"
+                             data-search="{{ scheme.scheme_name|default:''|lower }} {{ scheme.scheme_code|default:''|lower }} {{ scheme.category|default:''|lower }} {{ scheme.state|default:''|lower }}"
+                             data-category="{{ scheme.category|default:''|lower }}"
+                             data-state="{{ scheme.state|default:''|lower }}"
+                             data-status="{{ scheme.status|default:''|lower }}"
+                             data-featured="{% if scheme.is_featured %}featured{% endif %}">
+
+                            <article class="scheme-card">
+
+                                <button type="button"
+                                        class="save-btn"
+                                        title="Save Scheme">
+
+                                    <i class="fa-regular fa-bookmark"></i>
+
+                                </button>
+
+                                <div class="scheme-image">
+
+                                    {% if scheme.scheme_image_url %}
+                                        <img src="{{ scheme.scheme_image_url }}"
+                                             alt="{{ scheme.scheme_name|default:'Government Scheme' }}"
+                                             loading="lazy">
+
+                                    {% elif scheme.scheme_image %}
+                                        <img src="{{ scheme.scheme_image.url }}"
+                                             alt="{{ scheme.scheme_name|default:'Government Scheme' }}"
+                                             loading="lazy">
+
+                                    {% else %}
+                                        <div class="scheme-placeholder">
+                                            <i class="fa-solid fa-building-columns"></i>
+                                            <span>Government Scheme</span>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+
+                                <div class="scheme-body">
+
+                                    <div class="badge-wrap">
+
+                                        <span class="scheme-badge">
+                                            {{ scheme.category|default:"General Scheme" }}
+                                        </span>
+
+                                        {% if scheme.is_featured %}
+                                            <span class="scheme-badge featured-badge">
+                                                <i class="fa-solid fa-star"></i>
+                                                Featured
+                                            </span>
+                                        {% endif %}
+
+                                        {% if scheme.status == "active" %}
+                                            <span class="scheme-badge active-badge">
+                                                <i class="fa-solid fa-circle-check"></i>
+                                                Active
+                                            </span>
+                                        {% else %}
+                                            <span class="scheme-badge inactive-badge">
+                                                <i class="fa-solid fa-circle-xmark"></i>
+                                                Inactive
+                                            </span>
+                                        {% endif %}
+
+                                    </div>
+
+                                    <h3 class="scheme-title">
+                                        {{ scheme.scheme_name|default:"Government Scheme" }}
+                                    </h3>
+
+                                    <p class="scheme-desc">
+                                        {{ scheme.short_description|default:"View scheme details, eligibility, benefits and required documents."|truncatechars:120 }}
+                                    </p>
+
+                                    <div class="benefit-box">
+                                        <div>
+                                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                                            <span>Farmer Benefit</span>
+                                        </div>
+
+                                        <strong>
+                                            Check Details
+                                        </strong>
+                                    </div>
+
+                                    <div class="scheme-info">
+
+                                        <div class="scheme-info-row">
+                                            <span class="scheme-info-label">
+                                                Code:
+                                            </span>
+
+                                            <span class="scheme-info-value">
+                                                {{ scheme.scheme_code|default:"-" }}
+                                            </span>
+                                        </div>
+
+                                        <div class="scheme-info-row">
+                                            <span class="scheme-info-label">
+                                                State:
+                                            </span>
+
+                                            <span class="scheme-info-value">
+                                                {{ scheme.state|default:"All India" }}
+                                            </span>
+                                        </div>
+
+                                        <div class="scheme-info-row">
+                                            <span class="scheme-info-label">
+                                                End Date:
+                                            </span>
+
+                                            <span class="scheme-info-value deadline-value">
+                                                {% if scheme.end_date %}
+                                                    <i class="fa-solid fa-clock"></i>
+                                                    {{ scheme.end_date|date:"d M Y" }}
+                                                {% else %}
+                                                    <i class="fa-solid fa-infinity"></i>
+                                                    Ongoing
+                                                {% endif %}
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="quick-features">
+                                        <span>
+                                            <i class="fa-solid fa-file"></i>
+                                            Documents
+                                        </span>
+
+                                        <span>
+                                            <i class="fa-solid fa-user-check"></i>
+                                            Eligibility
+                                        </span>
+
+                                        <span>
+                                            <i class="fa-solid fa-link"></i>
+                                            Official Link
+                                        </span>
+                                    </div>
+
+                                    <div class="scheme-actions">
+
+                                        <a href="{% url 'government_scheme:farmer_government_scheme_detail' scheme.scheme_code %}"
+                                           class="btn-view">
+
+                                            <i class="fa-solid fa-eye"></i>
+                                            View Details
+
+                                        </a>
+
+                                        {% if scheme.apply_link %}
+                                            <a href="{{ scheme.apply_link }}"
+                                               target="_blank"
+                                               rel="noopener noreferrer"
+                                               class="btn-apply">
+
+                                                <i class="fa-solid fa-paper-plane"></i>
+                                                Apply Now
+
+                                            </a>
+                                        {% endif %}
+
+                                    </div>
+
+                                    <button type="button"
+                                            class="btn-share"
+                                            data-title="{{ scheme.scheme_name|default:'Government Scheme' }}"
+                                            data-url="{% url 'government_scheme:farmer_government_scheme_detail' scheme.scheme_code %}">
+
+                                        <i class="fa-solid fa-share-nodes"></i>
+                                        Share Scheme
+
+                                    </button>
+
+                                </div>
+
+                            </article>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <div id="noSearchResult"
+                     class="empty-state"
+                     style="display:none;">
+
+                    <div class="empty-icon">
+                        🔍
+                    </div>
+
+                    <h2 class="empty-title">
+                        No Matching Schemes
+                    </h2>
+
+                    <p class="empty-desc">
+                        No schemes matched your search or selected filters.
+                    </p>
+
+                    <button type="button"
+                            id="clearFiltersEmpty"
+                            class="btn-clear">
+
+                        <i class="fa-solid fa-rotate-right"></i>
+                        Clear Filters
+
+                    </button>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        🌾
+                    </div>
+
+                    <h2 class="empty-title">
+                        No Active Schemes Available
+                    </h2>
+
+                    <p class="empty-desc">
+                        There are currently no active government schemes available.
+                        Please check again later for new updates.
+                    </p>
+
+                    <a href="{% url 'government_scheme:farmer-scheme-dashboard' %}"
+                       class="btn-clear">
+
+                        <i class="fa-solid fa-gauge-high"></i>
+                        Back to Dashboard
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-bottom">
+            © 2026 Smart Sheti • Empowering Farmers Through Digital Agriculture
+        </div>
+    </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="{% static 'schemes/js/farmer_scheme_list.js' %}?v=999999"></script>
+</body>
+</html>

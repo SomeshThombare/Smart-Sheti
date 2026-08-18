@@ -1,0 +1,271 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Available Equipment</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          rel="stylesheet">
+
+<link rel="stylesheet"
+      href="{% static 'equipment/css/farmer_equipment_list.css' %}?v=10">
+</head>
+
+<body>
+
+{% include 'accounts/farmer/farmer_sidebar.html' %}
+
+<div class="main-content">
+
+    <div class="page-wrapper">
+
+        <header class="page-header">
+            <div>
+                <h1>Available Equipment</h1>
+                <p>Browse and rent agricultural equipment easily</p>
+            </div>
+
+            <div class="header-actions">
+
+                <a href="{% url 'equipment:farmer-booking-list' %}"
+                   class="btn-my-booking">
+                    <i class="fas fa-list-check"></i>
+                    My Bookings
+                </a>
+
+                <a href="{% url 'equipment:farmer-booking-history' %}"
+                   class="btn-my-booking">
+                    <i class="fas fa-clock-rotate-left"></i>
+                    Booking History
+                </a>
+
+            </div>
+        </header>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if message %}
+            <div class="alert {% if success %}alert-success{% else %}alert-danger{% endif %}">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        <section class="filter-card">
+
+            <div class="row g-3">
+
+                <div class="col-lg-5 col-md-6">
+                    <input type="text"
+                           id="searchInput"
+                           class="form-control"
+                           placeholder="Search by equipment, code, brand, city...">
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <select id="categoryFilter"
+                            class="form-select">
+
+                        <option value="">All Categories</option>
+
+                        {% for category in category_options %}
+                            <option value="{{ category|lower }}">
+                                {{ category }}
+                            </option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <select id="statusFilter"
+                            class="form-select">
+
+                        <option value="">All Status</option>
+                        <option value="available">Available</option>
+                        <option value="rented">Rented</option>
+
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <button type="button"
+                            id="resetFilters"
+                            class="btn-reset">
+
+                        <i class="fas fa-rotate-left"></i>
+                        Reset
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="summary-row">
+
+            <div class="summary-card">
+                <span>Total Equipment</span>
+                <strong id="totalCount">{{ total_count|default:0 }}</strong>
+            </div>
+
+            <div class="summary-card available">
+                <span>Available</span>
+                <strong>{{ available_count|default:0 }}</strong>
+            </div>
+
+            <div class="summary-card rented">
+                <span>Rented</span>
+                <strong>{{ rented_count|default:0 }}</strong>
+            </div>
+
+        </section>
+
+        <section class="equipment-grid"
+                 id="equipmentContainer">
+
+            {% for equipment in equipments %}
+
+                <article class="equipment-card equipment-item"
+                         data-search="{{ equipment.equipment_name|default:''|lower }} {{ equipment.equipment_code|default:''|lower }} {{ equipment.equipment_brand|default:''|lower }} {{ equipment.location_city|default:''|lower }} {{ equipment.equipment_category|default:''|lower }}"
+                         data-category="{{ equipment.equipment_category|default:''|lower }}"
+                         data-status="{{ equipment.equipment_status|default:''|lower }}">
+
+                    <div class="equipment-image-box">
+
+                        {% if equipment.equipment_image %}
+                            <img src="{{ equipment.equipment_image.url }}"
+                                 alt="{{ equipment.equipment_name|default:'Equipment Image' }}"
+                                 class="equipment-image">
+                        {% else %}
+                            <div class="no-image">
+                                <i class="fas fa-tractor"></i>
+                            </div>
+                        {% endif %}
+
+                        {% if equipment.equipment_status == "available" %}
+                            <span class="floating-status available">
+                                Available
+                            </span>
+                        {% else %}
+                            <span class="floating-status rented">
+                                Rented
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="equipment-content">
+
+                        <h3>{{ equipment.equipment_name }}</h3>
+
+                        <div class="equipment-code">
+                            {{ equipment.equipment_code }}
+                        </div>
+
+                        <div class="equipment-info">
+
+                            <div class="info-item">
+                                <i class="fas fa-layer-group"></i>
+                                <span>{{ equipment.equipment_category }}</span>
+                            </div>
+
+                            <div class="info-item">
+                                <i class="fas fa-building"></i>
+                                <span>{{ equipment.equipment_brand|default:"-" }}</span>
+                            </div>
+
+                            <div class="info-item">
+                                <i class="fas fa-location-dot"></i>
+                                <span>{{ equipment.location_city|default:"-" }}</span>
+                            </div>
+
+                        </div>
+
+                        <div class="price-row">
+                            <div>
+                                <span class="price">
+                                    ₹{{ equipment.rental_price_per_day }}
+                                </span>
+                                <small>/day</small>
+                            </div>
+                        </div>
+
+                        <div class="card-actions">
+
+                            <a href="{% url 'equipment:farmer-equipment-detail' equipment.equipment_code %}"
+                               class="btn-view">
+
+                                <i class="fas fa-eye"></i>
+                                View Details
+                            </a>
+
+                            {% if equipment.equipment_status == "available" %}
+                                <a href="{% url 'equipment:farmer-booking-form-page' %}?equipment_code={{ equipment.equipment_code }}"
+                                   class="btn-book">
+
+                                    <i class="fas fa-calendar-check"></i>
+                                    Book Now
+                                </a>
+                            {% else %}
+                                <button type="button"
+                                        class="btn-book disabled"
+                                        disabled>
+
+                                    <i class="fas fa-ban"></i>
+                                    Not Available
+                                </button>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <div class="empty-box">
+                    <i class="fas fa-tractor"></i>
+                    <h4>No Equipment Available</h4>
+                    <p>Equipment will appear here once admin adds it.</p>
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+        <div class="empty-box d-none"
+             id="emptySearchResult">
+
+            <i class="fas fa-search"></i>
+            <h4>No Matching Equipment</h4>
+            <p>Try changing search text or filters.</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="{% static 'equipment/js/farmer_equipment_list.js' %}"></script>
+
+</body>
+</html>

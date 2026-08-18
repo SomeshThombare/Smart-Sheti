@@ -1,0 +1,902 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Pest Dashboard | Smart Sheti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root{
+            --primary:#15803d;
+            --primary-dark:#14532d;
+            --primary-light:#dcfce7;
+            --success:#16a34a;
+            --danger:#dc2626;
+            --warning:#f59e0b;
+            --info:#2563eb;
+            --purple:#9333ea;
+            --white:#ffffff;
+            --bg:#f4f8f5;
+            --text:#1f2937;
+            --muted:#6b7280;
+            --border:#d9eadf;
+            --shadow:0 15px 40px rgba(0,0,0,.08);
+            --sidebar-width:290px;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Segoe UI",sans-serif;
+        }
+
+        body{
+            background:var(--bg);
+            color:var(--text);
+        }
+
+        .main-content{
+            margin-left:var(--sidebar-width);
+            padding:30px;
+        }
+
+        .dashboard-header{
+            background:linear-gradient(135deg,#14532d,#16a34a);
+            color:white;
+            padding:30px;
+            border-radius:22px;
+            margin-bottom:25px;
+            box-shadow:var(--shadow);
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:20px;
+            flex-wrap:wrap;
+        }
+
+        .dashboard-header h1{
+            font-size:32px;
+            margin-bottom:8px;
+        }
+
+        .dashboard-header p{
+            opacity:.92;
+            line-height:1.5;
+        }
+
+        .header-actions{
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:11px 16px;
+            border-radius:10px;
+            text-decoration:none;
+            border:none;
+            cursor:pointer;
+            font-weight:700;
+            font-size:14px;
+            transition:.2s ease;
+        }
+
+        .btn-white{
+            background:white;
+            color:var(--primary-dark);
+        }
+
+        .btn-white:hover{
+            background:#f0fdf4;
+        }
+
+        .btn-primary{
+            background:var(--primary);
+            color:white;
+        }
+
+        .btn-primary:hover{
+            background:var(--primary-dark);
+        }
+
+        .btn-light{
+            background:#f0fdf4;
+            color:var(--primary-dark);
+            border:1px solid var(--border);
+        }
+
+        .btn-light:hover{
+            background:var(--primary-light);
+        }
+
+        .alert{
+            padding:14px 16px;
+            border-radius:12px;
+            margin-bottom:20px;
+            font-weight:600;
+        }
+
+        .alert-success{
+            background:#dcfce7;
+            color:#166534;
+            border:1px solid #bbf7d0;
+        }
+
+        .alert-error{
+            background:#fee2e2;
+            color:#991b1b;
+            border:1px solid #fecaca;
+        }
+
+        .stats-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:22px;
+            margin-bottom:28px;
+        }
+
+        .stat-card{
+            background:white;
+            border-radius:20px;
+            padding:24px;
+            box-shadow:var(--shadow);
+            transition:.2s ease;
+            text-decoration:none;
+            color:var(--text);
+        }
+
+        .stat-card:hover{
+            transform:translateY(-4px);
+            background:#fafffb;
+        }
+
+        .stat-icon{
+            width:62px;
+            height:62px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:white;
+            font-size:25px;
+            margin-bottom:15px;
+        }
+
+        .total{background:var(--info);}
+        .success{background:var(--success);}
+        .failed{background:var(--danger);}
+        .today{background:var(--warning);}
+        .month{background:var(--purple);}
+        .rate{background:var(--primary);}
+
+        .stat-card h3{
+            color:var(--muted);
+            font-size:15px;
+            margin-bottom:8px;
+        }
+
+        .stat-card h2{
+            font-size:32px;
+            color:var(--primary-dark);
+        }
+
+        .analytics-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+            gap:22px;
+            margin-bottom:28px;
+        }
+
+        .analytics-card{
+            background:white;
+            border-radius:20px;
+            padding:24px;
+            box-shadow:var(--shadow);
+        }
+
+        .analytics-card h2{
+            color:var(--primary-dark);
+            font-size:21px;
+            margin-bottom:16px;
+        }
+
+        .info-box{
+            background:#f0fdf4;
+            border:1px solid var(--border);
+            border-radius:14px;
+            padding:15px;
+            line-height:1.7;
+        }
+
+        .info-label{
+            color:var(--muted);
+            font-weight:700;
+            font-size:14px;
+        }
+
+        .info-value{
+            color:var(--primary-dark);
+            font-weight:800;
+            font-size:18px;
+        }
+
+        .mini-list{
+            list-style:none;
+        }
+
+        .mini-list li{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            padding:12px 0;
+            border-bottom:1px solid var(--border);
+        }
+
+        .mini-list li:last-child{
+            border-bottom:none;
+        }
+
+        .mini-name{
+            font-weight:700;
+            color:var(--text);
+        }
+
+        .mini-sub{
+            color:var(--muted);
+            font-size:13px;
+            margin-top:3px;
+        }
+
+        .mini-count{
+            background:var(--primary-light);
+            color:var(--primary-dark);
+            padding:5px 10px;
+            border-radius:20px;
+            font-weight:800;
+            font-size:13px;
+            white-space:nowrap;
+        }
+
+        .quick-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+            gap:22px;
+            margin-bottom:28px;
+        }
+
+        .quick-card{
+            background:white;
+            border-radius:20px;
+            padding:25px;
+            box-shadow:var(--shadow);
+            text-decoration:none;
+            color:var(--text);
+            transition:.2s ease;
+            border:1px solid transparent;
+        }
+
+        .quick-card:hover{
+            transform:translateY(-4px);
+            border-color:var(--primary-light);
+            background:#f0fdf4;
+        }
+
+        .quick-card i{
+            font-size:35px;
+            color:var(--primary);
+            margin-bottom:15px;
+        }
+
+        .quick-card h3{
+            color:var(--primary-dark);
+            margin-bottom:8px;
+        }
+
+        .quick-card p{
+            color:var(--muted);
+            line-height:1.6;
+        }
+
+        .table-card{
+            background:white;
+            border-radius:20px;
+            padding:25px;
+            box-shadow:var(--shadow);
+        }
+
+        .table-header{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:15px;
+            flex-wrap:wrap;
+            margin-bottom:20px;
+        }
+
+        .table-header h2{
+            color:var(--primary-dark);
+            font-size:24px;
+        }
+
+        .table-wrapper{
+            width:100%;
+            overflow-x:auto;
+            border:1px solid var(--border);
+            border-radius:14px;
+        }
+
+        table{
+            width:100%;
+            min-width:1050px;
+            border-collapse:collapse;
+            background:white;
+        }
+
+        thead{
+            background:var(--primary-dark);
+            color:white;
+        }
+
+        th{
+            padding:15px;
+            text-align:left;
+            font-size:14px;
+            white-space:nowrap;
+        }
+
+        td{
+            padding:15px;
+            border-bottom:1px solid var(--border);
+            vertical-align:middle;
+            font-size:14px;
+        }
+
+        tbody tr:hover{
+            background:#f8fafc;
+        }
+
+        tbody tr:last-child td{
+            border-bottom:none;
+        }
+
+        .sr-no{
+            width:70px;
+            text-align:center;
+            font-weight:800;
+            color:var(--primary-dark);
+        }
+
+        .status-success{
+            display:inline-block;
+            background:#dcfce7;
+            color:#166534;
+            padding:7px 13px;
+            border-radius:20px;
+            font-size:13px;
+            font-weight:800;
+        }
+
+        .status-failed{
+            display:inline-block;
+            background:#fee2e2;
+            color:#991b1b;
+            padding:7px 13px;
+            border-radius:20px;
+            font-size:13px;
+            font-weight:800;
+        }
+
+        .btn-view{
+            padding:9px 15px;
+            border-radius:8px;
+            background:var(--primary);
+            color:white;
+            text-decoration:none;
+            font-size:14px;
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            transition:.2s ease;
+        }
+
+        .btn-view:hover{
+            background:var(--primary-dark);
+        }
+
+        .empty-box{
+            text-align:center;
+            padding:45px 20px;
+            color:var(--muted);
+        }
+
+        .empty-box i{
+            color:var(--primary);
+            font-size:40px;
+            margin-bottom:12px;
+        }
+
+        @media(max-width:991px){
+            .main-content{
+                margin-left:0;
+                padding:15px;
+            }
+
+            .dashboard-header{
+                padding:22px;
+            }
+
+            .dashboard-header h1{
+                font-size:25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+{% include 'accounts/admin/admin_sidebar.html' %}
+
+<div class="main-content">
+
+    <div class="dashboard-header">
+        <div>
+            <h1>
+                <i class="fa-solid fa-bug"></i>
+                Admin Pest Detection Dashboard
+            </h1>
+            <p>
+                Monitor all farmer pest predictions, success rate, pest trends, top farmers and recent AI detection records.
+            </p>
+        </div>
+
+        <div class="header-actions">
+            <a href="{% url 'pest_detection:admin_pest_predictions' %}" class="btn btn-white">
+                <i class="fa-solid fa-list"></i>
+                All Predictions
+            </a>
+
+            <a href="{% url 'pest_detection:admin_pest_predictions_export_csv' %}" class="btn btn-white">
+                <i class="fa-solid fa-file-csv"></i>
+                Export CSV
+            </a>
+
+            <a href="{% url 'pest_detection:admin_pest_dashboard' %}" class="btn btn-white">
+                <i class="fa-solid fa-rotate-right"></i>
+                Refresh
+            </a>
+        </div>
+    </div>
+
+    {% if message %}
+        <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <div class="stats-grid">
+
+        <a href="{% url 'pest_detection:admin_pest_predictions' %}" class="stat-card">
+            <div class="stat-icon total">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h3>Total Predictions</h3>
+            <h2>{{ total_predictions|default:"0" }}</h2>
+        </a>
+
+        <a href="{% url 'pest_detection:admin_pest_predictions' %}?status=SUCCESS" class="stat-card">
+            <div class="stat-icon success">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h3>Successful Predictions</h3>
+            <h2>{{ success_count|default:"0" }}</h2>
+        </a>
+
+        <a href="{% url 'pest_detection:admin_pest_predictions' %}?status=FAILED" class="stat-card">
+            <div class="stat-icon failed">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+            <h3>Failed Predictions</h3>
+            <h2>{{ failed_count|default:"0" }}</h2>
+        </a>
+
+        <a href="{% url 'pest_detection:admin_pest_predictions' %}" class="stat-card">
+            <div class="stat-icon today">
+                <i class="fa-solid fa-calendar-day"></i>
+            </div>
+            <h3>Today's Predictions</h3>
+            <h2>{{ today_predictions|default:"0" }}</h2>
+        </a>
+
+        <a href="{% url 'pest_detection:admin_pest_predictions' %}" class="stat-card">
+            <div class="stat-icon month">
+                <i class="fa-solid fa-calendar-days"></i>
+            </div>
+            <h3>This Month</h3>
+            <h2>{{ monthly_predictions|default:"0" }}</h2>
+        </a>
+
+        <a href="{% url 'pest_detection:admin_pest_predictions' %}" class="stat-card">
+            <div class="stat-icon rate">
+                <i class="fa-solid fa-percent"></i>
+            </div>
+            <h3>Success Rate</h3>
+            <h2>{{ success_rate|default:"0" }}%</h2>
+        </a>
+
+    </div>
+
+    <div class="analytics-grid">
+
+        <div class="analytics-card">
+            <h2>
+                <i class="fa-solid fa-seedling"></i>
+                Most Detected Pest
+            </h2>
+
+            {% if most_detected_pest %}
+                <div class="info-box">
+                    <div class="info-label">Pest Name</div>
+                    <div class="info-value">{{ most_detected_pest.pest_name }}</div>
+
+                    <br>
+
+                    <div class="info-label">Total Detections</div>
+                    <div class="info-value">{{ most_detected_pest.total }}</div>
+                </div>
+            {% else %}
+                <div class="empty-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <p>No pest analytics available.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="analytics-card">
+            <h2>
+                <i class="fa-solid fa-ranking-star"></i>
+                Top 5 Pests
+            </h2>
+
+            {% if top_pests %}
+                <ul class="mini-list">
+                    {% for pest in top_pests %}
+                        <li>
+                            <span class="mini-name">{{ pest.pest_name }}</span>
+                            <span class="mini-count">{{ pest.total }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="empty-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <p>No top pest data available.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="analytics-card">
+            <h2>
+                <i class="fa-solid fa-users"></i>
+                Top Farmers
+            </h2>
+
+            {% if top_farmers %}
+                <ul class="mini-list">
+                    {% for farmer in top_farmers %}
+                        <li>
+                            <span>
+                                <span class="mini-name">
+                                    {% if farmer.user__first_name or farmer.user__last_name %}
+                                        {{ farmer.user__first_name }} {{ farmer.user__last_name }}
+                                    {% else %}
+                                        {{ farmer.user__username }}
+                                    {% endif %}
+                                </span>
+                                <div class="mini-sub">{{ farmer.user__email }}</div>
+                            </span>
+                            <span class="mini-count">{{ farmer.total }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="empty-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <p>No farmer analytics available.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="analytics-card">
+            <h2>
+                <i class="fa-solid fa-chart-column"></i>
+                Monthly Trend
+            </h2>
+
+            {% if monthly_trend %}
+                <ul class="mini-list">
+                    {% for item in monthly_trend %}
+                        <li>
+                            <span class="mini-name">{{ item.month|date:"M Y" }}</span>
+                            <span class="mini-count">{{ item.total }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="empty-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <p>No monthly trend available.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="analytics-card">
+            <h2>
+                <i class="fa-solid fa-map-location-dot"></i>
+                District Report
+            </h2>
+
+            {% if district_report %}
+                <ul class="mini-list">
+                    {% for district in district_report %}
+                        <li>
+                            <span class="mini-name">{{ district.district }}</span>
+                            <span class="mini-count">{{ district.total }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="empty-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <p>District field not available or no district data found.</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="quick-grid">
+
+        <a href="{% url 'pest_detection:admin_pest_predictions' %}" class="quick-card">
+            <i class="fa-solid fa-table-list"></i>
+            <h3>All Prediction Records</h3>
+            <p>View, search, filter and sort all farmer pest prediction records.</p>
+        </a>
+
+        <a href="{% url 'pest_detection:admin_pest_predictions' %}?status=SUCCESS" class="quick-card">
+            <i class="fa-solid fa-circle-check"></i>
+            <h3>Successful Predictions</h3>
+            <p>Open all successful pest detection records.</p>
+        </a>
+
+        <a href="{% url 'pest_detection:admin_pest_predictions' %}?status=FAILED" class="quick-card">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <h3>Failed Predictions</h3>
+            <p>Check failed and low-confidence pest prediction records.</p>
+        </a>
+
+        <a href="{% url 'pest_detection:admin_pest_predictions_export_csv' %}" class="quick-card">
+            <i class="fa-solid fa-file-csv"></i>
+            <h3>Export CSV Report</h3>
+            <p>Download pest prediction report in CSV format.</p>
+        </a>
+
+    </div>
+
+    <div class="table-card">
+
+        <div class="table-header">
+            <h2>
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                Recent Pest Predictions
+            </h2>
+
+            <a href="{% url 'pest_detection:admin_pest_predictions' %}" class="btn btn-primary">
+                <i class="fa-solid fa-list"></i>
+                View All
+            </a>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="sr-no">SR No.</th>
+                        <th>Farmer</th>
+                        <th>Email</th>
+                        <th>Pest Name</th>
+                        <th>Confidence</th>
+                        <th>Class Name</th>
+                        <th>Predicted Index</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Detail</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for prediction in recent_predictions %}
+                    <tr>
+                        <td class="sr-no">{{ forloop.counter }}</td>
+
+                        <td>
+                            {% if prediction.user %}
+                                {{ prediction.user.get_full_name|default:prediction.user.username }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if prediction.user %}
+                                {{ prediction.user.email|default:"-" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>{{ prediction.pest_name|default:"-" }}</td>
+                        <td>{{ prediction.confidence|default:"0" }}%</td>
+                        <td>{{ prediction.class_name|default:"-" }}</td>
+                        <td>{{ prediction.predicted_index|default_if_none:"-" }}</td>
+
+                        <td>
+                            {% if prediction.status == "SUCCESS" %}
+                                <span class="status-success">SUCCESS</span>
+                            {% else %}
+                                <span class="status-failed">FAILED</span>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ prediction.created_at|date:"d M Y h:i A" }}</td>
+
+                        <td>
+                            <a href="{% url 'pest_detection:admin_pest_prediction_detail' prediction.id %}"
+                               class="btn-view">
+                                <i class="fa-solid fa-eye"></i>
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="10">
+                            <div class="empty-box">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <h3>No Pest Predictions Found</h3>
+                                <p>No farmer pest detection record is available.</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const alerts = document.querySelectorAll(".alert");
+        const statCards = document.querySelectorAll(".stat-card");
+        const quickCards = document.querySelectorAll(".quick-card");
+        const analyticsCards = document.querySelectorAll(".analytics-card");
+        const tableRows = document.querySelectorAll("tbody tr");
+        const exportBtn = document.querySelector("a[href*='export-csv']");
+        const refreshBtn = document.querySelector("a[href*='pest-dashboard']");
+
+        alerts.forEach(function (alertBox) {
+            setTimeout(function () {
+                alertBox.style.transition = "all 0.5s ease";
+                alertBox.style.opacity = "0";
+                alertBox.style.transform = "translateY(-10px)";
+
+                setTimeout(function () {
+                    alertBox.remove();
+                }, 500);
+            }, 3000);
+        });
+
+        function animateItems(items) {
+            items.forEach(function (item, index) {
+                item.style.opacity = "0";
+                item.style.transform = "translateY(15px)";
+
+                setTimeout(function () {
+                    item.style.transition = "all 0.45s ease";
+                    item.style.opacity = "1";
+                    item.style.transform = "translateY(0)";
+                }, index * 80);
+            });
+        }
+
+        animateItems(statCards);
+        animateItems(analyticsCards);
+        animateItems(quickCards);
+
+        tableRows.forEach(function (row) {
+            row.addEventListener("click", function () {
+                tableRows.forEach(function (item) {
+                    item.style.outline = "none";
+                    item.style.background = "";
+                });
+
+                row.style.outline = "2px solid #15803d";
+                row.style.outlineOffset = "-2px";
+                row.style.background = "#f0fdf4";
+            });
+        });
+
+        if (exportBtn) {
+            exportBtn.addEventListener("click", function () {
+                showToast("CSV report download started...");
+            });
+        }
+
+        if (refreshBtn) {
+            refreshBtn.addEventListener("click", function () {
+                showToast("Refreshing dashboard...");
+            });
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "r" && event.ctrlKey) {
+                event.preventDefault();
+                window.location.reload();
+            }
+        });
+
+        function showToast(message) {
+            const oldToast = document.querySelector(".custom-toast");
+
+            if (oldToast) {
+                oldToast.remove();
+            }
+
+            const toast = document.createElement("div");
+            toast.className = "custom-toast";
+            toast.innerText = message;
+
+            toast.style.position = "fixed";
+            toast.style.right = "25px";
+            toast.style.bottom = "25px";
+            toast.style.background = "#14532d";
+            toast.style.color = "#ffffff";
+            toast.style.padding = "14px 18px";
+            toast.style.borderRadius = "12px";
+            toast.style.boxShadow = "0 15px 40px rgba(0,0,0,.25)";
+            toast.style.zIndex = "99999";
+            toast.style.fontWeight = "700";
+            toast.style.fontSize = "14px";
+
+            document.body.appendChild(toast);
+
+            setTimeout(function () {
+                toast.style.transition = "all 0.4s ease";
+                toast.style.opacity = "0";
+                toast.style.transform = "translateY(10px)";
+
+                setTimeout(function () {
+                    toast.remove();
+                }, 400);
+            }, 1800);
+        }
+
+    });
+</script>
+
+</body>
+</html>

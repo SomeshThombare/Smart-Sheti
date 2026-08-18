@@ -1,0 +1,883 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Pest Predictions | Smart Sheti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root{
+            --primary:#15803d;
+            --primary-dark:#14532d;
+            --primary-light:#dcfce7;
+            --success:#16a34a;
+            --danger:#dc2626;
+            --warning:#f59e0b;
+            --info:#2563eb;
+            --white:#ffffff;
+            --bg:#f4f8f5;
+            --text:#1f2937;
+            --muted:#6b7280;
+            --border:#d9eadf;
+            --shadow:0 15px 40px rgba(0,0,0,.08);
+            --sidebar-width:290px;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Segoe UI",sans-serif;
+        }
+
+        body{
+            background:var(--bg);
+            color:var(--text);
+        }
+
+        .main-content{
+            margin-left:var(--sidebar-width);
+            padding:30px;
+        }
+
+        .page-header{
+            background:linear-gradient(135deg,#14532d,#16a34a);
+            color:white;
+            padding:30px;
+            border-radius:22px;
+            margin-bottom:25px;
+            box-shadow:var(--shadow);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:20px;
+            flex-wrap:wrap;
+        }
+
+        .page-header h1{
+            font-size:32px;
+            margin-bottom:8px;
+        }
+
+        .page-header p{
+            opacity:.92;
+            line-height:1.5;
+        }
+
+        .header-actions,
+        .filter-actions{
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:11px 16px;
+            border-radius:10px;
+            text-decoration:none;
+            border:none;
+            cursor:pointer;
+            font-weight:700;
+            font-size:14px;
+            transition:.2s ease;
+        }
+
+        .btn-white{
+            background:white;
+            color:var(--primary-dark);
+        }
+
+        .btn-white:hover{
+            background:#f0fdf4;
+        }
+
+        .btn-primary{
+            background:var(--primary);
+            color:white;
+        }
+
+        .btn-primary:hover{
+            background:var(--primary-dark);
+        }
+
+        .btn-light{
+            background:#f0fdf4;
+            color:var(--primary-dark);
+            border:1px solid var(--border);
+        }
+
+        .btn-light:hover{
+            background:var(--primary-light);
+        }
+
+        .alert{
+            padding:14px 16px;
+            border-radius:12px;
+            margin-bottom:20px;
+            font-weight:600;
+        }
+
+        .alert-success{
+            background:#dcfce7;
+            color:#166534;
+            border:1px solid #bbf7d0;
+        }
+
+        .alert-error{
+            background:#fee2e2;
+            color:#991b1b;
+            border:1px solid #fecaca;
+        }
+
+        .filter-card{
+            background:white;
+            border-radius:20px;
+            padding:24px;
+            box-shadow:var(--shadow);
+            margin-bottom:25px;
+        }
+
+        .filter-title{
+            color:var(--primary-dark);
+            margin-bottom:18px;
+            font-size:22px;
+        }
+
+        .filter-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+            gap:15px;
+            margin-bottom:18px;
+        }
+
+        .form-group label{
+            display:block;
+            font-size:13px;
+            font-weight:800;
+            color:var(--muted);
+            margin-bottom:7px;
+        }
+
+        .form-control{
+            width:100%;
+            padding:12px 13px;
+            border:1px solid var(--border);
+            border-radius:10px;
+            outline:none;
+            font-size:14px;
+            background:white;
+            color:var(--text);
+        }
+
+        .form-control:focus{
+            border-color:var(--primary);
+            box-shadow:0 0 0 3px rgba(21,128,61,.12);
+        }
+
+        .auto-note{
+            color:var(--muted);
+            font-size:13px;
+            margin-top:10px;
+        }
+
+        .table-card{
+            background:white;
+            border-radius:22px;
+            padding:25px;
+            box-shadow:var(--shadow);
+        }
+
+        .table-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:15px;
+            flex-wrap:wrap;
+            margin-bottom:20px;
+        }
+
+        .table-header h2{
+            color:var(--primary-dark);
+            font-size:24px;
+        }
+
+        .table-wrapper{
+            width:100%;
+            overflow-x:auto;
+            border:1px solid var(--border);
+            border-radius:14px;
+        }
+
+        table{
+            width:100%;
+            min-width:1350px;
+            border-collapse:collapse;
+            background:white;
+        }
+
+        thead{
+            background:var(--primary-dark);
+            color:white;
+        }
+
+        th{
+            padding:15px;
+            text-align:left;
+            font-size:14px;
+            white-space:nowrap;
+        }
+
+        td{
+            padding:15px;
+            border-bottom:1px solid var(--border);
+            vertical-align:middle;
+            font-size:14px;
+        }
+
+        tbody tr:hover{
+            background:#f8fafc;
+        }
+
+        tbody tr:last-child td{
+            border-bottom:none;
+        }
+
+        .sr-no{
+            width:70px;
+            text-align:center;
+            font-weight:800;
+            color:var(--primary-dark);
+        }
+
+        .image-box{
+            width:65px;
+            height:65px;
+            border-radius:12px;
+            overflow:hidden;
+            border:1px solid var(--border);
+            background:#f9fafb;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:var(--muted);
+        }
+
+        .image-box img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+
+        .status-success{
+            display:inline-block;
+            background:#dcfce7;
+            color:#166534;
+            padding:7px 13px;
+            border-radius:20px;
+            font-size:13px;
+            font-weight:800;
+        }
+
+        .status-failed{
+            display:inline-block;
+            background:#fee2e2;
+            color:#991b1b;
+            padding:7px 13px;
+            border-radius:20px;
+            font-size:13px;
+            font-weight:800;
+        }
+
+        .severity-badge{
+            display:inline-block;
+            padding:7px 13px;
+            border-radius:20px;
+            font-size:13px;
+            font-weight:800;
+        }
+
+        .severity-high{
+            background:#fee2e2;
+            color:#991b1b;
+        }
+
+        .severity-medium{
+            background:#fef3c7;
+            color:#92400e;
+        }
+
+        .severity-low{
+            background:#dcfce7;
+            color:#166534;
+        }
+
+        .severity-unclear{
+            background:#e5e7eb;
+            color:#374151;
+        }
+
+        .solution-text{
+            max-width:280px;
+            color:var(--muted);
+            line-height:1.5;
+        }
+
+        .btn-view{
+            padding:9px 15px;
+            border-radius:8px;
+            background:var(--primary);
+            color:white;
+            text-decoration:none;
+            font-size:14px;
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            transition:.2s ease;
+            white-space:nowrap;
+        }
+
+        .btn-view:hover{
+            background:var(--primary-dark);
+        }
+
+        .empty-box{
+            text-align:center;
+            padding:55px 20px;
+            color:var(--muted);
+        }
+
+        .empty-box i{
+            color:var(--primary);
+            font-size:45px;
+            margin-bottom:15px;
+        }
+
+        .pagination{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:10px;
+            flex-wrap:wrap;
+            margin-top:25px;
+        }
+
+        .page-link{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-width:38px;
+            height:38px;
+            padding:0 12px;
+            border-radius:10px;
+            border:1px solid var(--border);
+            background:white;
+            color:var(--primary-dark);
+            text-decoration:none;
+            font-weight:800;
+        }
+
+        .page-link:hover,
+        .page-link.active{
+            background:var(--primary);
+            color:white;
+            border-color:var(--primary);
+        }
+
+        .page-info{
+            color:var(--muted);
+            font-weight:700;
+        }
+
+        @media(max-width:991px){
+            .main-content{
+                margin-left:0;
+                padding:15px;
+            }
+
+            .page-header{
+                padding:22px;
+            }
+
+            .page-header h1{
+                font-size:25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+{% include 'accounts/admin/admin_sidebar.html' %}
+
+<div class="main-content">
+
+    <div class="page-header">
+        <div>
+            <h1>
+                <i class="fa-solid fa-list"></i>
+                Admin Pest Prediction List
+            </h1>
+            <p>
+                View, search, filter, sort and export all farmer pest prediction records.
+            </p>
+        </div>
+
+        <div class="header-actions">
+            <a href="{% url 'pest_detection:admin_pest_dashboard' %}" class="btn btn-white">
+                <i class="fa-solid fa-gauge-high"></i>
+                Dashboard
+            </a>
+
+            <a href="{% url 'pest_detection:admin_pest_predictions_export_csv' %}" class="btn btn-white">
+                <i class="fa-solid fa-file-csv"></i>
+                Export CSV
+            </a>
+        </div>
+    </div>
+
+    {% if message %}
+        <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <div class="filter-card">
+        <h2 class="filter-title">
+            <i class="fa-solid fa-filter"></i>
+            Filter Prediction Records
+        </h2>
+
+        <form method="get" id="filterForm">
+
+            <div class="filter-grid">
+
+                <div class="form-group">
+                    <label>Search</label>
+                    <input type="text"
+                           name="search"
+                           class="form-control auto-text-filter"
+                           placeholder="Search farmer, email, pest..."
+                           value="{{ request.GET.search }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select name="status" class="form-control auto-filter">
+                        <option value="">All Status</option>
+                        <option value="SUCCESS" {% if request.GET.status == "SUCCESS" %}selected{% endif %}>
+                            Success
+                        </option>
+                        <option value="FAILED" {% if request.GET.status == "FAILED" %}selected{% endif %}>
+                            Failed
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Pest Name</label>
+                    <input type="text"
+                           name="pest_name"
+                           class="form-control auto-text-filter"
+                           placeholder="Rice pest"
+                           value="{{ request.GET.pest_name }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Date From</label>
+                    <input type="date"
+                           name="date_from"
+                           class="form-control auto-filter"
+                           value="{{ request.GET.date_from }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Date To</label>
+                    <input type="date"
+                           name="date_to"
+                           class="form-control auto-filter"
+                           value="{{ request.GET.date_to }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Min Confidence</label>
+                    <input type="number"
+                           name="min_confidence"
+                           class="form-control auto-text-filter"
+                           min="0"
+                           max="100"
+                           step="0.01"
+                           placeholder="60"
+                           value="{{ request.GET.min_confidence }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Max Confidence</label>
+                    <input type="number"
+                           name="max_confidence"
+                           class="form-control auto-text-filter"
+                           min="0"
+                           max="100"
+                           step="0.01"
+                           placeholder="100"
+                           value="{{ request.GET.max_confidence }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Sort By</label>
+                    <select name="sort" class="form-control auto-filter">
+                        <option value="-date" {% if request.GET.sort == "-date" or not request.GET.sort %}selected{% endif %}>
+                            Newest First
+                        </option>
+                        <option value="date" {% if request.GET.sort == "date" %}selected{% endif %}>
+                            Oldest First
+                        </option>
+                        <option value="-confidence" {% if request.GET.sort == "-confidence" %}selected{% endif %}>
+                            High Confidence
+                        </option>
+                        <option value="confidence" {% if request.GET.sort == "confidence" %}selected{% endif %}>
+                            Low Confidence
+                        </option>
+                        <option value="pest_name" {% if request.GET.sort == "pest_name" %}selected{% endif %}>
+                            Pest Name A-Z
+                        </option>
+                        <option value="-pest_name" {% if request.GET.sort == "-pest_name" %}selected{% endif %}>
+                            Pest Name Z-A
+                        </option>
+                        <option value="status" {% if request.GET.sort == "status" %}selected{% endif %}>
+                            Status A-Z
+                        </option>
+                        <option value="-status" {% if request.GET.sort == "-status" %}selected{% endif %}>
+                            Status Z-A
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <select name="page_size" class="form-control auto-filter">
+                        <option value="10" {% if request.GET.page_size == "10" or not request.GET.page_size %}selected{% endif %}>10</option>
+                        <option value="20" {% if request.GET.page_size == "20" %}selected{% endif %}>20</option>
+                        <option value="50" {% if request.GET.page_size == "50" %}selected{% endif %}>50</option>
+                        <option value="100" {% if request.GET.page_size == "100" %}selected{% endif %}>100</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Apply Filter
+                </button>
+
+                <a href="{% url 'pest_detection:admin_pest_predictions' %}" class="btn btn-light">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Reset
+                </a>
+
+                <a href="{% url 'pest_detection:admin_pest_predictions_export_csv' %}?{{ request.GET.urlencode }}"
+                   class="btn btn-light">
+                    <i class="fa-solid fa-file-csv"></i>
+                    Export Filtered CSV
+                </a>
+            </div>
+
+            <p class="auto-note">
+                <i class="fa-solid fa-circle-info"></i>
+                Select filters apply automatically. Search fields apply after typing stops.
+            </p>
+
+        </form>
+    </div>
+
+    <div class="table-card">
+
+        <div class="table-header">
+            <h2>
+                <i class="fa-solid fa-table-list"></i>
+                Prediction Records
+            </h2>
+
+            <a href="{% url 'pest_detection:admin_pest_dashboard' %}" class="btn btn-primary">
+                <i class="fa-solid fa-gauge-high"></i>
+                Dashboard
+            </a>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="sr-no">SR No.</th>
+                        <th>Image</th>
+                        <th>Farmer</th>
+                        <th>Email</th>
+                        <th>Pest Name</th>
+                        <th>Confidence</th>
+                        <th>Class Name</th>
+                        <th>Predicted Index</th>
+                        <th>Status</th>
+                        <th>Severity</th>
+                        <th>Treatment Priority</th>
+                        <th>Solution</th>
+                        <th>Date</th>
+                        <th>Detail</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for prediction in predictions %}
+                    <tr>
+                        <td class="sr-no">
+                            {% if page_obj %}
+                                {{ page_obj.start_index|add:forloop.counter0 }}
+                            {% else %}
+                                {{ forloop.counter }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <div class="image-box">
+                                {% if prediction.image %}
+                                    <img src="{{ prediction.image.url }}" alt="Pest Image">
+                                {% else %}
+                                    <i class="fa-solid fa-image"></i>
+                                {% endif %}
+                            </div>
+                        </td>
+
+                        <td>
+                            {% if prediction.user %}
+                                {{ prediction.user.get_full_name|default:prediction.user.username }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if prediction.user %}
+                                {{ prediction.user.email|default:"-" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>{{ prediction.pest_name|default:"-" }}</td>
+                        <td>{{ prediction.confidence|default:"0" }}%</td>
+                        <td>{{ prediction.class_name|default:"-" }}</td>
+                        <td>{{ prediction.predicted_index|default_if_none:"-" }}</td>
+
+                        <td>
+                            {% if prediction.status == "SUCCESS" %}
+                                <span class="status-success">SUCCESS</span>
+                            {% else %}
+                                <span class="status-failed">FAILED</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if prediction.severity == "HIGH" %}
+                                <span class="severity-badge severity-high">HIGH</span>
+                            {% elif prediction.severity == "MEDIUM" %}
+                                <span class="severity-badge severity-medium">MEDIUM</span>
+                            {% elif prediction.severity == "LOW" %}
+                                <span class="severity-badge severity-low">LOW</span>
+                            {% else %}
+                                <span class="severity-badge severity-unclear">
+                                    {{ prediction.severity|default:"UNCLEAR" }}
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ prediction.treatment_priority|default:"-" }}</td>
+
+                        <td>
+                            <div class="solution-text">
+                                {{ prediction.solution|default:"No solution available."|truncatechars:100 }}
+                            </div>
+                        </td>
+
+                        <td>{{ prediction.created_at|date:"d M Y h:i A" }}</td>
+
+                        <td>
+                            <a href="{% url 'pest_detection:admin_pest_prediction_detail' prediction.id %}"
+                               class="btn-view">
+                                <i class="fa-solid fa-eye"></i>
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="14">
+                            <div class="empty-box">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <h3>No Pest Predictions Found</h3>
+                                <p>No farmer pest detection record matched your filter.</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if page_obj %}
+            <div class="pagination">
+
+                {% if page_obj.has_previous %}
+                    <a class="page-link"
+                       href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.pest_name %}&pest_name={{ request.GET.pest_name }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}{% if request.GET.min_confidence %}&min_confidence={{ request.GET.min_confidence }}{% endif %}{% if request.GET.max_confidence %}&max_confidence={{ request.GET.max_confidence }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}">
+                        First
+                    </a>
+
+                    <a class="page-link"
+                       href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.pest_name %}&pest_name={{ request.GET.pest_name }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}{% if request.GET.min_confidence %}&min_confidence={{ request.GET.min_confidence }}{% endif %}{% if request.GET.max_confidence %}&max_confidence={{ request.GET.max_confidence }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}">
+                        Prev
+                    </a>
+                {% endif %}
+
+                <span class="page-info">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a class="page-link"
+                       href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.pest_name %}&pest_name={{ request.GET.pest_name }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}{% if request.GET.min_confidence %}&min_confidence={{ request.GET.min_confidence }}{% endif %}{% if request.GET.max_confidence %}&max_confidence={{ request.GET.max_confidence }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}">
+                        Next
+                    </a>
+
+                    <a class="page-link"
+                       href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.pest_name %}&pest_name={{ request.GET.pest_name }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}{% if request.GET.min_confidence %}&min_confidence={{ request.GET.min_confidence }}{% endif %}{% if request.GET.max_confidence %}&max_confidence={{ request.GET.max_confidence }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}">
+                        Last
+                    </a>
+                {% endif %}
+
+            </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const alerts = document.querySelectorAll(".alert");
+        const filterForm = document.getElementById("filterForm");
+        const autoFilters = document.querySelectorAll(".auto-filter");
+        const autoTextFilters = document.querySelectorAll(".auto-text-filter");
+        const tableRows = document.querySelectorAll("tbody tr");
+        const exportLinks = document.querySelectorAll("a[href*='export-csv']");
+
+        alerts.forEach(function (alertBox) {
+            setTimeout(function () {
+                alertBox.style.transition = "all 0.5s ease";
+                alertBox.style.opacity = "0";
+                alertBox.style.transform = "translateY(-10px)";
+
+                setTimeout(function () {
+                    alertBox.remove();
+                }, 500);
+            }, 3000);
+        });
+
+        function submitFilterForm() {
+            if (!filterForm) {
+                return;
+            }
+
+            const pageInput = filterForm.querySelector('input[name="page"]');
+
+            if (pageInput) {
+                pageInput.remove();
+            }
+
+            filterForm.submit();
+        }
+
+        autoFilters.forEach(function (field) {
+            field.addEventListener("change", function () {
+                submitFilterForm();
+            });
+        });
+
+        let typingTimer = null;
+
+        autoTextFilters.forEach(function (field) {
+            field.addEventListener("input", function () {
+                clearTimeout(typingTimer);
+
+                typingTimer = setTimeout(function () {
+                    submitFilterForm();
+                }, 700);
+            });
+        });
+
+        tableRows.forEach(function (row) {
+            row.addEventListener("click", function () {
+                tableRows.forEach(function (item) {
+                    item.style.outline = "none";
+                    item.style.background = "";
+                });
+
+                row.style.outline = "2px solid #15803d";
+                row.style.outlineOffset = "-2px";
+                row.style.background = "#f0fdf4";
+            });
+        });
+
+        exportLinks.forEach(function (link) {
+            link.addEventListener("click", function () {
+                showToast("CSV report download started...");
+            });
+        });
+
+        function showToast(message) {
+            const oldToast = document.querySelector(".custom-toast");
+
+            if (oldToast) {
+                oldToast.remove();
+            }
+
+            const toast = document.createElement("div");
+            toast.className = "custom-toast";
+            toast.innerText = message;
+
+            toast.style.position = "fixed";
+            toast.style.right = "25px";
+            toast.style.bottom = "25px";
+            toast.style.background = "#14532d";
+            toast.style.color = "#ffffff";
+            toast.style.padding = "14px 18px";
+            toast.style.borderRadius = "12px";
+            toast.style.boxShadow = "0 15px 40px rgba(0,0,0,.25)";
+            toast.style.zIndex = "99999";
+            toast.style.fontWeight = "700";
+            toast.style.fontSize = "14px";
+
+            document.body.appendChild(toast);
+
+            setTimeout(function () {
+                toast.style.transition = "all 0.4s ease";
+                toast.style.opacity = "0";
+                toast.style.transform = "translateY(10px)";
+
+                setTimeout(function () {
+                    toast.remove();
+                }, 400);
+            }, 1800);
+        }
+    });
+</script>
+
+</body>
+</html>

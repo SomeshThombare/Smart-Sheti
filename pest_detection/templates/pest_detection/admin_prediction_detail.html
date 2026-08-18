@@ -1,0 +1,840 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pest Prediction Detail | Smart Sheti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root{
+            --primary:#15803d;
+            --primary-dark:#14532d;
+            --primary-light:#dcfce7;
+            --success:#16a34a;
+            --danger:#dc2626;
+            --warning:#f59e0b;
+            --info:#2563eb;
+            --white:#ffffff;
+            --bg:#f4f8f5;
+            --text:#1f2937;
+            --muted:#6b7280;
+            --border:#d9eadf;
+            --shadow:0 15px 40px rgba(0,0,0,.08);
+            --sidebar-width:290px;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Segoe UI",sans-serif;
+        }
+
+        body{
+            background:var(--bg);
+            color:var(--text);
+        }
+
+        .main-content{
+            margin-left:var(--sidebar-width);
+            padding:30px;
+        }
+
+        .page-header{
+            background:linear-gradient(135deg,#14532d,#16a34a);
+            color:white;
+            padding:30px;
+            border-radius:22px;
+            margin-bottom:25px;
+            box-shadow:var(--shadow);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:20px;
+            flex-wrap:wrap;
+        }
+
+        .page-header h1{
+            font-size:32px;
+            margin-bottom:8px;
+        }
+
+        .page-header p{
+            opacity:.92;
+        }
+
+        .header-actions,
+        .action-row{
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:11px 16px;
+            border-radius:10px;
+            text-decoration:none;
+            border:none;
+            cursor:pointer;
+            font-weight:700;
+            font-size:14px;
+            transition:.2s ease;
+        }
+
+        .btn-white{
+            background:white;
+            color:var(--primary-dark);
+        }
+
+        .btn-white:hover{
+            background:#f0fdf4;
+        }
+
+        .btn-primary{
+            background:var(--primary);
+            color:white;
+        }
+
+        .btn-primary:hover{
+            background:var(--primary-dark);
+        }
+
+        .btn-light{
+            background:#f0fdf4;
+            color:var(--primary-dark);
+            border:1px solid var(--border);
+        }
+
+        .btn-light:hover{
+            background:var(--primary-light);
+        }
+
+        .alert{
+            padding:14px 16px;
+            border-radius:12px;
+            margin-bottom:20px;
+            font-weight:600;
+        }
+
+        .alert-success{
+            background:#dcfce7;
+            color:#166534;
+            border:1px solid #bbf7d0;
+        }
+
+        .alert-error{
+            background:#fee2e2;
+            color:#991b1b;
+            border:1px solid #fecaca;
+        }
+
+        .detail-grid{
+            display:grid;
+            grid-template-columns:380px 1fr;
+            gap:25px;
+            margin-bottom:25px;
+        }
+
+        .card{
+            background:white;
+            border-radius:22px;
+            padding:25px;
+            box-shadow:var(--shadow);
+        }
+
+        .card-title{
+            color:var(--primary-dark);
+            font-size:22px;
+            margin-bottom:18px;
+        }
+
+        .image-box-large{
+            width:100%;
+            height:360px;
+            border-radius:18px;
+            overflow:hidden;
+            border:1px solid var(--border);
+            background:#f9fafb;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:var(--muted);
+            margin-bottom:20px;
+        }
+
+        .image-box-large img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+
+        .status-success{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            background:#dcfce7;
+            color:#166534;
+            padding:8px 14px;
+            border-radius:20px;
+            font-size:13px;
+            font-weight:800;
+        }
+
+        .status-failed{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            background:#fee2e2;
+            color:#991b1b;
+            padding:8px 14px;
+            border-radius:20px;
+            font-size:13px;
+            font-weight:800;
+        }
+
+        .severity-badge{
+            display:inline-block;
+            padding:8px 14px;
+            border-radius:20px;
+            font-size:13px;
+            font-weight:800;
+        }
+
+        .severity-high{
+            background:#fee2e2;
+            color:#991b1b;
+        }
+
+        .severity-medium{
+            background:#fef3c7;
+            color:#92400e;
+        }
+
+        .severity-low{
+            background:#dcfce7;
+            color:#166534;
+        }
+
+        .severity-unclear{
+            background:#e5e7eb;
+            color:#374151;
+        }
+
+        .info-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:15px;
+        }
+
+        .info-box{
+            background:#f9fafb;
+            border:1px solid var(--border);
+            border-radius:16px;
+            padding:16px;
+        }
+
+        .info-label{
+            color:var(--muted);
+            font-size:13px;
+            font-weight:800;
+            margin-bottom:7px;
+        }
+
+        .info-value{
+            color:var(--primary-dark);
+            font-size:17px;
+            font-weight:800;
+            word-break:break-word;
+        }
+
+        .section-card{
+            background:white;
+            border-radius:22px;
+            padding:25px;
+            box-shadow:var(--shadow);
+            margin-bottom:25px;
+        }
+
+        .solution-box{
+            background:var(--primary-light);
+            border-left:5px solid var(--primary);
+            padding:20px;
+            border-radius:16px;
+            line-height:1.7;
+            color:var(--text);
+        }
+
+        .error-box{
+            background:#fee2e2;
+            border-left:5px solid var(--danger);
+            padding:20px;
+            border-radius:16px;
+            line-height:1.7;
+            color:#991b1b;
+        }
+
+        .table-wrapper{
+            width:100%;
+            overflow-x:auto;
+            border:1px solid var(--border);
+            border-radius:14px;
+        }
+
+        table{
+            width:100%;
+            min-width:760px;
+            border-collapse:collapse;
+            background:white;
+        }
+
+        thead{
+            background:var(--primary-dark);
+            color:white;
+        }
+
+        th{
+            padding:15px;
+            text-align:left;
+            font-size:14px;
+            white-space:nowrap;
+        }
+
+        td{
+            padding:15px;
+            border-bottom:1px solid var(--border);
+            vertical-align:middle;
+            font-size:14px;
+        }
+
+        tbody tr:hover{
+            background:#f8fafc;
+        }
+
+        tbody tr:last-child td{
+            border-bottom:none;
+        }
+
+        .sr-no{
+            width:70px;
+            text-align:center;
+            font-weight:800;
+            color:var(--primary-dark);
+        }
+
+        .empty-box{
+            text-align:center;
+            padding:45px 20px;
+            color:var(--muted);
+        }
+
+        .empty-box i{
+            color:var(--primary);
+            font-size:40px;
+            margin-bottom:12px;
+        }
+
+        @media(max-width:1100px){
+            .detail-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media(max-width:991px){
+            .main-content{
+                margin-left:0;
+                padding:15px;
+            }
+
+            .page-header{
+                padding:22px;
+            }
+
+            .page-header h1{
+                font-size:25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+{% include 'accounts/admin/admin_sidebar.html' %}
+
+<div class="main-content">
+
+    <div class="page-header">
+        <div>
+            <h1>
+                <i class="fa-solid fa-eye"></i>
+                Pest Prediction Detail
+            </h1>
+            <p>
+                View full farmer pest prediction details, AI output, confidence, treatment priority and solution.
+            </p>
+        </div>
+
+        <div class="header-actions">
+            <a href="{% url 'pest_detection:admin_pest_dashboard' %}" class="btn btn-white">
+                <i class="fa-solid fa-gauge-high"></i>
+                Dashboard
+            </a>
+
+            <a href="{% url 'pest_detection:admin_pest_predictions' %}" class="btn btn-white">
+                <i class="fa-solid fa-list"></i>
+                Prediction List
+            </a>
+        </div>
+    </div>
+
+    {% if message %}
+        <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    {% if prediction %}
+
+        <div class="detail-grid">
+
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fa-solid fa-image"></i>
+                    Uploaded Image
+                </h2>
+
+                <div class="image-box-large">
+                    {% if prediction.image %}
+                        <img src="{{ prediction.image.url }}" alt="Pest Prediction Image">
+                    {% else %}
+                        <div>
+                            <i class="fa-solid fa-image fa-3x"></i>
+                            <br><br>
+                            No Image Available
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="action-row">
+                    <a href="{% url 'pest_detection:admin_pest_predictions' %}" class="btn btn-light">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Back To List
+                    </a>
+
+                    <a href="{% url 'pest_detection:admin_pest_dashboard' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fa-solid fa-circle-info"></i>
+                    Prediction Information
+                </h2>
+
+                <div class="info-grid">
+
+                    <div class="info-box">
+                        <div class="info-label">Prediction ID</div>
+                        <div class="info-value">{{ prediction.id }}</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Farmer</div>
+                        <div class="info-value">
+                            {% if prediction.user %}
+                                {{ prediction.user.get_full_name|default:prediction.user.username }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Farmer Email</div>
+                        <div class="info-value">
+                            {% if prediction.user %}
+                                {{ prediction.user.email|default:"-" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Pest Name</div>
+                        <div class="info-value">{{ prediction.pest_name|default:"-" }}</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Confidence</div>
+                        <div class="info-value">{{ prediction.confidence|default:"0" }}%</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Class Name</div>
+                        <div class="info-value">{{ prediction.class_name|default:"-" }}</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Predicted Index</div>
+                        <div class="info-value">{{ prediction.predicted_index|default_if_none:"-" }}</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Status</div>
+                        <div class="info-value">
+                            {% if prediction.status == "SUCCESS" %}
+                                <span class="status-success">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    SUCCESS
+                                </span>
+                            {% else %}
+                                <span class="status-failed">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                    FAILED
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Severity</div>
+                        <div class="info-value">
+                            {% if prediction.severity == "HIGH" %}
+                                <span class="severity-badge severity-high">HIGH</span>
+                            {% elif prediction.severity == "MEDIUM" %}
+                                <span class="severity-badge severity-medium">MEDIUM</span>
+                            {% elif prediction.severity == "LOW" %}
+                                <span class="severity-badge severity-low">LOW</span>
+                            {% else %}
+                                <span class="severity-badge severity-unclear">
+                                    {{ prediction.severity|default:"UNCLEAR" }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Treatment Priority</div>
+                        <div class="info-value">{{ prediction.treatment_priority|default:"-" }}</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Created Date</div>
+                        <div class="info-value">{{ prediction.created_at|date:"d M Y h:i A" }}</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Updated Date</div>
+                        <div class="info-value">{{ prediction.updated_at|date:"d M Y h:i A" }}</div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="section-card">
+            <h2 class="card-title">
+                <i class="fa-solid fa-leaf"></i>
+                Suggested Solution
+            </h2>
+
+            <div class="solution-box">
+                {{ prediction.solution|default:"No solution available."|linebreaks }}
+            </div>
+        </div>
+
+        {% if prediction.error_message %}
+            <div class="section-card">
+                <h2 class="card-title">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Error Message
+                </h2>
+
+                <div class="error-box">
+                    {{ prediction.error_message|linebreaks }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="section-card">
+            <h2 class="card-title">
+                <i class="fa-solid fa-ranking-star"></i>
+                Top Predictions
+            </h2>
+
+            {% if prediction.top_predictions %}
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="sr-no">SR No.</th>
+                                <th>Pest Name</th>
+                                <th>Class Name</th>
+                                <th>Predicted Index</th>
+                                <th>Confidence</th>
+                                <th>Severity</th>
+                                <th>Treatment Priority</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for item in prediction.top_predictions %}
+                            <tr>
+                                <td class="sr-no">{{ forloop.counter }}</td>
+                                <td>{{ item.pest_name|default:"-" }}</td>
+                                <td>{{ item.class_name|default:"-" }}</td>
+                                <td>{{ item.predicted_index|default_if_none:"-" }}</td>
+                                <td>{{ item.confidence|default:"0" }}%</td>
+                                <td>{{ item.severity|default:"-" }}</td>
+                                <td>{{ item.treatment_priority|default:"-" }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <h3>No Top Predictions Found</h3>
+                    <p>Top predictions were not stored for this record.</p>
+                </div>
+            {% endif %}
+        </div>
+
+    {% else %}
+
+        <div class="section-card">
+            <div class="empty-box">
+                <i class="fa-solid fa-circle-info"></i>
+                <h3>No Prediction Found</h3>
+                <p>This pest prediction record is not available.</p>
+
+                <br>
+
+                <a href="{% url 'pest_detection:admin_pest_predictions' %}" class="btn btn-primary">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back To Prediction List
+                </a>
+            </div>
+        </div>
+
+    {% endif %}
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        /* =========================
+           AUTO HIDE ALERT MESSAGE
+        ========================= */
+        const alerts = document.querySelectorAll(".alert");
+
+        alerts.forEach(function (alertBox) {
+            setTimeout(function () {
+                alertBox.style.transition = "all 0.5s ease";
+                alertBox.style.opacity = "0";
+                alertBox.style.transform = "translateY(-10px)";
+
+                setTimeout(function () {
+                    alertBox.remove();
+                }, 500);
+            }, 3000);
+        });
+
+
+        /* =========================
+           IMAGE PREVIEW MODAL
+        ========================= */
+        const imageBox = document.querySelector(".image-box-large img");
+
+        if (imageBox) {
+            imageBox.style.cursor = "zoom-in";
+
+            imageBox.addEventListener("click", function () {
+                const overlay = document.createElement("div");
+
+                overlay.style.position = "fixed";
+                overlay.style.top = "0";
+                overlay.style.left = "0";
+                overlay.style.width = "100%";
+                overlay.style.height = "100%";
+                overlay.style.background = "rgba(0,0,0,0.85)";
+                overlay.style.zIndex = "9999";
+                overlay.style.display = "flex";
+                overlay.style.alignItems = "center";
+                overlay.style.justifyContent = "center";
+                overlay.style.padding = "20px";
+
+                const img = document.createElement("img");
+                img.src = imageBox.src;
+                img.style.maxWidth = "95%";
+                img.style.maxHeight = "95%";
+                img.style.borderRadius = "14px";
+                img.style.boxShadow = "0 20px 60px rgba(0,0,0,0.5)";
+
+                overlay.appendChild(img);
+                document.body.appendChild(overlay);
+
+                overlay.addEventListener("click", function () {
+                    overlay.remove();
+                });
+            });
+        }
+
+
+        /* =========================
+           TABLE ROW HIGHLIGHT
+        ========================= */
+        const tableRows = document.querySelectorAll("tbody tr");
+
+        tableRows.forEach(function (row) {
+            row.addEventListener("click", function () {
+                tableRows.forEach(function (item) {
+                    item.style.outline = "none";
+                });
+
+                row.style.outline = "2px solid #15803d";
+                row.style.outlineOffset = "-2px";
+            });
+        });
+
+
+        /* =========================
+           TOP PREDICTIONS TOGGLE
+        ========================= */
+        const topPredictionSection = document.querySelector(".section-card table");
+
+        if (topPredictionSection) {
+            const sectionCard = topPredictionSection.closest(".section-card");
+            const title = sectionCard.querySelector(".card-title");
+
+            if (title) {
+                title.style.cursor = "pointer";
+
+                const icon = document.createElement("span");
+                icon.innerHTML = " <i class='fa-solid fa-chevron-up'></i>";
+                title.appendChild(icon);
+
+                title.addEventListener("click", function () {
+                    const wrapper = sectionCard.querySelector(".table-wrapper");
+
+                    if (!wrapper) return;
+
+                    if (wrapper.style.display === "none") {
+                        wrapper.style.display = "block";
+                        icon.innerHTML = " <i class='fa-solid fa-chevron-up'></i>";
+                    } else {
+                        wrapper.style.display = "none";
+                        icon.innerHTML = " <i class='fa-solid fa-chevron-down'></i>";
+                    }
+                });
+            }
+        }
+
+
+        /* =========================
+           COPY FIELD VALUE
+        ========================= */
+        const infoBoxes = document.querySelectorAll(".info-box");
+
+        infoBoxes.forEach(function (box) {
+            const value = box.querySelector(".info-value");
+
+            if (!value) return;
+
+            box.title = "Click to copy";
+            box.style.cursor = "copy";
+
+            box.addEventListener("click", function () {
+                const text = value.innerText.trim();
+
+                if (!text || text === "-") return;
+
+                navigator.clipboard.writeText(text).then(function () {
+                    showToast("Copied: " + text);
+                });
+            });
+        });
+
+
+        /* =========================
+           TOAST MESSAGE
+        ========================= */
+        function showToast(message) {
+            const oldToast = document.querySelector(".custom-toast");
+
+            if (oldToast) {
+                oldToast.remove();
+            }
+
+            const toast = document.createElement("div");
+            toast.className = "custom-toast";
+            toast.innerText = message;
+
+            toast.style.position = "fixed";
+            toast.style.right = "25px";
+            toast.style.bottom = "25px";
+            toast.style.background = "#14532d";
+            toast.style.color = "white";
+            toast.style.padding = "14px 18px";
+            toast.style.borderRadius = "12px";
+            toast.style.boxShadow = "0 15px 40px rgba(0,0,0,.25)";
+            toast.style.zIndex = "99999";
+            toast.style.fontWeight = "700";
+            toast.style.fontSize = "14px";
+
+            document.body.appendChild(toast);
+
+            setTimeout(function () {
+                toast.style.transition = "all 0.4s ease";
+                toast.style.opacity = "0";
+                toast.style.transform = "translateY(10px)";
+
+                setTimeout(function () {
+                    toast.remove();
+                }, 400);
+            }, 1800);
+        }
+
+
+        /* =========================
+           BACK BUTTON SHORTCUT
+        ========================= */
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                const listUrl = "{% url 'pest_detection:admin_pest_predictions' %}";
+                window.location.href = listUrl;
+            }
+        });
+
+
+        /* =========================
+           CONFIRM BEFORE LEAVING DETAIL
+        ========================= */
+        const backLinks = document.querySelectorAll("a[href*='pest-predictions']");
+
+        backLinks.forEach(function (link) {
+            link.addEventListener("click", function () {
+                link.style.opacity = "0.7";
+            });
+        });
+
+    });
+</script>
+
+</body>
+</html>

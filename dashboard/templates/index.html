@@ -1,0 +1,831 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Sheti | Digital Farming Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #14532d;
+            --primary-light: #66bb6a;
+            --accent: #f9a825;
+            --soil: #795548;
+            --leaf-soft: #e8f5e9;
+            --white: #ffffff;
+            --text: #263238;
+            --muted: #6b7280;
+            --border: #b7dfb9;
+            --shadow: rgba(20, 83, 45, 0.22);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Roboto", Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(249, 168, 37, 0.22), transparent 28%),
+                radial-gradient(circle at bottom right, rgba(76, 175, 80, 0.20), transparent 30%),
+                linear-gradient(135deg, #e8f5e9, #f1f8e9, #fffde7);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            width: 100%;
+            background: rgba(20, 83, 45, 0.97);
+            color: var(--white);
+            padding: 16px 55px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 10px 28px rgba(20, 83, 45, 0.25);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.20);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            font-size: 15px;
+            font-weight: 700;
+            padding: 10px 14px;
+            border-radius: 12px;
+            transition: 0.3s ease;
+        }
+
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn {
+            background: var(--white);
+            color: var(--primary-dark);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-btn:hover {
+            background: #fff8e1;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            position: relative;
+            padding: 110px 20px 95px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "🌾";
+            position: absolute;
+            top: 45px;
+            right: 8%;
+            font-size: 95px;
+            opacity: 0.16;
+            animation: floatIcon 4s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            left: -85px;
+            bottom: -75px;
+            border-radius: 50%;
+            background: rgba(102, 187, 106, 0.18);
+        }
+
+        @keyframes floatIcon {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .hero-content {
+            max-width: 960px;
+            margin: auto;
+            position: relative;
+            z-index: 1;
+            animation: fadeUp 0.9s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(35px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff8e1;
+            color: var(--soil);
+            border: 1px solid #ffe082;
+            padding: 9px 18px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 22px;
+            box-shadow: 0 8px 20px rgba(121, 85, 72, 0.12);
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            line-height: 1.12;
+            color: var(--primary-dark);
+            font-weight: 900;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            max-width: 790px;
+            margin: 0 auto 34px;
+            color: #4b5b50;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 14px 30px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 800;
+            transition: 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: 0 10px 24px rgba(46, 125, 50, 0.33);
+        }
+
+        .btn-primary:hover,
+        .btn-outline:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--primary);
+            color: var(--primary-dark);
+            background: rgba(255, 255, 255, 0.65);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ================= COMMON SECTION ================= */
+
+        .section {
+            padding: 70px 20px 35px;
+        }
+
+        .section-head {
+            text-align: center;
+            max-width: 790px;
+            margin: 0 auto 44px;
+            padding: 0 15px;
+        }
+
+        .section-title {
+            font-size: 37px;
+            color: var(--primary-dark);
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .section-subtitle {
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        /* ================= FEATURES ================= */
+
+        .features {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+            gap: 28px;
+        }
+
+        .feature-box {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(46, 125, 50, 0.16);
+            border-top: 6px solid var(--primary);
+            border-radius: 24px;
+            padding: 34px 24px;
+            text-align: center;
+            box-shadow: 0 16px 38px rgba(46, 125, 50, 0.14);
+            transition: 0.45s ease;
+            opacity: 0;
+            transform: translateY(45px);
+        }
+
+        .feature-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 44px var(--shadow);
+        }
+
+        .feature-icon {
+            width: 84px;
+            height: 84px;
+            margin: 0 auto 18px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border: 2px solid #a5d6a7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .feature-icon i {
+            font-size: 36px;
+            color: var(--primary);
+        }
+
+        .feature-box:hover .feature-icon {
+            transform: rotate(-4deg) scale(1.05);
+        }
+
+        .feature-box h3 {
+            color: var(--primary-dark);
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 11px;
+        }
+
+        .feature-box p {
+            color: #55615a;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* ================= WHY CHOOSE ================= */
+
+        .why-us {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 24px;
+        }
+
+        .why-card {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(46, 125, 50, 0.16);
+            border-left: 6px solid var(--primary);
+            border-radius: 20px;
+            padding: 27px;
+            box-shadow: 0 14px 32px rgba(46, 125, 50, 0.12);
+            transition: 0.3s ease;
+        }
+
+        .why-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 20px 42px var(--shadow);
+        }
+
+        .why-card i {
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .why-card h4 {
+            color: var(--primary-dark);
+            font-size: 21px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .why-card p {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* ================= CTA ================= */
+
+        .cta-band {
+            max-width: 1200px;
+            margin: 70px auto 0;
+            padding: 0 20px;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--primary-light));
+            color: white;
+            border-radius: 28px;
+            padding: 45px 30px;
+            text-align: center;
+            box-shadow: 0 18px 42px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: "🌱";
+            position: absolute;
+            top: 18px;
+            right: 30px;
+            font-size: 52px;
+            opacity: 0.22;
+        }
+
+        .cta-box h3 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .cta-box p {
+            max-width: 760px;
+            margin: 0 auto 24px;
+            color: rgba(255, 255, 255, 0.93);
+            line-height: 1.7;
+        }
+
+        .cta-box .btn {
+            background: white;
+            color: var(--primary-dark);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+        }
+
+        .cta-box .btn:hover {
+            transform: translateY(-3px);
+            background: #fff8e1;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: linear-gradient(180deg, #243227, #162318);
+            color: #ffffff;
+            margin-top: 75px;
+            padding: 48px 20px 20px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 32px;
+            padding-bottom: 25px;
+        }
+
+        .footer-col h4 {
+            color: #b7e2b9;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .footer-col p,
+        .footer-col a {
+            color: #dde7de;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: block;
+            line-height: 1.6;
+            transition: 0.3s ease;
+        }
+
+        .footer-col a:hover {
+            color: var(--primary-light);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b7e2b9;
+            font-size: 17px;
+            transition: 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+            background: var(--primary);
+            color: #ffffff;
+            padding-left: 0;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            padding-top: 16px;
+            color: #cbd5cc;
+            font-size: 14px;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+            header {
+                padding: 15px 22px;
+                justify-content: center;
+                text-align: center;
+                flex-direction: column;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero {
+                padding: 82px 15px 70px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 310px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            nav a {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+
+            .cta-box h3 {
+                font-size: 24px;
+            }
+
+            footer {
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <a href="{% url 'index' %}" class="logo">
+        <span class="logo-icon">🌾</span>
+        Smart Sheti
+    </a>
+
+    <nav aria-label="Main Navigation">
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'admin_register' %}">Admin Register</a>
+
+        <!-- Change this URL name if you have separate farmer register URL -->
+        <a href="{% url 'farmer_register_web' %}">Farmer Register</a>
+
+        <a href="{% url 'login' %}" class="nav-btn">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            Login
+        </a>
+    </nav>
+</header>
+
+<main>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                <i class="fa-solid fa-leaf"></i>
+                Digital Farming Platform
+            </div>
+
+            <h1>Welcome To <span>Smart Sheti</span></h1>
+
+            <p>
+                Smart Sheti helps farmers with equipment rental, weather forecast,
+                crop disease detection, and government scheme information in one simple platform.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="{% url 'farmer_register_web' %}" class="btn btn-primary">
+                    <i class="fa-solid fa-user-plus"></i>
+                    Register as Farmer
+                </a>
+
+                <a href="#features" class="btn btn-outline">
+                    <i class="fa-solid fa-seedling"></i>
+                    Explore Features
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="section" id="features">
+        <div class="section-head">
+            <h2 class="section-title">Our Key Features</h2>
+            <p class="section-subtitle">
+                Smart Sheti provides useful digital farming services for farmers in one easy-to-use platform.
+            </p>
+        </div>
+
+        <div class="features">
+
+            <div class="feature-box">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-tractor"></i>
+                </div>
+                <h3>Equipment Rental</h3>
+                <p>
+                    Rent tractors, tools, and farming equipment easily at affordable rates.
+                </p>
+            </div>
+
+            <div class="feature-box">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                </div>
+                <h3>Weather Forecast</h3>
+                <p>
+                    Check weather updates to plan sowing, irrigation, spraying, and harvesting.
+                </p>
+            </div>
+
+            <div class="feature-box">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <h3>Crop Detection</h3>
+                <p>
+                    Detect crop diseases and get helpful suggestions for better crop protection.
+                </p>
+            </div>
+
+            <div class="feature-box">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-landmark"></i>
+                </div>
+                <h3>Government Scheme</h3>
+                <p>
+                    Find useful government schemes, subsidies, and support programs for farmers.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- WHY CHOOSE SECTION -->
+    <section class="section">
+        <div class="section-head">
+            <h2 class="section-title">Why Choose Smart Sheti?</h2>
+            <p class="section-subtitle">
+                Built for farmers, Smart Sheti connects agriculture with simple digital technology.
+            </p>
+        </div>
+
+        <div class="why-us">
+
+            <div class="why-card">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+                <h4>Farmer Friendly</h4>
+                <p>
+                    Simple interface designed for farmers to use digital farming services easily.
+                </p>
+            </div>
+
+            <div class="why-card">
+                <i class="fa-solid fa-headset"></i>
+                <h4>Useful Farming Support</h4>
+                <p>
+                    Access weather, crop health, schemes, and equipment support from one place.
+                </p>
+            </div>
+
+            <div class="why-card">
+                <i class="fa-solid fa-microchip"></i>
+                <h4>Smart Agriculture</h4>
+                <p>
+                    Helps farmers make better farming decisions using digital tools and information.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-container">
+
+        <div class="footer-col">
+            <h4>Smart Sheti</h4>
+            <p>
+                Smart Sheti is a digital farming platform for equipment rental,
+                weather updates, crop detection, and government scheme information.
+            </p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="{% url 'index' %}">Home</a>
+            <a href="{% url 'admin_register' %}">Admin Register</a>
+
+            <!-- Change this URL name if you have separate farmer register URL -->
+            <a href="{% url 'farmer_register_web' %}">Farmer Register</a>
+
+            <a href="{% url 'login' %}">Login</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Features</h4>
+            <a href="#features">Equipment Rental</a>
+            <a href="#features">Weather Forecast</a>
+            <a href="#features">Crop Detection</a>
+            <a href="#features">Government Schemes</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Follow Us</h4>
+
+            <div class="social-links">
+                <a href="#" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+
+                <a href="#" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+
+                <a href="#" aria-label="Twitter">
+                    <i class="fab fa-x-twitter"></i>
+                </a>
+
+                <a href="#" aria-label="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2026 Smart Sheti. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const boxes = document.querySelectorAll(".feature-box");
+
+        const observer = new IntersectionObserver(function (entries, observer) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("show");
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.2
+        });
+
+        boxes.forEach(function (box, index) {
+            box.style.transitionDelay = `${index * 0.15}s`;
+            observer.observe(box);
+        });
+    });
+</script>
+
+</body>
+</html>

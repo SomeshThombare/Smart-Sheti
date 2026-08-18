@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Detail</title>
+</head>
+<body>
+    <h2>{{ message }}</h2>
+
+    {% if admin %}
+        <p><b>ID:</b> {{ admin.id }}</p>
+        <p><b>Username:</b> {{ admin.username }}</p>
+        <p><b>Name:</b> {{ admin.first_name }} {{ admin.last_name }}</p>
+        <p><b>Email:</b> {{ admin.email }}</p>
+        <p><b>Mobile:</b> {{ admin.country_code }} {{ admin.mobile_number }}</p>
+        <p><b>Language:</b> {{ admin.language_preference }}</p>
+        <p><b>Role:</b> {{ admin.role }}</p>
+        <p><b>Active:</b> {{ admin.is_active }}</p>
+
+        <br>
+        <a href="{% url 'admin_list_web' %}">Back to Admin List</a>
+    {% else %}
+        <p style="color:red;">Admin not found.</p>
+        <a href="{% url 'admin_list_web' %}">Back to Admin List</a>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,798 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detect Pest | Smart Sheti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root{
+            --primary:#15803d;
+            --primary-dark:#14532d;
+            --primary-light:#dcfce7;
+            --success:#16a34a;
+            --danger:#dc2626;
+            --warning:#f59e0b;
+            --info:#2563eb;
+            --white:#ffffff;
+            --bg:#f4f8f5;
+            --text:#1f2937;
+            --muted:#6b7280;
+            --border:#d9eadf;
+            --shadow:0 15px 40px rgba(0,0,0,.08);
+            --sidebar-width:290px;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Segoe UI",sans-serif;
+        }
+
+        body{
+            background:var(--bg);
+            color:var(--text);
+        }
+
+        .main-content{
+            margin-left:var(--sidebar-width);
+            padding:30px;
+        }
+
+        .page-header{
+            background:linear-gradient(135deg,#14532d,#16a34a);
+            color:white;
+            padding:30px;
+            border-radius:22px;
+            margin-bottom:25px;
+            box-shadow:var(--shadow);
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:20px;
+            flex-wrap:wrap;
+        }
+
+        .page-header h1{
+            font-size:32px;
+            margin-bottom:8px;
+        }
+
+        .page-header p{
+            opacity:.92;
+            line-height:1.5;
+        }
+
+        .header-actions{
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:12px 17px;
+            border-radius:10px;
+            text-decoration:none;
+            border:none;
+            cursor:pointer;
+            font-weight:700;
+            font-size:14px;
+            transition:.2s ease;
+        }
+
+        .btn-white{
+            background:white;
+            color:var(--primary-dark);
+        }
+
+        .btn-white:hover{
+            background:#f0fdf4;
+        }
+
+        .btn-primary{
+            background:var(--primary);
+            color:white;
+        }
+
+        .btn-primary:hover{
+            background:var(--primary-dark);
+        }
+
+        .btn-light{
+            background:#f0fdf4;
+            color:var(--primary-dark);
+            border:1px solid var(--border);
+        }
+
+        .btn-light:hover{
+            background:var(--primary-light);
+        }
+
+        .alert{
+            padding:14px 16px;
+            border-radius:12px;
+            margin-bottom:20px;
+            font-weight:600;
+        }
+
+        .alert-success{
+            background:#dcfce7;
+            color:#166534;
+            border:1px solid #bbf7d0;
+        }
+
+        .alert-error{
+            background:#fee2e2;
+            color:#991b1b;
+            border:1px solid #fecaca;
+        }
+
+        .detect-grid{
+            display:grid;
+            grid-template-columns:420px 1fr;
+            gap:25px;
+        }
+
+        .card{
+            background:white;
+            border-radius:22px;
+            padding:25px;
+            box-shadow:var(--shadow);
+        }
+
+        .card-title{
+            color:var(--primary-dark);
+            margin-bottom:18px;
+            font-size:22px;
+        }
+
+        .upload-box{
+            border:2px dashed var(--border);
+            border-radius:18px;
+            padding:34px 24px;
+            text-align:center;
+            background:#f9fafb;
+            cursor:pointer;
+            transition:.2s ease;
+            display:block;
+        }
+
+        .upload-box:hover{
+            border-color:var(--primary);
+            background:#f0fdf4;
+        }
+
+        .upload-box i{
+            font-size:50px;
+            color:var(--primary);
+            margin-bottom:15px;
+        }
+
+        .upload-box h3{
+            color:var(--primary-dark);
+            margin-bottom:8px;
+        }
+
+        .upload-box p{
+            color:var(--muted);
+            font-size:14px;
+            line-height:1.6;
+        }
+
+        input[type="file"]{
+            display:none;
+        }
+
+        .preview-box{
+            margin-top:20px;
+            display:none;
+        }
+
+        .preview-box img{
+            width:100%;
+            max-height:280px;
+            object-fit:cover;
+            border-radius:16px;
+            border:1px solid var(--border);
+        }
+
+        .form-error{
+            margin-top:15px;
+            background:#fee2e2;
+            color:#991b1b;
+            border:1px solid #fecaca;
+            padding:12px;
+            border-radius:12px;
+            font-size:14px;
+            line-height:1.6;
+        }
+
+        .full-btn{
+            width:100%;
+            margin-top:18px;
+        }
+
+        .result-card{
+            min-height:430px;
+        }
+
+        .empty-result{
+            min-height:380px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            color:var(--muted);
+            background:#f9fafb;
+            border-radius:18px;
+            border:2px dashed var(--border);
+            padding:30px;
+        }
+
+        .empty-result i{
+            font-size:55px;
+            color:var(--primary);
+            margin-bottom:15px;
+        }
+
+        .empty-result h3{
+            color:var(--primary-dark);
+            margin-bottom:8px;
+        }
+
+        .result-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:15px;
+            margin-bottom:20px;
+            flex-wrap:wrap;
+        }
+
+        .result-header h3{
+            color:var(--primary-dark);
+            font-size:21px;
+        }
+
+        .badge{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:8px 14px;
+            border-radius:30px;
+            font-size:13px;
+            font-weight:800;
+        }
+
+        .badge-success{
+            background:#dcfce7;
+            color:#166534;
+        }
+
+        .badge-failed{
+            background:#fee2e2;
+            color:#991b1b;
+        }
+
+        .badge-warning{
+            background:#fef3c7;
+            color:#92400e;
+        }
+
+        .result-main{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+            gap:15px;
+            margin-bottom:20px;
+        }
+
+        .metric-box{
+            background:#f9fafb;
+            border:1px solid var(--border);
+            border-radius:16px;
+            padding:16px;
+        }
+
+        .metric-label{
+            color:var(--muted);
+            font-weight:700;
+            font-size:13px;
+            margin-bottom:6px;
+        }
+
+        .metric-value{
+            color:var(--primary-dark);
+            font-weight:800;
+            font-size:19px;
+            word-break:break-word;
+        }
+
+        .uploaded-image{
+            margin-bottom:20px;
+        }
+
+        .uploaded-image img{
+            width:100%;
+            max-height:300px;
+            object-fit:cover;
+            border-radius:18px;
+            border:1px solid var(--border);
+        }
+
+        .solution-box{
+            margin-top:20px;
+            padding:20px;
+            border-radius:16px;
+            background:var(--primary-light);
+            border-left:5px solid var(--primary);
+            line-height:1.7;
+        }
+
+        .solution-box h3{
+            color:var(--primary-dark);
+            margin-bottom:10px;
+        }
+
+        .message-box{
+            margin-top:20px;
+            padding:18px;
+            border-radius:16px;
+            background:#eff6ff;
+            border-left:5px solid var(--info);
+            line-height:1.7;
+            color:#1e3a8a;
+        }
+
+        .error-box{
+            margin-top:20px;
+            padding:18px;
+            border-radius:16px;
+            background:#fee2e2;
+            border-left:5px solid var(--danger);
+            color:#991b1b;
+            line-height:1.7;
+        }
+
+        .top-table-card{
+            margin-top:20px;
+            border:1px solid var(--border);
+            border-radius:16px;
+            overflow:hidden;
+        }
+
+        .top-table-title{
+            background:#f0fdf4;
+            padding:14px 16px;
+            color:var(--primary-dark);
+            font-weight:800;
+            border-bottom:1px solid var(--border);
+        }
+
+        .table-wrapper{
+            width:100%;
+            overflow-x:auto;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            min-width:650px;
+        }
+
+        thead{
+            background:var(--primary-dark);
+            color:white;
+        }
+
+        th{
+            padding:13px;
+            text-align:left;
+            font-size:14px;
+            white-space:nowrap;
+        }
+
+        td{
+            padding:13px;
+            border-bottom:1px solid var(--border);
+            font-size:14px;
+        }
+
+        tbody tr:hover{
+            background:#f8fafc;
+        }
+
+        tbody tr:last-child td{
+            border-bottom:none;
+        }
+
+        .sr-no{
+            width:70px;
+            text-align:center;
+            font-weight:800;
+            color:var(--primary-dark);
+        }
+
+        .action-row{
+            display:flex;
+            gap:12px;
+            margin-top:22px;
+            flex-wrap:wrap;
+        }
+
+        @media(max-width:1100px){
+            .detect-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media(max-width:991px){
+            .main-content{
+                margin-left:0;
+                padding:15px;
+            }
+
+            .page-header{
+                padding:22px;
+            }
+
+            .page-header h1{
+                font-size:25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+{% include 'accounts/farmer/farmer_sidebar.html' %}
+
+<div class="main-content">
+
+    <div class="page-header">
+        <div>
+            <h1>
+                <i class="fa-solid fa-bug"></i>
+                Pest Detection
+            </h1>
+            <p>
+                Upload a clear crop pest image and get pest name, confidence, severity, treatment priority and solution.
+            </p>
+        </div>
+
+        <div class="header-actions">
+            <a href="{% url 'pest_detection:farmer_pest_dashboard' %}" class="btn btn-white">
+                <i class="fa-solid fa-gauge-high"></i>
+                Dashboard
+            </a>
+
+            <a href="{% url 'pest_detection:farmer_pest_history' %}" class="btn btn-white">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                History
+            </a>
+        </div>
+    </div>
+
+    {% if message %}
+        <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <div class="detect-grid">
+
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fa-solid fa-camera"></i>
+                Upload Pest Image
+            </h2>
+
+            <form method="post" enctype="multipart/form-data" id="pestDetectForm">
+                {% csrf_token %}
+
+                <label for="id_image" class="upload-box">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <h3>Select Pest Image</h3>
+                    <p>Allowed image types: JPG, JPEG, PNG, WEBP</p>
+                    <p>Upload clear insect close-up image for better prediction.</p>
+                </label>
+
+                {{ form.image }}
+
+                {% if errors.image %}
+                    <div class="form-error">
+                        {% for error in errors.image %}
+                            {{ error }}<br>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if errors.detail %}
+                    <div class="form-error">
+                        {% for error in errors.detail %}
+                            {{ error }}<br>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="preview-box" id="previewBox">
+                    <img src="" alt="Selected Image Preview" id="previewImage">
+                </div>
+
+                <button type="submit" class="btn btn-primary full-btn" id="submitBtn">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    Detect Pest
+                </button>
+
+                <a href="{% url 'pest_detection:farmer_pest_dashboard' %}" class="btn btn-light full-btn">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back To Dashboard
+                </a>
+
+                <a href="{% url 'pest_detection:farmer_pest_history' %}" class="btn btn-light full-btn">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    View History
+                </a>
+            </form>
+        </div>
+
+        <div class="card result-card">
+            <h2 class="card-title">
+                <i class="fa-solid fa-seedling"></i>
+                Detection Result
+            </h2>
+
+            {% if result %}
+
+                <div class="result-header">
+                    <h3>Prediction Details</h3>
+
+                    {% if result.success %}
+                        <span class="badge badge-success">
+                            <i class="fa-solid fa-circle-check"></i>
+                            SUCCESS
+                        </span>
+                    {% else %}
+                        {% if result.status == "low_confidence" %}
+                            <span class="badge badge-warning">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                LOW CONFIDENCE
+                            </span>
+                        {% else %}
+                            <span class="badge badge-failed">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                                FAILED
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                {% if prediction_obj and prediction_obj.image %}
+                    <div class="uploaded-image">
+                        <img src="{{ prediction_obj.image.url }}" alt="Uploaded Pest Image">
+                    </div>
+                {% endif %}
+
+                <div class="result-main">
+
+                    <div class="metric-box">
+                        <div class="metric-label">Pest Name</div>
+                        <div class="metric-value">{{ result.pest_name|default:"-" }}</div>
+                    </div>
+
+                    <div class="metric-box">
+                        <div class="metric-label">Confidence</div>
+                        <div class="metric-value">{{ result.confidence|default:"0" }}%</div>
+                    </div>
+
+                    <div class="metric-box">
+                        <div class="metric-label">Class Name</div>
+                        <div class="metric-value">{{ result.class_name|default:"-" }}</div>
+                    </div>
+
+                    <div class="metric-box">
+                        <div class="metric-label">Predicted Index</div>
+                        <div class="metric-value">{{ result.predicted_index|default_if_none:"-" }}</div>
+                    </div>
+
+                    <div class="metric-box">
+                        <div class="metric-label">Severity</div>
+                        <div class="metric-value">{{ result.severity|default:"-" }}</div>
+                    </div>
+
+                    <div class="metric-box">
+                        <div class="metric-label">Treatment Priority</div>
+                        <div class="metric-value">{{ result.treatment_priority|default:"-" }}</div>
+                    </div>
+
+                </div>
+
+                {% if result.message %}
+                    <div class="message-box">
+                        <strong>
+                            <i class="fa-solid fa-circle-info"></i>
+                            Message:
+                        </strong>
+                        <br>
+                        {{ result.message }}
+                    </div>
+                {% endif %}
+
+                {% if result.solution %}
+                    <div class="solution-box">
+                        <h3>
+                            <i class="fa-solid fa-leaf"></i>
+                            Suggested Solution
+                        </h3>
+                        <div>
+                            {{ result.solution|linebreaks }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if result.error %}
+                    <div class="error-box">
+                        <strong>
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            Error:
+                        </strong>
+                        <br>
+                        {{ result.error }}
+                    </div>
+                {% endif %}
+
+                {% if result.top_predictions %}
+                    <div class="top-table-card">
+                        <div class="top-table-title">
+                            <i class="fa-solid fa-ranking-star"></i>
+                            Top 5 Predictions
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="sr-no">SR No.</th>
+                                        <th>Pest Name</th>
+                                        <th>Class Name</th>
+                                        <th>Predicted Index</th>
+                                        <th>Confidence</th>
+                                        <th>Severity</th>
+                                        <th>Treatment Priority</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for item in result.top_predictions %}
+                                    <tr>
+                                        <td class="sr-no">{{ forloop.counter }}</td>
+                                        <td>{{ item.pest_name|default:"-" }}</td>
+                                        <td>{{ item.class_name|default:"-" }}</td>
+                                        <td>{{ item.predicted_index|default_if_none:"-" }}</td>
+                                        <td>{{ item.confidence|default:"0" }}%</td>
+                                        <td>{{ item.severity|default:"-" }}</td>
+                                        <td>{{ item.treatment_priority|default:"-" }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="action-row">
+                    <a href="{% url 'pest_detection:farmer_pest_detection' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-camera"></i>
+                        Detect New Pest
+                    </a>
+
+                    <a href="{% url 'pest_detection:farmer_pest_history' %}" class="btn btn-light">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        View History
+                    </a>
+                </div>
+
+            {% else %}
+
+                <div class="empty-result">
+                    <div>
+                        <i class="fa-solid fa-image"></i>
+                        <h3>No Detection Yet</h3>
+                        <p>Upload a pest image to see AI prediction result here.</p>
+                    </div>
+                </div>
+
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const imageInput = document.getElementById("id_image");
+        const previewBox = document.getElementById("previewBox");
+        const previewImage = document.getElementById("previewImage");
+        const submitBtn = document.getElementById("submitBtn");
+        const form = document.getElementById("pestDetectForm");
+        const alerts = document.querySelectorAll(".alert");
+
+        alerts.forEach(function (alertBox) {
+            setTimeout(function () {
+                alertBox.style.transition = "all 0.5s ease";
+                alertBox.style.opacity = "0";
+                alertBox.style.transform = "translateY(-10px)";
+
+                setTimeout(function () {
+                    alertBox.remove();
+                }, 500);
+            }, 3000);
+        });
+
+        if (imageInput) {
+            imageInput.addEventListener("change", function (event) {
+                const file = event.target.files[0];
+
+                if (!file) {
+                    previewBox.style.display = "none";
+                    previewImage.src = "";
+                    return;
+                }
+
+                const allowedTypes = [
+                    "image/jpeg",
+                    "image/jpg",
+                    "image/png",
+                    "image/webp"
+                ];
+
+                if (!allowedTypes.includes(file.type)) {
+                    alert("Only JPG, JPEG, PNG and WEBP images are allowed.");
+                    imageInput.value = "";
+                    previewBox.style.display = "none";
+                    previewImage.src = "";
+                    return;
+                }
+
+                const maxSize = 5 * 1024 * 1024;
+
+                if (file.size > maxSize) {
+                    alert("Image size must be less than 5 MB.");
+                    imageInput.value = "";
+                    previewBox.style.display = "none";
+                    previewImage.src = "";
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewBox.style.display = "block";
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        if (form && submitBtn) {
+            form.addEventListener("submit", function () {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Detecting...';
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

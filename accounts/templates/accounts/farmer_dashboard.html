@@ -1,0 +1,816 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard | Smart Sheti</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #14532d;
+            --primary-light: #43a047;
+            --accent: #f9a825;
+            --bg: #f4f8f4;
+            --white: #ffffff;
+            --text: #263238;
+            --muted: #607d8b;
+            --border: #dce9dd;
+            --shadow: 0 12px 30px rgba(20, 83, 45, 0.12);
+            --shadow-hover: 0 18px 45px rgba(20, 83, 45, 0.20);
+            --transition: all 0.35s ease;
+            --sidebar-width: 300px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top right, rgba(67, 160, 71, 0.12), transparent 25%),
+                radial-gradient(circle at bottom left, rgba(249, 168, 37, 0.10), transparent 25%),
+                linear-gradient(180deg, #f8fcf8 0%, #eef6f0 100%);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.40);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 98;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background:
+                linear-gradient(rgba(12, 35, 16, 0.92), rgba(10, 28, 13, 0.94)),
+                url("https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1000&q=80");
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 24px 16px 32px;
+            box-shadow: 8px 0 28px rgba(0, 0, 0, 0.18);
+            z-index: 99;
+            transition: transform 0.35s ease;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 26px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .logo-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffffff, #e8f5e9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+            border: 4px solid rgba(255, 255, 255, 0.25);
+            animation: pulseGlow 2.6s infinite ease-in-out;
+        }
+
+        .logo-circle i {
+            font-size: 38px;
+            color: var(--primary);
+        }
+
+        .sidebar-logo h2 {
+            font-size: 27px;
+            font-weight: 900;
+            color: #9af7a4;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-logo p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        .menu-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+            color: rgba(255, 255, 255, 0.72);
+            margin: 18px 10px 12px;
+            font-weight: 800;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-menu a,
+        .toggle-btn-link {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 13px 14px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--white);
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .left-side {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-menu a i,
+        .toggle-btn-link i {
+            width: 21px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active,
+        .toggle-btn-link:hover,
+        .settings-parent.open .toggle-btn-link {
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateX(6px);
+            border-color: rgba(255, 255, 255, 0.16);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+        }
+
+        .chevron {
+            transition: transform 0.3s ease;
+        }
+
+        .settings-parent.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .submenu {
+            list-style: none;
+            margin-left: 22px;
+            padding-left: 12px;
+            border-left: 1px solid rgba(255, 255, 255, 0.16);
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.35s ease;
+        }
+
+        .settings-parent.open .submenu {
+            max-height: 320px;
+            opacity: 1;
+            margin-top: 8px;
+            margin-bottom: 10px;
+        }
+
+        .submenu a {
+            padding: 10px 12px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.90);
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 11px;
+            justify-content: flex-start;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 22px rgba(20, 83, 45, 0.22);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .menu-toggle {
+            display: none;
+            width: 46px;
+            height: 46px;
+            border: none;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.16);
+            color: var(--white);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .topbar h1 {
+            font-size: 30px;
+            font-weight: 900;
+        }
+
+        .content {
+            padding: 28px;
+            flex: 1;
+        }
+
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 28px;
+            border: 1px solid #e4efe5;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-card::after {
+            content: "\f4d8";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 30px;
+            bottom: -10px;
+            font-size: 95px;
+            color: rgba(46, 125, 50, 0.08);
+        }
+
+        .welcome-card h2 {
+            font-size: 31px;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+
+        .welcome-card p {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.8;
+            max-width: 760px;
+        }
+
+        .section-title {
+            margin-bottom: 22px;
+        }
+
+        .section-title h2 {
+            font-size: 27px;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+            font-weight: 900;
+        }
+
+        .section-title p {
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+        }
+
+        .module-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            padding: 23px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+
+        .module-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .module-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .icon-box {
+            width: 66px;
+            height: 66px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #eef9ef, #fff8e1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 17px;
+            border: 1px solid #d7e8d9;
+        }
+
+        .icon-box i {
+            font-size: 29px;
+            color: var(--primary);
+        }
+
+        .module-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 900;
+            color: var(--text);
+        }
+
+        .module-card p {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 18px;
+            min-height: 72px;
+        }
+
+        .module-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 11px 18px;
+            border-radius: 13px;
+            font-size: 14px;
+            font-weight: 900;
+            transition: var(--transition);
+            box-shadow: 0 8px 18px rgba(46, 125, 50, 0.20);
+        }
+
+        .module-btn:hover {
+            background: linear-gradient(135deg, var(--primary-dark), #0f3d18);
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+            padding: 12px 20px 26px;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.28);
+            border-radius: 20px;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 14px 34px rgba(142, 243, 154, 0.35);
+            }
+        }
+
+        @media (max-width: 1350px) {
+            .module-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .module-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .menu-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .topbar {
+                padding: 18px 20px;
+            }
+
+            .topbar h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-card h2,
+            .section-title h2 {
+                font-size: 23px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .topbar h1 {
+                font-size: 21px;
+            }
+
+            .welcome-card,
+            .module-card {
+                padding: 19px;
+            }
+
+            .module-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .module-card p {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="dashboard-container">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-logo">
+            <div class="logo-circle">
+                <i class="fa-solid fa-seedling"></i>
+            </div>
+            <h2>Smart Sheti</h2>
+            <p>Farmer Panel</p>
+        </div>
+
+        <div class="menu-title">Main Menu</div>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a href="/farmer-dashboard/" class="active">
+                    <div class="left-side">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Dashboard</span>
+                    </div>
+                </a>
+            </li>
+
+
+
+<li>
+    <a href="{% url 'farmer_crop_recommendation' %}">
+        <div class="left-side">
+            <i class="fa-solid fa-seedling"></i>
+            <span>Crop Management</span>
+        </div>
+    </a>
+</li>
+
+            <li>
+                <a href="/weather/">
+                    <div class="left-side">
+                        <i class="fa-solid fa-cloud-sun"></i>
+                        <span>Weather Updates</span>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'fertilizer:farmer_fertilizer_form' %}">
+                    <div class="left-side">
+                        <i class="fa-solid fa-flask"></i>
+                        <span>Fertilizer Recommendations</span>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'disease_detection:farmer-disease-detection' %}">
+                    <div class="left-side">
+                        <i class="fa-solid fa-bug"></i>
+                        <span>Disease Detection</span>
+                    </div>
+                </a>
+            </li>
+            <!-- Pest Detection -->
+<li>
+    <a href="{% url 'pest_detection:farmer_pest_detection' %}">
+        <div class="left-side">
+            <i class="fa-solid fa-bug"></i>
+            <span>Pest Detection</span>
+        </div>
+    </a>
+</li>
+
+            <li>
+                <a href="{% url 'farmer_chatbot_page' %}">
+                    <div class="left-side">
+                        <i class="fa-solid fa-robot"></i>
+                        <span>AI Assistant</span>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'farmer_government_scheme_list' %}">
+                    <div class="left-side">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Government Schemes</span>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'farmer-equipment-list' %}">
+                    <div class="left-side">
+                        <i class="fa-solid fa-tractor"></i>
+                        <span>Equipment Rental</span>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="/marketplace/">
+                    <div class="left-side">
+                        <i class="fa-solid fa-store"></i>
+                        <span>Marketplace</span>
+                    </div>
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="menu-title">Settings</div>
+
+        <ul class="sidebar-menu">
+            <li class="settings-parent" id="settingsParent">
+
+                <button class="toggle-btn-link" id="settingsToggle" type="button">
+                    <div class="left-side">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Settings Module</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </button>
+
+                <ul class="submenu" id="settingsSubmenu">
+                    <li>
+                        <a href="{% url 'current_farmer_profile_update_web' %}">
+                            <i class="fa-solid fa-id-card"></i>
+                            <span>Profile Settings</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'change_password' %}">
+                            <i class="fa-solid fa-key"></i>
+                            <span>Change Password</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'logout' %}">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+
+            </li>
+        </ul>
+
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menuToggle" type="button">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1>Farmer Dashboard</h1>
+            </div>
+        </header>
+
+        <section class="content">
+
+            <div class="welcome-card">
+                <h2>
+                    Welcome,
+                    {% if request.user.is_authenticated %}
+                        {{ request.user.username }}
+                    {% else %}
+                        Farmer
+                    {% endif %}
+                </h2>
+                <p>
+                    Manage your farming activities, monitor updates, and access all Smart Sheti modules from one place.
+                </p>
+            </div>
+
+            <div class="section-title">
+                <h2>Dashboard Modules</h2>
+                <p>Access all farming-related modules quickly from one place.</p>
+            </div>
+
+            <div class="module-grid">
+
+                <div class="module-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <h3>Crop Management</h3>
+                    <p>Add, view, update, and manage crop-related records efficiently from your farmer dashboard.</p>
+                    <a href="/crop/" class="module-btn">Open Module</a>
+                </div>
+
+                <div class="module-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-cloud-sun"></i>
+                    </div>
+                    <h3>Weather Updates</h3>
+                    <p>Check weather conditions, rainfall updates, and climate insights for better farming decisions.</p>
+                    <a href="/weather/" class="module-btn">Open Module</a>
+                </div>
+
+                <div class="module-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-flask"></i>
+                    </div>
+                    <h3>Fertilizer Recommendation</h3>
+                    <p>Get smart fertilizer suggestions based on your soil, crop, and farming requirements.</p>
+                    <a href="{% url 'fertilizer:farmer_fertilizer_form' %}" class="module-btn">Open Module</a>
+                </div>
+
+                <div class="module-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-bug"></i>
+                    </div>
+                    <h3>Disease Detection</h3>
+                    <p>Identify plant diseases quickly and receive helpful recommendations for crop protection.</p>
+                    <a href="{% url 'disease_detection:farmer-disease-detection' %}" class="module-btn">Open Module</a>
+                </div>
+
+                <div class="module-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <h3>AI Assistant</h3>
+                    <p>Ask agriculture-related questions and get instant smart guidance from the AI assistant.</p>
+                    <a href="{% url 'farmer_chatbot_page' %}" class="module-btn">Open Module</a>
+                </div>
+
+                <div class="module-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <h3>Government Schemes</h3>
+                    <p>Explore available government schemes, benefits, and support opportunities for farmers.</p>
+                    <a href="{% url 'farmer_government_scheme_list' %}" class="module-btn">Open Module</a>
+                </div>
+
+                <div class="module-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-tractor"></i>
+                    </div>
+                    <h3>Equipment Rental</h3>
+                    <p>Browse and rent farming equipment as per your agricultural needs and usage duration.</p>
+                    <a href="{% url 'farmer-equipment-list' %}" class="module-btn">Open Module</a>
+                </div>
+
+                <div class="module-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <h3>Marketplace</h3>
+                    <p>Buy and sell agricultural items, products, and related goods using the marketplace module.</p>
+                    <a href="/marketplace/" class="module-btn">Open Module</a>
+                </div>
+
+            </div>
+
+        </section>
+
+        <div class="footer">
+            © 2026 Smart Sheti Farmer Dashboard. All Rights Reserved.
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+    const menuToggle = document.getElementById("menuToggle");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const settingsToggle = document.getElementById("settingsToggle");
+    const settingsParent = document.getElementById("settingsParent");
+
+    if (menuToggle && sidebar && sidebarOverlay) {
+        menuToggle.addEventListener("click", function () {
+            sidebar.classList.toggle("active");
+            sidebarOverlay.classList.toggle("active");
+        });
+
+        sidebarOverlay.addEventListener("click", function () {
+            sidebar.classList.remove("active");
+            sidebarOverlay.classList.remove("active");
+        });
+    }
+
+    if (settingsToggle && settingsParent) {
+        settingsToggle.addEventListener("click", function () {
+            settingsParent.classList.toggle("open");
+        });
+    }
+
+    document.querySelectorAll(".sidebar a").forEach(function (link) {
+        link.addEventListener("click", function () {
+            if (window.innerWidth <= 900) {
+                sidebar.classList.remove("active");
+                sidebarOverlay.classList.remove("active");
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

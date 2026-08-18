@@ -1,0 +1,230 @@
+from decimal import Decimal
+
+
+# =========================
+# EQUIPMENT STATUS
+# =========================
+
+EQUIPMENT_STATUS_AVAILABLE = "available"
+EQUIPMENT_STATUS_RENTED = "rented"
+EQUIPMENT_STATUS_MAINTENANCE = "maintenance"
+
+EQUIPMENT_STATUS_CHOICES = [
+    (EQUIPMENT_STATUS_AVAILABLE, "Available"),
+    (EQUIPMENT_STATUS_RENTED, "Rented"),
+    (EQUIPMENT_STATUS_MAINTENANCE, "Maintenance"),
+]
+
+
+# =========================
+# EQUIPMENT APPROVAL STATUS
+# =========================
+
+APPROVAL_STATUS_PENDING = "pending"
+APPROVAL_STATUS_APPROVED = "approved"
+APPROVAL_STATUS_REJECTED = "rejected"
+
+APPROVAL_STATUS_CHOICES = [
+    (APPROVAL_STATUS_PENDING, "Pending"),
+    (APPROVAL_STATUS_APPROVED, "Approved"),
+    (APPROVAL_STATUS_REJECTED, "Rejected"),
+]
+
+
+# =========================
+# BOOKING STATUS
+# =========================
+
+BOOKING_STATUS_PENDING = "pending"
+BOOKING_STATUS_CONFIRMED = "confirmed"
+BOOKING_STATUS_CANCELLED = "cancelled"
+BOOKING_STATUS_COMPLETED = "completed"
+
+BOOKING_STATUS_CHOICES = [
+    (BOOKING_STATUS_PENDING, "Pending"),
+    (BOOKING_STATUS_CONFIRMED, "Confirmed"),
+    (BOOKING_STATUS_CANCELLED, "Cancelled"),
+    (BOOKING_STATUS_COMPLETED, "Completed"),
+]
+
+
+# =========================
+# PAYMENT STATUS
+# =========================
+
+PAYMENT_STATUS_PENDING = "pending"
+PAYMENT_STATUS_PAID = "paid"
+PAYMENT_STATUS_FAILED = "failed"
+PAYMENT_STATUS_REFUNDED = "refunded"
+
+PAYMENT_STATUS_CHOICES = [
+    (PAYMENT_STATUS_PENDING, "Pending"),
+    (PAYMENT_STATUS_PAID, "Paid"),
+    (PAYMENT_STATUS_FAILED, "Failed"),
+    (PAYMENT_STATUS_REFUNDED, "Refunded"),
+]
+
+
+# =========================
+# PAYMENT METHODS
+# =========================
+
+PAYMENT_METHOD_UPI = "upi"
+PAYMENT_METHOD_CARD = "card"
+PAYMENT_METHOD_NETBANKING = "netbanking"
+PAYMENT_METHOD_WALLET = "wallet"
+PAYMENT_METHOD_CASH = "cash"
+PAYMENT_METHOD_OTHER = "other"
+
+PAYMENT_METHOD_CHOICES = [
+    (PAYMENT_METHOD_UPI, "UPI"),
+    (PAYMENT_METHOD_CARD, "Card"),
+    (PAYMENT_METHOD_NETBANKING, "Net Banking"),
+    (PAYMENT_METHOD_WALLET, "Wallet"),
+    (PAYMENT_METHOD_CASH, "Cash"),
+    (PAYMENT_METHOD_OTHER, "Other"),
+]
+
+
+# =========================
+# EQUIPMENT CATEGORIES
+# =========================
+
+EQUIPMENT_CATEGORY_TRACTOR = "Tractor"
+EQUIPMENT_CATEGORY_POWER_TILLER = "Power Tiller"
+EQUIPMENT_CATEGORY_ROTAVATOR = "Rotavator"
+EQUIPMENT_CATEGORY_CULTIVATOR = "Cultivator"
+EQUIPMENT_CATEGORY_DISC_HARROW = "Disc Harrow"
+EQUIPMENT_CATEGORY_PLOUGH = "Plough"
+EQUIPMENT_CATEGORY_SEED_DRILL = "Seed Drill"
+EQUIPMENT_CATEGORY_PLANTER = "Planter"
+EQUIPMENT_CATEGORY_TRANSPLANTER = "Transplanter"
+EQUIPMENT_CATEGORY_SPRAYER = "Sprayer"
+EQUIPMENT_CATEGORY_HARVESTER = "Harvester"
+EQUIPMENT_CATEGORY_REAPER = "Reaper"
+EQUIPMENT_CATEGORY_THRESHER = "Thresher"
+EQUIPMENT_CATEGORY_BALER = "Baler"
+EQUIPMENT_CATEGORY_MULCHER = "Mulcher"
+EQUIPMENT_CATEGORY_SUBSOILER = "Subsoiler"
+EQUIPMENT_CATEGORY_RIDGER = "Ridger"
+EQUIPMENT_CATEGORY_LAND_LEVELER = "Land Leveler"
+EQUIPMENT_CATEGORY_TRAILER = "Trailer"
+EQUIPMENT_CATEGORY_PUMP_SET = "Pump Set"
+
+EQUIPMENT_CATEGORY_CHOICES = [
+    (EQUIPMENT_CATEGORY_TRACTOR, "Tractor"),
+    (EQUIPMENT_CATEGORY_POWER_TILLER, "Power Tiller"),
+    (EQUIPMENT_CATEGORY_ROTAVATOR, "Rotavator"),
+    (EQUIPMENT_CATEGORY_CULTIVATOR, "Cultivator"),
+    (EQUIPMENT_CATEGORY_DISC_HARROW, "Disc Harrow"),
+    (EQUIPMENT_CATEGORY_PLOUGH, "Plough"),
+    (EQUIPMENT_CATEGORY_SEED_DRILL, "Seed Drill"),
+    (EQUIPMENT_CATEGORY_PLANTER, "Planter"),
+    (EQUIPMENT_CATEGORY_TRANSPLANTER, "Transplanter"),
+    (EQUIPMENT_CATEGORY_SPRAYER, "Sprayer"),
+    (EQUIPMENT_CATEGORY_HARVESTER, "Harvester"),
+    (EQUIPMENT_CATEGORY_REAPER, "Reaper"),
+    (EQUIPMENT_CATEGORY_THRESHER, "Thresher"),
+    (EQUIPMENT_CATEGORY_BALER, "Baler"),
+    (EQUIPMENT_CATEGORY_MULCHER, "Mulcher"),
+    (EQUIPMENT_CATEGORY_SUBSOILER, "Subsoiler"),
+    (EQUIPMENT_CATEGORY_RIDGER, "Ridger"),
+    (EQUIPMENT_CATEGORY_LAND_LEVELER, "Land Leveler"),
+    (EQUIPMENT_CATEGORY_TRAILER, "Trailer"),
+    (EQUIPMENT_CATEGORY_PUMP_SET, "Pump Set"),
+]
+
+
+# =========================
+# ENGINE BASED CATEGORIES
+# =========================
+
+ENGINE_BASED_CATEGORIES = {
+    EQUIPMENT_CATEGORY_TRACTOR,
+    EQUIPMENT_CATEGORY_POWER_TILLER,
+    EQUIPMENT_CATEGORY_HARVESTER,
+    EQUIPMENT_CATEGORY_TRAILER,
+}
+
+
+# =========================
+# FILE SETTINGS
+# =========================
+
+MAX_IMAGE_UPLOAD_SIZE = 2 * 1024 * 1024
+MAX_PDF_UPLOAD_SIZE = 5 * 1024 * 1024
+
+ALLOWED_IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"]
+ALLOWED_PDF_EXTENSIONS = [".pdf"]
+
+
+# =========================
+# BOOKING SETTINGS
+# =========================
+
+MINIMUM_RENTAL_PRICE = Decimal("100.00")
+MAX_BOOKING_DAYS = 60
+BOOKING_CODE_PREFIX = "BOOK"
+EQUIPMENT_CODE_PREFIX = "EQP"
+
+
+# =========================
+# RAZORPAY SETTINGS
+# =========================
+
+RAZORPAY_CURRENCY = "INR"
+RAZORPAY_ORDER_PREFIX = "order_"
+RAZORPAY_PAYMENT_PREFIX = "pay_"
+
+
+# =========================
+# PAGINATION
+# =========================
+
+DEFAULT_PAGE_SIZE = 10
+ADMIN_PAGE_SIZE = 25
+
+
+# =========================
+# API RESPONSE MESSAGES
+# =========================
+
+SUCCESS_MESSAGE = "Success"
+ERROR_MESSAGE = "Something went wrong."
+
+PAYMENT_SUCCESS_MESSAGE = "Payment completed successfully."
+PAYMENT_FAILED_MESSAGE = "Payment failed."
+
+BOOKING_CREATED_MESSAGE = "Booking created successfully."
+BOOKING_CANCELLED_MESSAGE = "Booking cancelled successfully."
+BOOKING_COMPLETED_MESSAGE = "Booking completed successfully."
+
+
+# =========================
+# EXTRA MISSING CONSTANTS
+# =========================
+
+DATE_FORMAT = "%Y-%m-%d"
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+
+ROLE_ADMIN = "admin"
+ROLE_FARMER = "farmer"
+
+ACTIVE_BOOKING_STATUSES = [
+    BOOKING_STATUS_PENDING,
+    BOOKING_STATUS_CONFIRMED,
+]
+
+HISTORY_BOOKING_STATUSES = [
+    BOOKING_STATUS_CANCELLED,
+    BOOKING_STATUS_COMPLETED,
+]
+
+AVAILABLE_FOR_BOOKING_STATUSES = [
+    EQUIPMENT_STATUS_AVAILABLE,
+]
+
+NOT_AVAILABLE_FOR_BOOKING_STATUSES = [
+    EQUIPMENT_STATUS_RENTED,
+    EQUIPMENT_STATUS_MAINTENANCE,
+]

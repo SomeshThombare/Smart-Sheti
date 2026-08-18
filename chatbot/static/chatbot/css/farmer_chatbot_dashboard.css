@@ -1,0 +1,253 @@
+:root {
+    --primary: #15803d;
+    --primary-dark: #14532d;
+    --primary-light: #dcfce7;
+
+    --white: #ffffff;
+    --bg: #f4f8f5;
+
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #d9eadf;
+
+    --success: #16a34a;
+    --danger: #dc2626;
+
+    --shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+
+    --sidebar-width: 290px;
+    --radius: 18px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 30px;
+}
+
+/* HEADER */
+
+.dashboard-header {
+    background: linear-gradient(135deg, #14532d, #16a34a);
+    color: white;
+    padding: 28px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    box-shadow: var(--shadow);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.dashboard-header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.dashboard-header p {
+    opacity: 0.95;
+}
+
+.chat-btn {
+    background: white;
+    color: var(--primary-dark);
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    transition: 0.25s ease;
+}
+
+.chat-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* STATS */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 25px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: 0.25s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+}
+
+.stat-card i {
+    width: 55px;
+    height: 55px;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.stat-card h2 {
+    font-size: 34px;
+    color: var(--primary-dark);
+    margin-bottom: 6px;
+}
+
+.stat-card p {
+    color: var(--muted);
+    font-weight: 600;
+}
+
+/* RECENT TABLE */
+
+.recent-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 22px 25px;
+    border-bottom: 1px solid var(--border);
+    background: #f0fdf4;
+}
+
+.card-header h2 {
+    color: var(--primary-dark);
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+}
+
+thead {
+    background: #f9fafb;
+}
+
+th,
+td {
+    padding: 15px 18px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+th {
+    color: var(--primary-dark);
+    font-weight: 800;
+}
+
+tbody tr:hover {
+    background: #f9fafb;
+}
+
+.yes {
+    color: var(--success);
+    font-weight: 700;
+}
+
+.no {
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.status {
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.status.success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status.failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.empty-row {
+    text-align: center;
+    padding: 35px;
+    color: var(--muted);
+    font-weight: 700;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dashboard-header h1 {
+        font-size: 26px;
+    }
+
+    .chat-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

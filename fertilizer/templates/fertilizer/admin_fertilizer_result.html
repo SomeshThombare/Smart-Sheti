@@ -1,0 +1,553 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Fertilizer Result | Smart Sheti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #14532d;
+            --soft-green: #e8f5e9;
+            --white: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #dbe8dc;
+            --shadow: 0 12px 30px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Roboto", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top right, rgba(76,175,80,0.16), transparent 25%),
+                linear-gradient(180deg, #f8fcf8, #eef7ef);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 16px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        .logo span {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 800;
+            transition: var(--transition);
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: white;
+            color: var(--primary-dark);
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 34px auto;
+            padding: 0 18px 40px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 28px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            margin-bottom: 26px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            color: rgba(255,255,255,0.9);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .hero-badge {
+            background: rgba(255,255,255,0.16);
+            padding: 16px 22px;
+            border-radius: 18px;
+            font-weight: 900;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 26px;
+        }
+
+        .btn {
+            min-height: 54px;
+            padding: 14px 18px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 10px 24px rgba(46,125,50,0.20);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(46,125,50,0.28);
+        }
+
+        .card {
+            background: rgba(255,255,255,0.96);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 26px;
+        }
+
+        .card-header {
+            padding: 26px 30px;
+            border-bottom: 1px solid #e5e7eb;
+            background: linear-gradient(180deg, #ffffff, #f8fff8);
+        }
+
+        .card-header h2 {
+            color: var(--primary-dark);
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .card-header p {
+            color: var(--muted);
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        .card-body {
+            padding: 28px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .info-box {
+            background: #f9fff9;
+            border: 1px solid #dcebdd;
+            border-radius: 18px;
+            padding: 18px;
+            transition: var(--transition);
+        }
+
+        .info-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+        }
+
+        .label {
+            color: var(--primary-dark);
+            font-weight: 900;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 14px;
+        }
+
+        .value {
+            color: var(--text);
+            font-size: 15px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .main-result {
+            background: linear-gradient(135deg, #f0fdf4, #ffffff);
+            border: 1px solid #bbf7d0;
+            border-left: 7px solid var(--primary);
+            border-radius: 22px;
+            padding: 24px;
+        }
+
+        .main-result h3 {
+            color: var(--primary-dark);
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .recommendation-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .alternative-card {
+            background: #f8fffa;
+            border: 1px solid #dcebdd;
+            border-left: 6px solid var(--primary);
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 18px;
+        }
+
+        .alternative-card h3 {
+            color: var(--primary-dark);
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .empty {
+            background: #f9fff9;
+            border: 1px dashed #b7d7b9;
+            color: var(--muted);
+            font-weight: 800;
+            padding: 22px;
+            border-radius: 18px;
+            text-align: center;
+        }
+
+        .note {
+            padding: 18px;
+            border-radius: 18px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            line-height: 1.6;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        footer {
+            background: linear-gradient(180deg, #243227, #172016);
+            color: white;
+            padding: 22px;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1000px) {
+            .actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 14px 18px;
+                justify-content: center;
+                text-align: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .hero {
+                padding: 24px;
+                text-align: center;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 25px;
+            }
+
+            .actions,
+            .info-grid,
+            .recommendation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .card-body {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+{% include 'accounts/admin/admin_sidebar.html' %}
+
+<main class="main-content">
+
+<header>
+    <a href="/" class="logo">
+        <span><i class="fa-solid fa-seedling"></i></span>
+        Smart Sheti
+    </a>
+
+    <nav>
+        <a href="{% url 'fertilizer:admin_dashboard' %}">
+            <i class="fa-solid fa-chart-line"></i>Fertilizer Dashboard
+        </a>
+
+        
+
+        <a href="{% url 'fertilizer:admin_fertilizer_form' %}" class="active">
+            <i class="fa-solid fa-flask"></i> Recommendation
+        </a>
+
+        <a href="{% url 'fertilizer:admin_history' %}">
+            <i class="fa-solid fa-clock-rotate-left"></i> History
+        </a>
+
+        <a href="{% url 'fertilizer:export_csv' %}">
+            <i class="fa-solid fa-file-csv"></i> Export
+        </a>
+    </nav>
+</header>
+
+<main class="page">
+
+    <section class="hero">
+        <div>
+            <h1>Admin Fertilizer Recommendation Result</h1>
+            <p>
+                View fertilizer recommendation result based on crop, soil nutrients,
+                rainfall, temperature, and soil pH analysis.
+            </p>
+        </div>
+
+        <div class="hero-badge">
+            <i class="fa-solid fa-leaf"></i>
+            Result Ready
+        </div>
+    </section>
+
+
+
+    <section class="card">
+        <div class="card-header">
+            <h2>Crop Information</h2>
+            <p>Selected crop and soil color details.</p>
+        </div>
+
+        <div class="card-body">
+            <div class="info-grid">
+                <div class="info-box">
+                    <span class="label">Crop</span>
+                    <div class="value">{{ crop|default:"-" }}</div>
+                </div>
+
+                <div class="info-box">
+                    <span class="label">Soil Color</span>
+                    <div class="value">{{ soil_data.Soil_color|default:"-" }}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="card-header">
+            <h2>Input Soil and Weather Data</h2>
+            <p>Values entered for fertilizer recommendation calculation.</p>
+        </div>
+
+        <div class="card-body">
+            <div class="info-grid">
+                <div class="info-box">
+                    <span class="label">Nitrogen - N</span>
+                    <div class="value">{{ soil_data.Nitrogen|default:"0" }}</div>
+                </div>
+
+                <div class="info-box">
+                    <span class="label">Phosphorus - P</span>
+                    <div class="value">{{ soil_data.Phosphorus|default:"0" }}</div>
+                </div>
+
+                <div class="info-box">
+                    <span class="label">Potassium - K</span>
+                    <div class="value">{{ soil_data.Potassium|default:"0" }}</div>
+                </div>
+
+                <div class="info-box">
+                    <span class="label">Soil pH</span>
+                    <div class="value">{{ soil_data.pH|default:"0" }}</div>
+                </div>
+
+                <div class="info-box">
+                    <span class="label">Rainfall</span>
+                    <div class="value">{{ soil_data.Rainfall|default:"0" }}</div>
+                </div>
+
+                <div class="info-box">
+                    <span class="label">Temperature</span>
+                    <div class="value">{{ soil_data.Temperature|default:"0" }}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="card-header">
+            <h2>Main Fertilizer Recommendation</h2>
+            <p>Best fertilizer suggestion based on provided details.</p>
+        </div>
+
+        <div class="card-body">
+            <div class="main-result">
+                <h3>
+                    <i class="fa-solid fa-seedling"></i>
+                    Recommended Fertilizer
+                </h3>
+
+                <div class="recommendation-grid">
+                    <div class="recommendation-item">
+                        <span class="label">Fertilizer Name</span>
+                        <div class="value">{{ result.fertilizer_name|default:"-" }}</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <span class="label">Quantity</span>
+                        <div class="value">{{ result.quantity|default:"-" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="card-header">
+            <h2>Alternative Recommendations</h2>
+            <p>Other useful fertilizer suggestions and usage details.</p>
+        </div>
+
+        <div class="card-body">
+            {% for item in result.recommendations %}
+                <div class="alternative-card">
+                    <h3>
+                        <i class="fa-solid fa-flask"></i>
+                        {{ item.fertilizer_name|default:"Fertilizer Recommendation" }}
+                    </h3>
+
+                    <div class="recommendation-grid">
+                        <div class="recommendation-item">
+                            <span class="label">Amount</span>
+                            <div class="value">{{ item.amount|default:"-" }}</div>
+                        </div>
+
+                        <div class="recommendation-item">
+                            <span class="label">Description</span>
+                            <div class="value">{{ item.description|default:"-" }}</div>
+                        </div>
+
+                        <div class="recommendation-item">
+                            <span class="label">How To Use</span>
+                            <div class="value">{{ item.how_to_use|default:"-" }}</div>
+                        </div>
+
+                        <div class="recommendation-item">
+                            <span class="label">Timing</span>
+                            <div class="value">{{ item.timing|default:"-" }}</div>
+                        </div>
+
+                        <div class="recommendation-item">
+                            <span class="label">Tips</span>
+                            <div class="value">{{ item.tips|default:"-" }}</div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty">
+                    <i class="fa-solid fa-circle-info"></i>
+                    No alternative recommendations available.
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+
+</main>
+
+<footer>
+    © 2026 Smart Sheti. All rights reserved.
+</footer>
+
+</body>
+</html>

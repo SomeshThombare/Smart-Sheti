@@ -1,0 +1,752 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>
+        Admin Crop Records | Smart Sheti
+    </title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #14532d;
+            --soft-green: #e8f5e9;
+            --white: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #dbe8dc;
+            --shadow: 0 12px 30px rgba(0,0,0,0.08);
+            --danger: #dc3545;
+            --success: #198754;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Roboto", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(76,175,80,0.16),
+                    transparent 25%
+                ),
+                linear-gradient(
+                    180deg,
+                    #f8fcf8,
+                    #eef7ef
+                );
+
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* =========================================
+           HEADER
+        ========================================== */
+        header {
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+
+            color: white;
+
+            padding: 16px 50px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+
+            position: sticky;
+            top: 0;
+            z-index: 999;
+
+            box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        .logo span {
+            width: 45px;
+            height: 45px;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,0.18);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            padding: 10px 15px;
+
+            border-radius: 12px;
+
+            font-size: 14px;
+            font-weight: 800;
+
+            transition: var(--transition);
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: white;
+            color: var(--primary-dark);
+        }
+
+        /* =========================================
+           PAGE
+        ========================================== */
+        .page {
+            max-width: 1350px;
+            margin: 34px auto;
+            padding: 0 18px 40px;
+        }
+
+        /* =========================================
+           HERO
+        ========================================== */
+        .hero {
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+
+            color: white;
+
+            border-radius: 28px;
+
+            padding: 32px;
+
+            box-shadow: var(--shadow);
+
+            margin-bottom: 26px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            color: rgba(255,255,255,0.9);
+
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .hero-badge {
+            background: rgba(255,255,255,0.16);
+
+            padding: 16px 22px;
+
+            border-radius: 18px;
+
+            font-weight: 900;
+        }
+
+        /* =========================================
+           CARD
+        ========================================== */
+        .card {
+            background: rgba(255,255,255,0.96);
+
+            border: 1px solid var(--border);
+
+            border-radius: 28px;
+
+            box-shadow: var(--shadow);
+
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 26px 30px;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            background: linear-gradient(
+                180deg,
+                #ffffff,
+                #f8fff8
+            );
+        }
+
+        .card-header h2 {
+            color: var(--primary-dark);
+
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .card-header p {
+            color: var(--muted);
+
+            margin-top: 6px;
+
+            font-size: 14px;
+        }
+
+        .card-body {
+            padding: 28px;
+        }
+
+        /* =========================================
+           FILTER
+        ========================================== */
+        .filter-box {
+            background: white;
+
+            border: 1px solid var(--border);
+
+            border-radius: 22px;
+
+            padding: 24px;
+
+            margin-bottom: 24px;
+        }
+
+        .filter-grid {
+            display: grid;
+
+            grid-template-columns: repeat(2, 1fr);
+
+            gap: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            color: var(--primary-dark);
+
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        input {
+            width: 100%;
+
+            min-height: 52px;
+
+            padding: 13px 15px;
+
+            border: 1px solid #d7e3d8;
+
+            border-radius: 15px;
+
+            font-size: 15px;
+
+            background: #fcfffc;
+
+            transition: var(--transition);
+        }
+
+        input:focus {
+            outline: none;
+
+            border-color: var(--primary);
+
+            box-shadow: 0 0 0 4px rgba(46,125,50,0.12);
+
+            background: white;
+        }
+
+        /* =========================================
+           BUTTONS
+        ========================================== */
+        .button-row {
+            margin-top: 22px;
+
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            min-height: 52px;
+
+            padding: 14px 20px;
+
+            border-radius: 15px;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 15px;
+            font-weight: 900;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-blue {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-gray {
+            background: #475569;
+            color: white;
+        }
+
+        /* =========================================
+           TABLE
+        ========================================== */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        th {
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+
+            color: white;
+
+            padding: 14px;
+
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        td {
+            padding: 14px;
+
+            text-align: center;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f0fdf4;
+        }
+
+        .crop-img {
+            width: 80px;
+            height: 65px;
+
+            object-fit: cover;
+
+            border-radius: 12px;
+
+            box-shadow: 0 5px 14px rgba(0,0,0,0.15);
+        }
+
+        .crop-name {
+            color: var(--primary-dark);
+
+            font-weight: 900;
+
+            text-transform: capitalize;
+        }
+
+        .empty-row {
+            padding: 22px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        /* =========================================
+           FOOTER
+        ========================================== */
+        footer {
+            background: linear-gradient(
+                180deg,
+                #243227,
+                #172016
+            );
+
+            color: white;
+
+            padding: 22px;
+
+            text-align: center;
+
+            margin-top: 40px;
+
+            font-size: 14px;
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================== */
+        @media (max-width: 768px) {
+
+            header {
+                padding: 14px 18px;
+
+                justify-content: center;
+
+                text-align: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .hero {
+                padding: 24px;
+
+                text-align: center;
+
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 25px;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-body {
+                padding: 18px;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+{% include 'accounts/admin/admin_sidebar.html' %}
+
+<main class="main-content">
+
+<header>
+
+    <div class="logo">
+        <span>
+            🌾
+        </span>
+
+        Smart Sheti
+    </div>
+
+    <nav>
+
+        <a href="{% url 'admin_crop_dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'admin_crop_records' %}"
+           class="active">
+
+            Crop Records
+        </a>
+
+    </nav>
+
+</header>
+
+<div class="page">
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <div>
+
+            <h1>
+                🌱 Admin Crop Prediction Records
+            </h1>
+
+            <p>
+                View, search and manage all crop
+                prediction history records generated
+                by farmers.
+            </p>
+
+        </div>
+
+        <div class="hero-badge">
+            Admin Panel
+        </div>
+
+    </section>
+
+    <!-- FILTER -->
+    <div class="filter-box">
+
+        <form method="GET">
+
+            <div class="filter-grid">
+
+                <div class="field">
+
+                    <label>
+                        Search Crop
+                    </label>
+
+                    <input type="text"
+                           name="crop"
+                           placeholder="Enter crop name"
+                           value="{{ crop|default:'' }}">
+
+                </div>
+
+                <div class="field">
+
+                    <label>
+                        Search Farmer
+                    </label>
+
+                    <input type="text"
+                           name="farmer"
+                           placeholder="Enter farmer username"
+                           value="{{ farmer|default:'' }}">
+
+                </div>
+
+            </div>
+
+            <div class="button-row">
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    Search
+                </button>
+
+                <a class="btn btn-blue"
+                   href="{% url 'admin_crop_records' %}">
+
+                    <i class="fa-solid fa-rotate-left"></i>
+
+                    Reset
+                </a>
+
+                <a class="btn btn-primary"
+                   href="{% url 'admin_crop_export_csv' %}">
+
+                    <i class="fa-solid fa-file-csv"></i>
+
+                    Export CSV
+                </a>
+
+                <a class="btn btn-gray"
+                   href="{% url 'admin_crop_dashboard' %}">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    Dashboard
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- CARD -->
+    <div class="card">
+
+        <div class="card-header">
+
+            <h2>
+                Crop Prediction Records
+            </h2>
+
+            <p>
+                All crop prediction history generated
+                from AI crop recommendation system.
+            </p>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Image</th>
+                        <th>Farmer</th>
+                        <th>N</th>
+                        <th>P</th>
+                        <th>K</th>
+                        <th>Temperature</th>
+                        <th>Humidity</th>
+                        <th>pH</th>
+                        <th>Rainfall</th>
+                        <th>Predicted Crop</th>
+                        <th>Date</th>
+
+                    </tr>
+
+                    {% for item in records %}
+
+                    <tr>
+
+                        <td>
+                            {{ item.id }}
+                        </td>
+
+                        <td>
+
+                            <img
+                                class="crop-img"
+
+                                src="{% static 'images/crops/' %}{{ item.predicted_crop|lower }}/1.jpg"
+
+                                alt="{{ item.predicted_crop }}"
+
+                                onerror="this.src='{% static 'images/crops/default.jpg' %}'"
+                            >
+
+                        </td>
+
+                        <td>
+
+                            {% if item.user %}
+                                {{ item.user.username }}
+                            {% else %}
+                                Unknown
+                            {% endif %}
+
+                        </td>
+
+                        <td>{{ item.nitrogen }}</td>
+                        <td>{{ item.phosphorus }}</td>
+                        <td>{{ item.potassium }}</td>
+                        <td>{{ item.temperature }}</td>
+                        <td>{{ item.humidity }}</td>
+                        <td>{{ item.ph }}</td>
+                        <td>{{ item.rainfall }}</td>
+
+                        <td class="crop-name">
+                            {{ item.predicted_crop }}
+                        </td>
+
+                        <td>
+                            {{ item.created_at }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="12"
+                            class="empty-row">
+
+                            No records found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 Smart Sheti | Admin Crop Prediction Records
+</footer>
+
+</body>
+
+</html>

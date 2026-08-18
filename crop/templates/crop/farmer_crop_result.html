@@ -1,0 +1,684 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Crop Result | Smart Sheti</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #14532d;
+            --soft-green: #e8f5e9;
+            --white: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #dbe8dc;
+            --shadow: 0 12px 30px rgba(0,0,0,0.08);
+            --danger: #dc3545;
+            --success: #198754;
+            --warning: #ca8a04;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Roboto", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top right, rgba(76,175,80,0.16), transparent 25%),
+                linear-gradient(180deg, #f8fcf8, #eef7ef);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 16px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        .logo span {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 800;
+            transition: var(--transition);
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: white;
+            color: var(--primary-dark);
+        }
+
+        .page {
+            max-width: 1180px;
+            margin: 34px auto;
+            padding: 0 18px 40px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 28px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            margin-bottom: 26px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            color: rgba(255,255,255,0.9);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .hero-badge {
+            background: rgba(255,255,255,0.16);
+            padding: 16px 22px;
+            border-radius: 18px;
+            font-weight: 900;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.96);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 26px;
+        }
+
+        .card-header {
+            padding: 26px 30px;
+            border-bottom: 1px solid #e5e7eb;
+            background: linear-gradient(180deg, #ffffff, #f8fff8);
+        }
+
+        .card-header h2 {
+            color: var(--primary-dark);
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .card-header p {
+            color: var(--muted);
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        .card-body {
+            padding: 28px;
+        }
+
+        .crop-box {
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            padding: 35px;
+            border-radius: 24px;
+            text-align: center;
+            border: 2px solid #86efac;
+        }
+
+        .crop-label {
+            color: var(--primary-dark);
+            font-size: 20px;
+            margin-bottom: 12px;
+            font-weight: 900;
+        }
+
+        .crop {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--primary-dark);
+            text-transform: capitalize;
+            margin-top: 18px;
+        }
+
+        .crop-image-slider {
+            max-width: 430px;
+            height: 270px;
+            margin: 22px auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+            background: #f0fdf4;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .section-title {
+            color: var(--primary-dark);
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .item {
+            background: #fcfffc;
+            padding: 20px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--primary);
+            transition: var(--transition);
+        }
+
+        .item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .item b {
+            color: var(--primary-dark);
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .value {
+            margin-top: 8px;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .status-good {
+            color: var(--success);
+            font-weight: 900;
+        }
+
+        .status-medium {
+            color: var(--warning);
+            font-weight: 900;
+        }
+
+        .status-danger {
+            color: var(--danger);
+            font-weight: 900;
+        }
+
+        .advice {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .submit-row {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            min-height: 52px;
+            padding: 14px 20px;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 10px 24px rgba(46,125,50,0.20);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(46,125,50,0.28);
+        }
+
+        .btn-blue {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-blue:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background: linear-gradient(180deg, #243227, #172016);
+            color: white;
+            padding: 22px;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 14px 18px;
+                justify-content: center;
+                text-align: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .hero {
+                padding: 24px;
+                text-align: center;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 25px;
+            }
+
+            .card-body {
+                padding: 18px;
+            }
+
+            .crop {
+                font-size: 36px;
+            }
+
+            .crop-image-slider {
+                height: 220px;
+            }
+
+            .submit-row {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+{% include 'accounts/farmer/farmer_sidebar.html' %}
+
+<div class="main-content">
+<header>
+    <div class="logo">
+        <span>🌾</span>
+        Smart Sheti
+    </div>
+
+    <nav>
+        <a href="{% url 'farmer_crop_recommendation' %}">
+            Crop Recommendation
+        </a>
+
+        <a href="{% url 'farmer_crop_history' %}">
+            My History
+        </a>
+    </nav>
+</header>
+
+<div class="page">
+
+    <section class="hero">
+        <div>
+            <h1>
+                🌾 Recommended Crop Result
+            </h1>
+
+            <p>
+                AI based crop recommendation using soil nutrients,
+                weather condition and crop management analysis.
+            </p>
+        </div>
+
+        <div class="hero-badge">
+            Prediction Completed
+        </div>
+    </section>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                Recommended Crop
+            </h2>
+
+            <p>
+                Best suitable crop based on your submitted values.
+            </p>
+        </div>
+
+        <div class="card-body">
+            <div class="crop-box">
+
+                <div class="crop-label">
+                    Recommended Crop
+                </div>
+
+                <div class="crop-image-slider">
+
+                    <div class="slide">
+                        <img src="{% static 'images/crops/' %}{{ history.predicted_crop|lower }}/1.jpg"
+                             onerror="this.src='{% static 'images/crops/default.jpg' %}'">
+                    </div>
+
+                    <div class="slide">
+                        <img src="{% static 'images/crops/' %}{{ history.predicted_crop|lower }}/2.jpg"
+                             onerror="this.src='{% static 'images/crops/default.jpg' %}'">
+                    </div>
+
+                    <div class="slide">
+                        <img src="{% static 'images/crops/' %}{{ history.predicted_crop|lower }}/3.jpg"
+                             onerror="this.src='{% static 'images/crops/default.jpg' %}'">
+                    </div>
+
+                    <div class="slide">
+                        <img src="{% static 'images/crops/' %}{{ history.predicted_crop|lower }}/4.jpg"
+                             onerror="this.src='{% static 'images/crops/default.jpg' %}'">
+                    </div>
+
+                </div>
+
+                <div class="crop">
+                    🌱 {{ history.predicted_crop }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                <i class="fa-solid fa-chart-simple"></i>
+                Input Analysis
+            </h2>
+
+            <p>
+                Soil and weather values used for prediction.
+            </p>
+        </div>
+
+        <div class="card-body">
+            <div class="grid">
+
+                <div class="item">
+                    <b>Nitrogen</b>
+                    <div class="value">{{ history.nitrogen }}</div>
+                </div>
+
+                <div class="item">
+                    <b>Phosphorus</b>
+                    <div class="value">{{ history.phosphorus }}</div>
+                </div>
+
+                <div class="item">
+                    <b>Potassium</b>
+                    <div class="value">{{ history.potassium }}</div>
+                </div>
+
+                <div class="item">
+                    <b>Temperature</b>
+                    <div class="value">{{ history.temperature }} °C</div>
+                </div>
+
+                <div class="item">
+                    <b>Humidity</b>
+                    <div class="value">{{ history.humidity }}%</div>
+                </div>
+
+                <div class="item">
+                    <b>pH</b>
+                    <div class="value">{{ history.ph }}</div>
+                </div>
+
+                <div class="item">
+                    <b>Rainfall</b>
+                    <div class="value">{{ history.rainfall }} mm</div>
+                </div>
+
+                <div class="item">
+                    <b>Prediction Date</b>
+                    <div class="value">{{ history.created_at }}</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                <i class="fa-solid fa-seedling"></i>
+                Crop Management Analysis
+            </h2>
+
+            <p>
+                Soil and weather condition status with basic suggestions.
+            </p>
+        </div>
+
+        <div class="card-body">
+            <div class="grid">
+
+                <div class="item">
+                    <b>Nitrogen Status</b>
+                    <div class="value status-good">
+                        {{ crop_management_analysis.nitrogen_status }}
+                    </div>
+                    <div class="advice">
+                        {{ crop_management_analysis.nitrogen_advice }}
+                    </div>
+                </div>
+
+                <div class="item">
+                    <b>Phosphorus Status</b>
+                    <div class="value status-good">
+                        {{ crop_management_analysis.phosphorus_status }}
+                    </div>
+                    <div class="advice">
+                        {{ crop_management_analysis.phosphorus_advice }}
+                    </div>
+                </div>
+
+                <div class="item">
+                    <b>Potassium Status</b>
+                    <div class="value status-good">
+                        {{ crop_management_analysis.potassium_status }}
+                    </div>
+                    <div class="advice">
+                        {{ crop_management_analysis.potassium_advice }}
+                    </div>
+                </div>
+
+                <div class="item">
+                    <b>pH Status</b>
+                    <div class="value status-medium">
+                        {{ crop_management_analysis.ph_status }}
+                    </div>
+                    <div class="advice">
+                        {{ crop_management_analysis.ph_advice }}
+                    </div>
+                </div>
+
+                <div class="item">
+                    <b>Rainfall Status</b>
+                    <div class="value status-good">
+                        {{ crop_management_analysis.rainfall_status }}
+                    </div>
+                    <div class="advice">
+                        {{ crop_management_analysis.rainfall_advice }}
+                    </div>
+                </div>
+
+                <div class="item">
+                    <b>Temperature Status</b>
+                    <div class="value status-good">
+                        {{ crop_management_analysis.temperature_status }}
+                    </div>
+                    <div class="advice">
+                        {{ crop_management_analysis.temperature_advice }}
+                    </div>
+                </div>
+
+                <div class="item">
+                    <b>Humidity Status</b>
+                    <div class="value status-good">
+                        {{ crop_management_analysis.humidity_status }}
+                    </div>
+                    <div class="advice">
+                        {{ crop_management_analysis.humidity_advice }}
+                    </div>
+                </div>
+
+                {% if crop_management_analysis.overall_condition %}
+                    <div class="item">
+                        <b>Overall Condition</b>
+                        <div class="value status-medium">
+                            {{ crop_management_analysis.overall_condition }}
+                        </div>
+                        <div class="advice">
+                            {{ crop_management_analysis.overall_advice }}
+                        </div>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <div class="submit-row">
+                <a class="btn btn-primary"
+                   href="{% url 'farmer_crop_recommendation' %}">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Check Again
+                </a>
+
+                <a class="btn btn-blue"
+                   href="{% url 'farmer_crop_history' %}">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    My History
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    © 2026 Smart Sheti | AI Powered Crop Recommendation System
+</footer>
+
+<script>
+    let slideIndex = 0;
+    showSlides();
+
+    function showSlides() {
+        let slides = document.getElementsByClassName("slide");
+
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+
+        slideIndex++;
+
+        if (slideIndex > slides.length) {
+            slideIndex = 1;
+        }
+
+        if (slides.length > 0) {
+            slides[slideIndex - 1].style.display = "block";
+        }
+
+        setTimeout(showSlides, 2500);
+    }
+</script>
+
+</body>
+
+</html>

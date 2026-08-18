@@ -1,0 +1,176 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+
+```
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<link rel="stylesheet"
+      href="{% static 'chatbot/css/farmer_chatbot_dashboard.css' %}">
+```
+
+</head>
+
+<body>
+
+{% include 'accounts/farmer/farmer_sidebar.html' %}
+
+<div class="main-content">
+
+```
+<div class="dashboard-header">
+
+    <div>
+        <h1>
+            <i class="fa-solid fa-robot"></i>
+            Farmer Chatbot Dashboard
+        </h1>
+
+        <p>
+            View chatbot usage, image analysis, PDF analysis and recent conversations.
+        </p>
+    </div>
+
+    <a href="{% url 'farmer_chatbot_page' %}"
+       class="chat-btn">
+        <i class="fa-solid fa-comments"></i>
+        Open Chatbot
+    </a>
+
+</div>
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <i class="fa-solid fa-comments"></i>
+        <h2>{{ total_chats }}</h2>
+        <p>Total Chats</p>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-calendar-day"></i>
+        <h2>{{ today_chats }}</h2>
+        <p>Today's Chats</p>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-image"></i>
+        <h2>{{ image_chats }}</h2>
+        <p>Image Analysis</p>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-file-pdf"></i>
+        <h2>{{ pdf_chats }}</h2>
+        <p>PDF Analysis</p>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-circle-check"></i>
+        <h2>{{ success_chats }}</h2>
+        <p>Successful Chats</p>
+    </div>
+
+    <div class="stat-card">
+        <i class="fa-solid fa-circle-xmark"></i>
+        <h2>{{ failed_chats }}</h2>
+        <p>Failed Chats</p>
+    </div>
+
+</div>
+
+<div class="recent-card">
+
+    <div class="card-header">
+        <h2>
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            Recent Conversations
+        </h2>
+    </div>
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Question</th>
+                    <th>Image</th>
+                    <th>PDF</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for chat in recent_chats %}
+                <tr>
+
+                    <td>
+                        {{ chat.created_at|date:"d M Y H:i" }}
+                    </td>
+
+                    <td>
+                        {{ chat.user_message|truncatechars:80 }}
+                    </td>
+
+                    <td>
+                        {% if chat.has_image %}
+                            <span class="yes">Yes</span>
+                        {% else %}
+                            <span class="no">No</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if chat.has_pdf %}
+                            <span class="yes">Yes</span>
+                        {% else %}
+                            <span class="no">No</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if chat.status == "success" %}
+                            <span class="status success">
+                                Success
+                            </span>
+                        {% else %}
+                            <span class="status failed">
+                                Failed
+                            </span>
+                        {% endif %}
+                    </td>
+
+                </tr>
+            {% empty %}
+
+                <tr>
+                    <td colspan="5" class="empty-row">
+                        No chatbot conversations found.
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+</body>
+</html>

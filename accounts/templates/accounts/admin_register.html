@@ -1,0 +1,1098 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Registration | Smart Sheti</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+    --primary:#2e7d32;
+    --primary-dark:#14532d;
+    --primary-light:#66bb6a;
+    --accent:#f9a825;
+    --soil:#795548;
+    --leaf-soft:#e8f5e9;
+    --white:#fff;
+    --text:#263238;
+    --muted:#6b7280;
+    --border:#b7dfb9;
+    --danger:#dc3545;
+    --success:#198754;
+    --warning:#f9a825;
+    --shadow:rgba(20,83,45,.22);
+}
+
+* {
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body {
+    margin:0;
+    min-height:100vh;
+    padding:35px 15px;
+    background:
+        linear-gradient(rgba(210,245,214,.94),rgba(255,253,231,.95)),
+        url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80");
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
+
+.container {
+    width:100%;
+    max-width:900px;
+    margin:auto;
+    background:rgba(255,255,255,.86);
+    backdrop-filter:blur(12px);
+    padding:34px;
+    border-radius:26px;
+    box-shadow:0 18px 45px var(--shadow);
+    border:1px solid rgba(46,125,50,.20);
+    border-top:8px solid var(--primary);
+    position:relative;
+    overflow:hidden;
+    animation:fadeIn .55s ease;
+}
+
+.container::before {
+    content:"🌾";
+    position:absolute;
+    top:14px;
+    right:22px;
+    font-size:52px;
+    opacity:.18;
+}
+
+.header {
+    text-align:center;
+    margin-bottom:24px;
+    position:relative;
+    z-index:1;
+}
+
+.header-icon {
+    width:86px;
+    height:86px;
+    margin:0 auto 14px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#e8f5e9,#c8e6c9);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:3px solid #a5d6a7;
+    box-shadow:0 8px 20px rgba(46,125,50,.18);
+}
+
+.header-icon i {
+    font-size:42px;
+    color:var(--primary);
+}
+
+h2 {
+    color:var(--primary-dark);
+    margin:0;
+    font-size:31px;
+    font-weight:800;
+}
+
+.subtitle {
+    color:var(--muted);
+    font-size:14px;
+    margin-top:8px;
+}
+
+.tagline {
+    display:inline-block;
+    margin-top:10px;
+    background:#fff8e1;
+    color:var(--soil);
+    font-size:13px;
+    font-weight:700;
+    padding:8px 13px;
+    border-radius:999px;
+    border:1px solid #ffe082;
+    animation:pulseBadge 1.8s infinite;
+}
+
+.top-action {
+    display:flex;
+    justify-content:flex-start;
+    margin-bottom:20px;
+    position:relative;
+    z-index:1;
+}
+
+.back-index-btn {
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--leaf-soft);
+    color:var(--primary-dark);
+    border:1px solid var(--border);
+    padding:10px 15px;
+    border-radius:12px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:700;
+    transition:.3s;
+}
+
+.back-index-btn:hover {
+    background:var(--primary);
+    color:white;
+    transform:translateY(-2px);
+}
+
+form {
+    position:relative;
+    z-index:1;
+    animation:fadeIn .7s ease;
+}
+
+.form-row {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+.country-mobile-row {
+    display:grid;
+    grid-template-columns:280px 1fr;
+    gap:18px;
+}
+
+.form-group {
+    margin-bottom:18px;
+}
+
+label {
+    display:block;
+    margin-bottom:7px;
+    font-weight:bold;
+    color:var(--text);
+    font-size:14px;
+}
+
+.required {
+    color:var(--danger);
+}
+
+.input-box {
+    position:relative;
+}
+
+.left-icon {
+    position:absolute;
+    top:50%;
+    left:13px;
+    transform:translateY(-50%);
+    color:var(--primary);
+    font-size:15px;
+    z-index:2;
+}
+
+input,
+select {
+    width:100%;
+    min-height:46px;
+    padding:12px 12px 12px 40px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    font-size:15px;
+    outline:none;
+    background:#fbfff7;
+    color:var(--text);
+    transition:.25s;
+}
+
+input:focus,
+select:focus {
+    border-color:var(--primary);
+    box-shadow:0 0 0 5px rgba(46,125,50,.16);
+    background:white;
+}
+
+input.invalid {
+    border-color:var(--danger);
+    box-shadow:0 0 0 4px rgba(220,53,69,.13);
+}
+
+input.valid {
+    border-color:var(--success);
+    box-shadow:0 0 0 4px rgba(25,135,84,.12);
+}
+
+.password-input {
+    padding-right:42px;
+}
+
+.toggle-password {
+    position:absolute;
+    top:50%;
+    right:13px;
+    transform:translateY(-50%);
+    color:var(--muted);
+    cursor:pointer;
+    z-index:3;
+}
+
+.toggle-password:hover {
+    color:var(--primary);
+}
+
+.client-error,
+.live-status {
+    display:none;
+    font-size:13px;
+    margin-top:6px;
+    font-weight:700;
+}
+
+.client-error {
+    color:var(--danger);
+}
+
+.status-success {
+    color:var(--success);
+}
+
+.status-error {
+    color:var(--danger);
+}
+
+.field-error {
+    color:var(--danger);
+    font-size:13px;
+    margin-top:6px;
+    line-height:1.5;
+    font-weight:600;
+}
+
+.message-box {
+    padding:12px 14px;
+    border-radius:12px;
+    margin-bottom:18px;
+    font-weight:700;
+    font-size:14px;
+}
+
+.message-success {
+    background:#e8f5e9;
+    color:var(--success);
+    border:1px solid #a5d6a7;
+}
+
+.message-error {
+    background:#fff5f5;
+    color:var(--danger);
+    border:1px solid #f5c2c7;
+}
+
+.country-dropdown {
+    position:relative;
+}
+
+.country-selected {
+    width:100%;
+    height:46px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:#fbfff7;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.country-selected:hover,
+.country-selected.active {
+    border-color:var(--primary);
+    box-shadow:0 0 0 5px rgba(46,125,50,.16);
+    background:white;
+}
+
+.country-left {
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:14px;
+    font-weight:700;
+    color:var(--text);
+}
+
+.country-left img,
+.country-option img {
+    width:24px;
+    height:17px;
+    object-fit:cover;
+    border-radius:3px;
+}
+
+.country-options {
+    display:none;
+    position:absolute;
+    top:52px;
+    left:0;
+    right:0;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:0 14px 30px rgba(0,0,0,.16);
+    max-height:300px;
+    overflow-y:auto;
+    z-index:999;
+}
+
+.country-options.show {
+    display:block;
+}
+
+.country-search {
+    padding:10px;
+    position:sticky;
+    top:0;
+    background:white;
+    z-index:2;
+    border-bottom:1px solid #edf7ed;
+}
+
+.country-search input {
+    min-height:38px;
+    padding:9px 10px;
+    font-size:14px;
+}
+
+.country-option {
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:11px 12px;
+    cursor:pointer;
+    font-size:14px;
+    color:var(--text);
+    border-bottom:1px solid #edf7ed;
+}
+
+.country-option:hover {
+    background:#e8f5e9;
+}
+
+.country-code {
+    margin-left:auto;
+    font-weight:bold;
+    color:var(--primary-dark);
+}
+
+.strength-wrap {
+    margin-top:8px;
+    display:none;
+}
+
+.strength-bar {
+    width:100%;
+    height:7px;
+    background:#e5e7eb;
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.strength-fill {
+    height:100%;
+    width:0;
+    transition:.3s;
+}
+
+.strength-text {
+    margin-top:5px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.weak {
+    background:var(--danger);
+}
+
+.medium {
+    background:var(--warning);
+}
+
+.strong {
+    background:var(--success);
+}
+
+.btn {
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:14px;
+    background:linear-gradient(135deg,var(--primary-dark),var(--primary),var(--primary-light));
+    background-size:200% 200%;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:10px;
+    transition:.3s;
+    box-shadow:0 10px 24px rgba(46,125,50,.32);
+}
+
+.btn:hover {
+    transform:translateY(-2px) scale(1.02);
+    background-position:right center;
+    box-shadow:0 14px 28px rgba(46,125,50,.38);
+}
+
+.btn:disabled {
+    opacity:.75;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.links {
+    text-align:center;
+    margin-top:22px;
+    font-size:14px;
+    color:var(--muted);
+    position:relative;
+    z-index:1;
+}
+
+.links a {
+    color:var(--primary);
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.footer-note {
+    margin-top:18px;
+    text-align:center;
+    color:var(--soil);
+    font-size:13px;
+    font-weight:700;
+}
+
+@keyframes fadeIn {
+    from { opacity:0; transform:translateY(15px); }
+    to { opacity:1; transform:translateY(0); }
+}
+
+@keyframes pulseBadge {
+    0%,100% { transform:scale(1); }
+    50% { transform:scale(1.04); }
+}
+
+@media(max-width:768px) {
+    body {
+        padding:20px 10px;
+    }
+
+    .container {
+        padding:22px;
+        border-radius:20px;
+    }
+
+    .form-row,
+    .country-mobile-row {
+        grid-template-columns:1fr;
+        gap:0;
+    }
+
+    .form-group {
+        margin-bottom:14px;
+    }
+
+    h2 {
+        font-size:24px;
+    }
+
+    .top-action {
+        justify-content:center;
+    }
+
+    .back-index-btn {
+        width:100%;
+        justify-content:center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+    <div class="header-icon">
+        <i class="fa-solid fa-seedling"></i>
+    </div>
+    <h2>Smart Sheti Admin Registration</h2>
+    <p class="subtitle">Create admin account and verify access using OTP</p>
+    <p class="tagline">🌱 Digital Farming • Smart Agriculture • Secure Admin Access</p>
+</div>
+
+<div class="top-action">
+    <a href="{% url 'index' %}" class="back-index-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Index
+    </a>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="message-box {% if message.tags == 'success' %}message-success{% else %}message-error{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="post" id="adminRegistrationForm" novalidate>
+{% csrf_token %}
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="{{ form.first_name.id_for_label }}">First Name <span class="required">*</span></label>
+        <div class="input-box">
+            <i class="fa-solid fa-user left-icon"></i>
+            {{ form.first_name }}
+        </div>
+        <div class="client-error" id="firstNameError"></div>
+        {% for error in form.first_name.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.last_name.id_for_label }}">Last Name <span class="required">*</span></label>
+        <div class="input-box">
+            <i class="fa-solid fa-user left-icon"></i>
+            {{ form.last_name }}
+        </div>
+        <div class="client-error" id="lastNameError"></div>
+        {% for error in form.last_name.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="{{ form.username.id_for_label }}">Username <span class="required">*</span></label>
+    <div class="input-box">
+        <i class="fa-solid fa-id-badge left-icon"></i>
+        {{ form.username }}
+    </div>
+    <div class="client-error" id="usernameError"></div>
+    {% for error in form.username.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.email.id_for_label }}">Email Address <span class="required">*</span></label>
+    <div class="input-box">
+        <i class="fa-solid fa-envelope left-icon"></i>
+        {{ form.email }}
+    </div>
+    <div class="client-error" id="emailError"></div>
+    {% for error in form.email.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+</div>
+
+<div class="country-mobile-row">
+    <div class="form-group">
+        <label>Country Code <span class="required">*</span></label>
+        <input type="hidden" name="country_code" id="id_country_code" value="{{ form.country_code.value|default:'+91' }}">
+
+        <div class="country-dropdown">
+            <div class="country-selected" id="countrySelected">
+                <div class="country-left">
+                    <img id="selectedFlag" src="https://flagcdn.com/w40/in.png" alt="India Flag">
+                    <span id="selectedText">India</span>
+                    <span id="selectedCode">(+91)</span>
+                </div>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+
+            <div class="country-options" id="countryOptions">
+                <div class="country-search">
+                    <input type="text" id="countrySearch" placeholder="Search country...">
+                </div>
+
+                <div class="country-option" data-code="+91" data-name="India" data-flag="in"><img src="https://flagcdn.com/w40/in.png"><span>India</span><span class="country-code">+91</span></div>
+                <div class="country-option" data-code="+1" data-name="USA" data-flag="us"><img src="https://flagcdn.com/w40/us.png"><span>USA</span><span class="country-code">+1</span></div>
+                <div class="country-option" data-code="+44" data-name="UK" data-flag="gb"><img src="https://flagcdn.com/w40/gb.png"><span>UK</span><span class="country-code">+44</span></div>
+                <div class="country-option" data-code="+971" data-name="UAE" data-flag="ae"><img src="https://flagcdn.com/w40/ae.png"><span>UAE</span><span class="country-code">+971</span></div>
+                <div class="country-option" data-code="+61" data-name="Australia" data-flag="au"><img src="https://flagcdn.com/w40/au.png"><span>Australia</span><span class="country-code">+61</span></div>
+                <div class="country-option" data-code="+81" data-name="Japan" data-flag="jp"><img src="https://flagcdn.com/w40/jp.png"><span>Japan</span><span class="country-code">+81</span></div>
+                <div class="country-option" data-code="+49" data-name="Germany" data-flag="de"><img src="https://flagcdn.com/w40/de.png"><span>Germany</span><span class="country-code">+49</span></div>
+                <div class="country-option" data-code="+33" data-name="France" data-flag="fr"><img src="https://flagcdn.com/w40/fr.png"><span>France</span><span class="country-code">+33</span></div>
+                <div class="country-option" data-code="+977" data-name="Nepal" data-flag="np"><img src="https://flagcdn.com/w40/np.png"><span>Nepal</span><span class="country-code">+977</span></div>
+                <div class="country-option" data-code="+880" data-name="Bangladesh" data-flag="bd"><img src="https://flagcdn.com/w40/bd.png"><span>Bangladesh</span><span class="country-code">+880</span></div>
+                <div class="country-option" data-code="+94" data-name="Sri Lanka" data-flag="lk"><img src="https://flagcdn.com/w40/lk.png"><span>Sri Lanka</span><span class="country-code">+94</span></div>
+                <div class="country-option" data-code="+966" data-name="Saudi Arabia" data-flag="sa"><img src="https://flagcdn.com/w40/sa.png"><span>Saudi Arabia</span><span class="country-code">+966</span></div>
+                <div class="country-option" data-code="+974" data-name="Qatar" data-flag="qa"><img src="https://flagcdn.com/w40/qa.png"><span>Qatar</span><span class="country-code">+974</span></div>
+            </div>
+        </div>
+
+        {% for error in form.country_code.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.mobile_number.id_for_label }}">Mobile Number <span class="required">*</span></label>
+        <div class="input-box">
+            <i class="fa-solid fa-phone left-icon"></i>
+            {{ form.mobile_number }}
+        </div>
+        <div class="client-error" id="mobileError"></div>
+        <div class="live-status" id="mobileStatus"></div>
+        {% for error in form.mobile_number.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="{{ form.language_preference.id_for_label }}">Language Preference <span class="required">*</span></label>
+    <div class="input-box">
+        <i class="fa-solid fa-language left-icon"></i>
+        {{ form.language_preference }}
+    </div>
+    {% for error in form.language_preference.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.admin_secret_code.id_for_label }}">
+        Admin Secret Code <span class="required">*</span>
+    </label>
+    <div class="input-box">
+        <i class="fa-solid fa-key left-icon"></i>
+        {{ form.admin_secret_code }}
+        <i class="fa-solid fa-eye toggle-password" data-target="id_admin_secret_code"></i>
+    </div>
+    <div class="client-error" id="adminSecretError"></div>
+    {% for error in form.admin_secret_code.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="{{ form.password1.id_for_label }}">Password <span class="required">*</span></label>
+        <div class="input-box">
+            <i class="fa-solid fa-lock left-icon"></i>
+            {{ form.password1 }}
+            <i class="fa-solid fa-eye toggle-password" data-target="id_password1"></i>
+        </div>
+        <div class="strength-wrap" id="strengthWrap">
+            <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+            <div class="strength-text" id="strengthText"></div>
+        </div>
+        <div class="client-error" id="password1Error"></div>
+        {% for error in form.password1.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.password2.id_for_label }}">Confirm Password <span class="required">*</span></label>
+        <div class="input-box">
+            <i class="fa-solid fa-lock left-icon"></i>
+            {{ form.password2 }}
+            <i class="fa-solid fa-eye toggle-password" data-target="id_password2"></i>
+        </div>
+        <div class="client-error" id="password2Error"></div>
+        <div class="live-status" id="passwordMatchStatus"></div>
+        {% for error in form.password2.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+    </div>
+</div>
+
+{% if form.non_field_errors %}
+<div class="message-box message-error">
+    {% for error in form.non_field_errors %}
+        {{ error }}
+    {% endfor %}
+</div>
+{% endif %}
+
+<button type="submit" class="btn" id="submitBtn">
+    <i class="fa-solid fa-seedling"></i>
+    Create Admin Account & Verify via OTP
+</button>
+
+</form>
+
+<div class="links">
+    <p>Already registered? <a href="{% url 'login' %}">Login here</a></p>
+</div>
+
+<div class="footer-note">
+    Smart Sheti Admin Panel • Secure Farming Management System 🌿
+</div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const OTP_REDIRECT_URL = "{% url 'verify_otp' %}";
+
+    const form = document.getElementById("adminRegistrationForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const firstName = document.getElementById("id_first_name");
+    const lastName = document.getElementById("id_last_name");
+    const username = document.getElementById("id_username");
+    const email = document.getElementById("id_email");
+    const mobile = document.getElementById("id_mobile_number");
+    const adminSecretCode = document.getElementById("id_admin_secret_code");
+    const password1 = document.getElementById("id_password1");
+    const password2 = document.getElementById("id_password2");
+
+    const countryCodeInput = document.getElementById("id_country_code");
+    const countrySelected = document.getElementById("countrySelected");
+    const countryOptions = document.getElementById("countryOptions");
+    const countrySearch = document.getElementById("countrySearch");
+    const selectedFlag = document.getElementById("selectedFlag");
+    const selectedText = document.getElementById("selectedText");
+    const selectedCode = document.getElementById("selectedCode");
+
+    const errors = {
+        firstName: document.getElementById("firstNameError"),
+        lastName: document.getElementById("lastNameError"),
+        username: document.getElementById("usernameError"),
+        email: document.getElementById("emailError"),
+        mobile: document.getElementById("mobileError"),
+        adminSecret: document.getElementById("adminSecretError"),
+        password1: document.getElementById("password1Error"),
+        password2: document.getElementById("password2Error")
+    };
+
+    const mobileStatus = document.getElementById("mobileStatus");
+    const passwordMatchStatus = document.getElementById("passwordMatchStatus");
+
+    const strengthWrap = document.getElementById("strengthWrap");
+    const strengthFill = document.getElementById("strengthFill");
+    const strengthText = document.getElementById("strengthText");
+
+    function setPlaceholder(input, text) {
+        if (input) input.placeholder = text;
+    }
+
+    setPlaceholder(firstName, "Enter first name");
+    setPlaceholder(lastName, "Enter last name");
+    setPlaceholder(username, "Enter username");
+    setPlaceholder(email, "Enter email address");
+    setPlaceholder(mobile, "Enter mobile number");
+    setPlaceholder(adminSecretCode, "Enter admin secret code");
+    setPlaceholder(password1, "Enter password");
+    setPlaceholder(password2, "Confirm password");
+
+    if (email) email.type = "email";
+
+    if (mobile) {
+        mobile.type = "tel";
+        mobile.inputMode = "numeric";
+        mobile.maxLength = 11;
+    }
+
+    if (adminSecretCode) adminSecretCode.type = "password";
+    if (password1) password1.classList.add("password-input");
+    if (password2) password2.classList.add("password-input");
+    if (adminSecretCode) adminSecretCode.classList.add("password-input");
+
+    function showError(el, message, input) {
+        if (el) {
+            el.textContent = message;
+            el.style.display = "block";
+        }
+
+        if (input) {
+            input.classList.add("invalid");
+            input.classList.remove("valid");
+        }
+    }
+
+    function clearError(el, input) {
+        if (el) {
+            el.textContent = "";
+            el.style.display = "none";
+        }
+
+        if (input) {
+            input.classList.remove("invalid");
+        }
+    }
+
+    function setValid(input) {
+        if (input) {
+            input.classList.add("valid");
+            input.classList.remove("invalid");
+        }
+    }
+
+    function setStatus(el, message, type) {
+        if (!el) return;
+        el.textContent = message;
+        el.className = "live-status " + type;
+        el.style.display = "block";
+    }
+
+    function clearStatus(el) {
+        if (!el) return;
+        el.textContent = "";
+        el.style.display = "none";
+    }
+
+    function initCapInput(input) {
+        if (!input) return;
+
+        input.addEventListener("input", function () {
+            this.value = this.value
+                .replace(/[^a-zA-Z\s]/g, "")
+                .replace(/\s+/g, " ")
+                .replace(/\b\w/g, char => char.toUpperCase());
+        });
+    }
+
+    initCapInput(firstName);
+    initCapInput(lastName);
+
+    if (username) {
+        username.addEventListener("input", function () {
+            this.value = this.value.replace(/[^a-zA-Z0-9_@.-]/g, "");
+        });
+    }
+
+    if (mobile) {
+        mobile.addEventListener("input", function () {
+            let digits = this.value.replace(/\D/g, "").slice(0, 10);
+
+            if (digits.length > 5) {
+                this.value = digits.slice(0, 5) + " " + digits.slice(5);
+            } else {
+                this.value = digits;
+            }
+
+            validateMobileLive();
+        });
+    }
+
+    function getMobileDigits() {
+        return mobile ? mobile.value.replace(/\D/g, "") : "";
+    }
+
+    function validateMobileLive() {
+        const digits = getMobileDigits();
+        clearError(errors.mobile, mobile);
+
+        if (!digits) {
+            clearStatus(mobileStatus);
+            return;
+        }
+
+        if (/^[0-9]{10}$/.test(digits)) {
+            setStatus(mobileStatus, "Valid mobile number ✅", "status-success");
+            setValid(mobile);
+        } else {
+            setStatus(mobileStatus, "Mobile number must be 10 digits ❌", "status-error");
+            mobile.classList.add("invalid");
+        }
+    }
+
+    function checkPasswordStrength(value) {
+        let score = 0;
+
+        if (value.length >= 8) score++;
+        if (/[A-Z]/.test(value)) score++;
+        if (/[a-z]/.test(value)) score++;
+        if (/[0-9]/.test(value)) score++;
+        if (/[^A-Za-z0-9]/.test(value)) score++;
+
+        return score;
+    }
+
+    function updatePasswordStrength() {
+        const value = password1.value;
+        strengthWrap.style.display = value ? "block" : "none";
+
+        const score = checkPasswordStrength(value);
+        strengthFill.className = "strength-fill";
+
+        if (score <= 2) {
+            strengthFill.style.width = "33%";
+            strengthFill.classList.add("weak");
+            strengthText.textContent = "Weak password";
+            strengthText.style.color = "var(--danger)";
+        } else if (score <= 4) {
+            strengthFill.style.width = "66%";
+            strengthFill.classList.add("medium");
+            strengthText.textContent = "Medium password";
+            strengthText.style.color = "var(--warning)";
+        } else {
+            strengthFill.style.width = "100%";
+            strengthFill.classList.add("strong");
+            strengthText.textContent = "Strong password";
+            strengthText.style.color = "var(--success)";
+        }
+    }
+
+    function validatePasswordMatchLive() {
+        if (!password2.value) {
+            clearStatus(passwordMatchStatus);
+            return;
+        }
+
+        if (password1.value === password2.value) {
+            setStatus(passwordMatchStatus, "Passwords match ✅", "status-success");
+            setValid(password2);
+        } else {
+            setStatus(passwordMatchStatus, "Passwords do not match ❌", "status-error");
+            password2.classList.add("invalid");
+        }
+    }
+
+    if (password1) {
+        password1.addEventListener("input", function () {
+            updatePasswordStrength();
+            validatePasswordMatchLive();
+        });
+    }
+
+    if (password2) {
+        password2.addEventListener("input", validatePasswordMatchLive);
+    }
+
+    if (countrySelected && countryOptions) {
+        countrySelected.addEventListener("click", function () {
+            countryOptions.classList.toggle("show");
+            countrySelected.classList.toggle("active");
+            if (countrySearch) countrySearch.focus();
+        });
+
+        document.querySelectorAll(".country-option").forEach(function (option) {
+            option.addEventListener("click", function () {
+                const code = this.dataset.code;
+                const name = this.dataset.name;
+                const flag = this.dataset.flag;
+
+                countryCodeInput.value = code;
+                selectedText.textContent = name;
+                selectedCode.textContent = "(" + code + ")";
+                selectedFlag.src = "https://flagcdn.com/w40/" + flag + ".png";
+                selectedFlag.alt = name + " Flag";
+
+                countryOptions.classList.remove("show");
+                countrySelected.classList.remove("active");
+            });
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!countrySelected.contains(event.target) && !countryOptions.contains(event.target)) {
+                countryOptions.classList.remove("show");
+                countrySelected.classList.remove("active");
+            }
+        });
+    }
+
+    if (countrySearch) {
+        countrySearch.addEventListener("input", function () {
+            const search = this.value.toLowerCase();
+
+            document.querySelectorAll(".country-option").forEach(function (option) {
+                const text = option.textContent.toLowerCase();
+                option.style.display = text.includes(search) ? "flex" : "none";
+            });
+        });
+    }
+
+    document.querySelectorAll(".toggle-password").forEach(function (icon) {
+        icon.addEventListener("click", function () {
+            const input = document.getElementById(this.dataset.target);
+            if (!input) return;
+
+            if (input.type === "password") {
+                input.type = "text";
+                this.classList.remove("fa-eye");
+                this.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                this.classList.remove("fa-eye-slash");
+                this.classList.add("fa-eye");
+            }
+        });
+    });
+
+    if (form) {
+        form.addEventListener("submit", function (event) {
+            let isValid = true;
+
+            clearError(errors.firstName, firstName);
+            clearError(errors.lastName, lastName);
+            clearError(errors.username, username);
+            clearError(errors.email, email);
+            clearError(errors.mobile, mobile);
+            clearError(errors.adminSecret, adminSecretCode);
+            clearError(errors.password1, password1);
+            clearError(errors.password2, password2);
+
+            const nameRegex = /^[A-Za-z\s]{2,50}$/;
+            const usernameRegex = /^[A-Za-z0-9_@.-]{3,50}$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!nameRegex.test(firstName.value.trim())) {
+                showError(errors.firstName, "Enter a valid first name.", firstName);
+                isValid = false;
+            }
+
+            if (!nameRegex.test(lastName.value.trim())) {
+                showError(errors.lastName, "Enter a valid last name.", lastName);
+                isValid = false;
+            }
+
+            if (!usernameRegex.test(username.value.trim())) {
+                showError(errors.username, "Username must be at least 3 characters.", username);
+                isValid = false;
+            }
+
+            if (!emailRegex.test(email.value.trim())) {
+                showError(errors.email, "Enter a valid email address.", email);
+                isValid = false;
+            }
+
+            if (!/^[0-9]{10}$/.test(getMobileDigits())) {
+                showError(errors.mobile, "Mobile number must be 10 digits.", mobile);
+                isValid = false;
+            } else {
+                mobile.value = getMobileDigits();
+            }
+
+            if (adminSecretCode.value.trim().length < 4) {
+                showError(errors.adminSecret, "Enter valid admin secret code.", adminSecretCode);
+                isValid = false;
+            }
+
+            if (password1.value.length < 8) {
+                showError(errors.password1, "Password must be at least 8 characters.", password1);
+                isValid = false;
+            }
+
+            if (password1.value !== password2.value) {
+                showError(errors.password2, "Password and confirm password do not match.", password2);
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registering... ⏳';
+        });
+    }
+
+    const successBox = document.querySelector(".message-success");
+
+    if (successBox && successBox.textContent.toLowerCase().includes("otp")) {
+        setTimeout(function () {
+            window.location.href = OTP_REDIRECT_URL;
+        }, 1800);
+    }
+});
+</script>
+
+</body>
+</html>

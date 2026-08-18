@@ -1,0 +1,471 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Detail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #1b5e20;
+            --primary-mid: #43a047;
+            --primary-glow: rgba(46, 125, 50, 0.16);
+            --text: #2f3a33;
+            --text-dark: #1f2937;
+            --muted: #6b7280;
+            --border: #dbe8dc;
+            --shadow-md: 0 16px 36px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.12);
+            --shadow-green: 0 14px 30px rgba(46, 125, 50, 0.18);
+            --radius-xl: 26px;
+            --transition: all 0.35s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(129,199,132,0.14), transparent 18%),
+                radial-gradient(circle at bottom left, rgba(46,125,50,0.08), transparent 20%),
+                linear-gradient(180deg, #f8fcf8 0%, #eff6f0 100%);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        header {
+            background: rgba(46,125,50,0.96);
+            color: white;
+            padding: 16px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+        }
+
+        .logo {
+            color: white;
+            font-size: 28px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 10px 16px;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: white;
+            color: var(--primary);
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 18px 42px;
+        }
+
+        .topbar {
+            background: linear-gradient(135deg, #2f8a35 0%, #1b5e20 100%);
+            color: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 28px 30px;
+            margin-bottom: 24px;
+        }
+
+        .topbar h1 {
+            font-size: 32px;
+            font-weight: 900;
+        }
+
+        .topbar p {
+            margin-top: 8px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .card-box {
+            background: rgba(255,255,255,0.96);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary-dark);
+            margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary-mid), var(--primary-dark));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-green);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .detail-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .image-section {
+            background: #f8fbf8;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .image-section img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .details-section {
+            width: 100%;
+        }
+
+        .prediction-name {
+            font-size: 30px;
+            font-weight: 900;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 15px 18px;
+            margin-bottom: 14px;
+            border-radius: 16px;
+            background: #f8fbf8;
+            border: 1px solid var(--border);
+        }
+
+        .detail-label {
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 800;
+            min-width: 180px;
+        }
+
+        .detail-value {
+            flex: 1;
+            text-align: right;
+            color: var(--text-dark);
+            font-size: 15px;
+            font-weight: 800;
+            word-break: break-word;
+        }
+
+        .success {
+            color: #166534;
+            font-weight: 900;
+        }
+
+        .failed {
+            color: #b91c1c;
+            font-weight: 900;
+        }
+
+        .empty-box {
+            padding: 50px 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--muted);
+            background: #f8fbf8;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        footer {
+            background: linear-gradient(180deg, #243227 0%, #1e2a20 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .detail-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .image-section img,
+            .image-placeholder {
+                height: 320px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 16px;
+                justify-content: center;
+                text-align: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .page {
+                margin: 18px auto;
+                padding: 0 14px 28px;
+            }
+
+            .topbar {
+                padding: 22px 20px;
+                text-align: center;
+            }
+
+            .topbar h1 {
+                font-size: 24px;
+            }
+
+            .card-box {
+                padding: 20px;
+            }
+
+            .prediction-name {
+                font-size: 24px;
+            }
+
+            .detail-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+
+            .detail-label {
+                min-width: auto;
+            }
+
+            .detail-value {
+                text-align: left;
+            }
+
+            .back-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+{% include 'accounts/admin/admin_sidebar.html' %}
+
+<main class="main-content">
+
+<header>
+    <a href="/disease/admin/disease-predictions/" class="logo">
+        <i class="fa-solid fa-seedling"></i>
+        Smart Sheti
+    </a>
+
+    <nav>
+        <a href="/disease/admin/disease-predictions/">
+            <i class="fa-solid fa-list"></i>
+            Predictions
+        </a>
+
+        <a href="/disease/admin/disease-predictions/" class="active">
+            <i class="fa-solid fa-microscope"></i>
+            Detail
+        </a>
+    </nav>
+</header>
+
+<main class="page">
+
+    <section class="topbar">
+        <h1>
+            <i class="fa-solid fa-microscope"></i>
+            Prediction Detail
+        </h1>
+        <p>
+            View complete disease prediction information including farmer, crop, disease, confidence,
+            treatment, suggestion, model class, status, and created date.
+        </p>
+    </section>
+
+    <section class="card-box">
+
+        <a href="/disease/admin/disease-predictions/" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back To Predictions
+        </a>
+
+        <h2 class="section-title">
+            <i class="fa-solid fa-circle-info"></i>
+            Prediction Information
+        </h2>
+
+        {% if prediction %}
+
+            <div class="detail-layout">
+
+                <section class="image-section">
+                    {% if prediction.image %}
+                        <img src="{{ prediction.image.url }}" alt="Prediction Image">
+                    {% else %}
+                        <div class="image-placeholder">
+                            No Image Available
+                        </div>
+                    {% endif %}
+                </section>
+
+                <section class="details-section">
+
+                    <h3 class="prediction-name">
+                        {{ prediction.crop_name|default:"Prediction Result" }}
+                    </h3>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Farmer</span>
+                        <span class="detail-value">{{ prediction.user|default:"-" }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Crop Name</span>
+                        <span class="detail-value">{{ prediction.crop_name|default:"-" }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Disease Name</span>
+                        <span class="detail-value">{{ prediction.disease_name|default:"-" }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Confidence</span>
+                        <span class="detail-value">{{ prediction.confidence|default:"0" }}%</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Treatment</span>
+                        <span class="detail-value">{{ prediction.treatment|default:"-" }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Suggestion</span>
+                        <span class="detail-value">{{ prediction.suggestion|default:"-" }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Class Name</span>
+                        <span class="detail-value">{{ prediction.class_name|default:"-" }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Predicted Index</span>
+                        <span class="detail-value">{{ prediction.predicted_index|default:"-" }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value {% if prediction.status == 'SUCCESS' %}success{% else %}failed{% endif %}">
+                            {{ prediction.status|default:"FAILED" }}
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Error Message</span>
+                        <span class="detail-value">{{ prediction.error_message|default:"-" }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Created Date</span>
+                        <span class="detail-value">
+                            {{ prediction.created_at|date:"d M Y h:i A" }}
+                        </span>
+                    </div>
+
+                </section>
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-box">
+                No prediction found.
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+<footer>
+    © 2026 Smart Sheti | Prediction Detail
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,350 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ scheme.scheme_name|default:"Government Scheme" }} - Smart Sheti</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="{% static 'schemes/css/government_scheme_detail.css' %}?v=999999">
+</head>
+
+<body>
+
+{% include 'accounts/farmer/farmer_sidebar.html' %}
+
+<div class="main-content">
+
+    <header>
+
+        <a href="/" class="logo">
+            <span>
+                <i class="fa-solid fa-seedling"></i>
+            </span>
+            Smart Sheti
+        </a>
+
+        <nav>
+
+            <a href="{% url 'government_scheme:farmer-scheme-dashboard' %}">
+                <i class="fa-solid fa-gauge-high"></i>
+                Dashboard
+            </a>
+
+            <a href="{% url 'government_scheme:farmer_government_scheme_list' %}" class="active">
+                <i class="fa-solid fa-file-lines"></i>
+                Schemes
+            </a>
+
+        </nav>
+
+    </header>
+
+    <main class="page">
+
+        <div class="topbar">
+
+            <div>
+                <span class="page-badge">
+                    <i class="fa-solid fa-landmark"></i>
+                    Government Scheme Detail
+                </span>
+
+                <h1>Scheme Details</h1>
+
+                <p>
+                    View complete details, eligibility, benefits, required documents and official links for this government scheme.
+                </p>
+            </div>
+
+            <div class="topbar-actions">
+
+                <a href="{% url 'government_scheme:farmer_government_scheme_list' %}"
+                   class="btn btn-secondary">
+
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to List
+
+                </a>
+
+                <a href="{% url 'government_scheme:farmer-scheme-dashboard' %}"
+                   class="btn btn-dashboard">
+
+                    <i class="fa-solid fa-gauge-high"></i>
+                    Dashboard
+
+                </a>
+
+                {% if scheme.apply_link %}
+                    <a href="{{ scheme.apply_link }}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="btn btn-primary">
+
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Apply Online
+
+                    </a>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <section class="card">
+
+            <div class="banner">
+
+                {% if scheme.scheme_image_url %}
+                    <img src="{{ scheme.scheme_image_url }}"
+                         alt="{{ scheme.scheme_name|default:'Government Scheme' }}"
+                         loading="lazy">
+
+                {% elif scheme.scheme_image %}
+                    <img src="{{ scheme.scheme_image.url }}"
+                         alt="{{ scheme.scheme_name|default:'Government Scheme' }}"
+                         loading="lazy">
+
+                {% else %}
+                    <div class="scheme-placeholder">
+                        <i class="fa-solid fa-building-columns"></i>
+                        <span>Government Scheme</span>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <div class="content">
+
+                <div class="badge-row">
+
+                    <span class="badge">
+                        {{ scheme.category|default:"General Scheme" }}
+                    </span>
+
+                    {% if scheme.is_featured %}
+                        <span class="badge badge-featured">
+                            <i class="fa-solid fa-star"></i>
+                            Featured
+                        </span>
+                    {% endif %}
+
+                    {% if scheme.status == "active" %}
+                        <span class="badge badge-active">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Active
+                        </span>
+                    {% else %}
+                        <span class="badge badge-inactive">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                            Inactive
+                        </span>
+                    {% endif %}
+
+                </div>
+
+                <h2 class="main-title">
+                    {{ scheme.scheme_name|default:"Government Scheme" }}
+                </h2>
+
+                <p class="main-desc">
+                    {{ scheme.short_description|default:"No short description available." }}
+                </p>
+
+                <div class="details-grid">
+
+                    <div class="info-box">
+                        <div class="info-label">Scheme Code</div>
+                        <div class="info-value">{{ scheme.scheme_code|default:"-" }}</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Category</div>
+                        <div class="info-value">{{ scheme.category|default:"-" }}</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">State</div>
+                        <div class="info-value">{{ scheme.state|default:"All India" }}</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Country</div>
+                        <div class="info-value">{{ scheme.country|default:"India" }}</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Start Date</div>
+                        <div class="info-value">
+                            {% if scheme.start_date %}
+                                {{ scheme.start_date|date:"d M Y" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">End Date</div>
+                        <div class="info-value">
+                            {% if scheme.end_date %}
+                                {{ scheme.end_date|date:"d M Y" }}
+                            {% else %}
+                                Ongoing
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Contact Person</div>
+                        <div class="info-value">{{ scheme.contact_person|default:"-" }}</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">Contact Number</div>
+                        <div class="info-value">{{ scheme.contact_number|default:"-" }}</div>
+                    </div>
+
+                </div>
+
+                <section class="section">
+                    <h3>
+                        <i class="fa-solid fa-circle-info"></i>
+                        Description
+                    </h3>
+
+                    <p>
+                        {{ scheme.description|default:"No description available."|linebreaksbr }}
+                    </p>
+                </section>
+
+                <section class="section">
+                    <h3>
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                        Benefits
+                    </h3>
+
+                    <p>
+                        {{ scheme.benefits|default:"Benefits not specified."|linebreaksbr }}
+                    </p>
+                </section>
+
+                <section class="section">
+                    <h3>
+                        <i class="fa-solid fa-user-check"></i>
+                        Eligibility
+                    </h3>
+
+                    <p>
+                        {{ scheme.eligibility|default:"Eligibility details not specified."|linebreaksbr }}
+                    </p>
+                </section>
+
+                <section class="section">
+                    <h3>
+                        <i class="fa-solid fa-file-lines"></i>
+                        Required Documents
+                    </h3>
+
+                    <p>
+                        {{ scheme.required_documents|default:"Not specified."|linebreaksbr }}
+                    </p>
+                </section>
+
+                <div class="actions">
+
+                    <a href="{% url 'government_scheme:farmer_government_scheme_list' %}"
+                       class="action-btn secondary-btn">
+
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Back to List
+
+                    </a>
+
+                    <a href="{% url 'government_scheme:farmer-scheme-dashboard' %}"
+                       class="action-btn dashboard-btn">
+
+                        <i class="fa-solid fa-gauge-high"></i>
+                        Dashboard
+
+                    </a>
+
+                    {% if scheme.apply_link %}
+                        <a href="{{ scheme.apply_link }}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="action-btn">
+
+                            <i class="fa-solid fa-paper-plane"></i>
+                            Apply Online
+
+                        </a>
+                    {% endif %}
+
+                    {% if scheme.official_link %}
+                        <a href="{{ scheme.official_link }}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="action-btn secondary-btn">
+
+                            <i class="fa-solid fa-globe"></i>
+                            Official Website
+
+                        </a>
+                    {% endif %}
+
+                    {% if scheme.scheme_document_url %}
+                        <a href="{{ scheme.scheme_document_url }}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="action-btn secondary-btn">
+
+                            <i class="fa-solid fa-download"></i>
+                            Download Document
+
+                        </a>
+
+                    {% elif scheme.scheme_document %}
+                        <a href="{{ scheme.scheme_document.url }}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="action-btn secondary-btn">
+
+                            <i class="fa-solid fa-download"></i>
+                            Download Document
+
+                        </a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-bottom">
+            © 2026 Smart Sheti. All rights reserved.
+        </div>
+    </footer>
+
+</div>
+
+<script src="{% static 'schemes/js/farmer_scheme_detail.js' %}?v=999999"></script>
+
+</body>
+</html>

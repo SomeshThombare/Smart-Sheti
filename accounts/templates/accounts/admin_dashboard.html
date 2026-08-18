@@ -1,0 +1,886 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Smart Sheti</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #14532d;
+            --primary-soft: #e8f5e9;
+            --secondary: #66bb6a;
+            --white: #ffffff;
+            --bg: #f4f8f4;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #dcebdd;
+            --danger: #dc3545;
+            --shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 24px 60px rgba(0, 0, 0, 0.14);
+            --sidebar-width: 292px;
+            --transition: 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #f8fcf8 0%, #eef6f0 100%);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 90;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 99;
+            overflow-y: auto;
+            padding: 24px 16px;
+            color: var(--white);
+            background:
+                linear-gradient(180deg, rgba(12, 45, 22, 0.96), rgba(9, 30, 15, 0.98)),
+                url("https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=900&q=80");
+            background-size: cover;
+            background-position: center;
+            box-shadow: 8px 0 30px rgba(0, 0, 0, 0.18);
+            transition: var(--transition);
+        }
+
+        .brand {
+            text-align: center;
+            padding: 8px 8px 24px;
+            margin-bottom: 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.14);
+        }
+
+        .brand-icon {
+            width: 86px;
+            height: 86px;
+            margin: 0 auto 14px;
+            border-radius: 28px;
+            background: rgba(255,255,255,0.95);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+        }
+
+        .brand h2 {
+            font-size: 27px;
+            font-weight: 900;
+            color: #9df5a6;
+        }
+
+        .brand p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.78);
+            margin-top: 6px;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.62);
+            margin: 18px 12px 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 7px;
+        }
+
+        .sidebar-menu a,
+        .settings-toggle {
+            width: 100%;
+            min-height: 47px;
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            color: rgba(255,255,255,0.92);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .menu-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-left i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active,
+        .settings-toggle:hover,
+        .settings-toggle.active {
+            background: rgba(255,255,255,0.16);
+            transform: translateX(5px);
+        }
+
+        .chevron {
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        .settings-toggle.active .chevron {
+            transform: rotate(180deg);
+        }
+
+        .submenu {
+            display: none;
+            list-style: none;
+            margin: 8px 0 10px 20px;
+            padding-left: 12px;
+            border-left: 1px solid rgba(255,255,255,0.16);
+        }
+
+        .submenu.open {
+            display: block;
+        }
+
+        .submenu a {
+            min-height: 40px;
+            font-size: 13px;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .main-content {
+            width: calc(100% - var(--sidebar-width));
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: 18px 28px;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .menu-toggle {
+            display: none;
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 14px;
+            background: var(--primary);
+            color: var(--white);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--primary-dark);
+        }
+
+        .page-title p {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            background: var(--primary-soft);
+            color: var(--primary-dark);
+            border: 1px solid #cfe8d1;
+            padding: 11px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .welcome-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+            padding: 34px;
+            background:
+                linear-gradient(135deg, rgba(46,125,50,0.96), rgba(20,83,45,0.96)),
+                url("https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=1200&q=80");
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            box-shadow: var(--shadow);
+            margin-bottom: 28px;
+        }
+
+        .welcome-card h2 {
+            font-size: 34px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .welcome-card p {
+            color: rgba(255,255,255,0.88);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .stats-grid,
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+        }
+
+        .stats-grid {
+            margin-bottom: 32px;
+        }
+
+        .stat-card,
+        .module-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover,
+        .module-card:hover {
+            transform: translateY(-7px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-icon,
+        .module-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            flex-shrink: 0;
+        }
+
+        .stat-info h3 {
+            font-size: 21px;
+            font-weight: 900;
+            color: var(--primary-dark);
+        }
+
+        .stat-info p {
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .section-header {
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 26px;
+            color: var(--primary-dark);
+            font-weight: 900;
+        }
+
+        .section-header p {
+            font-size: 14px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .module-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 5px;
+            width: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .module-icon {
+            margin-bottom: 18px;
+        }
+
+        .module-card h3 {
+            font-size: 19px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .module-card p {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.7;
+            min-height: 72px;
+            margin-bottom: 18px;
+        }
+
+        .module-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 11px 17px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            font-size: 14px;
+            font-weight: 800;
+            transition: var(--transition);
+        }
+
+        .module-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(46,125,50,0.25);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 18px 24px 28px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        @media (max-width: 1400px) {
+            .stats-grid,
+            .module-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .stats-grid,
+            .module-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .admin-badge,
+            .module-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats-grid,
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-card h2 {
+                font-size: 27px;
+            }
+
+            .module-card p {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="dashboard-container">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-seedling"></i>
+            </div>
+            <h2>Smart Sheti</h2>
+            <p>Admin Management Panel</p>
+        </div>
+
+        <div class="menu-title">Main Menu</div>
+
+        <ul class="sidebar-menu">
+            <li>
+                <a href="/" class="active">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Dashboard</span>
+                    </div>
+                </a>
+            </li>
+
+<li>
+    <a href="{% url 'admin_search_farmers' %}">
+        <div class="menu-left">
+            <i class="fa-solid fa-user-group"></i>
+            <span>Farmer Management</span>
+        </div>
+    </a>
+</li>
+
+            <li>
+    <a href="{% url 'admin_crop_dashboard' %}">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-seedling"></i>
+                        <span>Crop Management</span>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'admin_chatbot_api' %}">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-robot"></i>
+                        <span>AI Chatbot</span>
+                    </div>
+                </a>
+            </li>
+
+<li>
+    <a href="{% url 'fertilizer:admin_dashboard' %}">
+        <div class="menu-left">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Fertilizer Dashboard</span>
+        </div>
+    </a>
+</li>
+           
+
+            <a href="{% url 'disease_detection:admin-disease-dashboard' %}">
+                <div class="menu-left">
+                    <i class="fa-solid fa-bug"></i>
+                    <span>Disease Detection</span>
+                </div>
+            </a>
+        </li>
+
+            <li>
+                <a href="/weather/">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-cloud-sun"></i>
+                        <span>Weather Management</span>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'admin_government_scheme_create_form' %}">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Government Schemes</span>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="/marketplace/">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-store"></i>
+                        <span>Marketplace</span>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'admin-equipment-form-page' %}">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-tractor"></i>
+                        <span>Equipment Management</span>
+                    </div>
+                </a>
+            </li>
+        </ul>
+
+        <div class="menu-title">Settings</div>
+
+        <ul class="sidebar-menu">
+            <li>
+                <div class="settings-toggle" id="settingsToggle">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Settings</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </div>
+
+                <ul class="submenu" id="settingsSubmenu">
+                    <li>
+                        <a href="{% url 'current_profile_update_web' %}">
+                            <div class="menu-left">
+                                <i class="fa-solid fa-user-pen"></i>
+                                <span>Profile Update</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'change_password' %}">
+                            <div class="menu-left">
+                                <i class="fa-solid fa-key"></i>
+                                <span>Change Password</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'logout' %}">
+                            <div class="menu-left">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                <span>Logout</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div class="page-title">
+                    <h1>Admin Dashboard</h1>
+                    <p>Manage your Smart Sheti platform modules</p>
+                </div>
+            </div>
+
+            <div class="admin-badge">
+                <i class="fa-solid fa-user-shield"></i>
+                Administrator
+            </div>
+        </header>
+
+        <section class="content">
+
+            <div class="welcome-card">
+                <div class="welcome-content">
+                    <h2>
+                        Welcome,
+                        {% if request.user.is_authenticated %}
+                            {{ request.user.username }}
+                        {% else %}
+                            Admin
+                        {% endif %}
+                    </h2>
+
+                    <p>
+                        Manage farmers, crops, weather services, fertilizer details, disease detection,
+                        AI chatbot, government schemes, equipment, and marketplace from one modern admin dashboard.
+                    </p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-user-group"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Farmers</h3>
+                        <p>Manage farmer accounts</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Crops</h3>
+                        <p>Crop information</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-cloud-sun"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Weather</h3>
+                        <p>Weather updates</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Market</h3>
+                        <p>Marketplace control</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>Admin Modules</h2>
+                <p>Quick access to all Smart Sheti management sections</p>
+            </div>
+
+            <div class="module-grid">
+
+                <div class="module-card">
+                    <div class="module-icon">
+                        <i class="fa-solid fa-user-group"></i>
+                    </div>
+                    <h3>Farmer Management</h3>
+                    <p>View, add, update and manage registered farmers.</p>
+                    <a href="/accounts/farmers/" class="module-btn">
+                        Open <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <h3>Crop Management</h3>
+                    <p>Manage crop details, crop guidance and related records.</p>
+                    <a href="/crop/" class="module-btn">
+                        Open <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <h3>AI Chatbot</h3>
+                    <p>Manage chatbot responses and farmer support queries.</p>
+                    <a href="{% url 'admin_chatbot_api' %}" class="module-btn">
+                        Open <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">
+                        <i class="fa-solid fa-flask"></i>
+                    </div>
+                    <h3>Fertilizer</h3>
+                    <p>Add and update fertilizer recommendation details.</p>
+                    <a href="{% url 'admin_dashboard' %}" class="module-btn">
+                        Open <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">
+                        <i class="fa-solid fa-bug"></i>
+                    </div>
+                    <h3>Disease Detection</h3>
+                    <p>Manage crop disease detection and diagnosis records.</p>
+                    <a href="/disease/" class="module-btn">
+                        Open <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">
+                        <i class="fa-solid fa-cloud-sun"></i>
+                    </div>
+                    <h3>Weather</h3>
+                    <p>Control weather data and agricultural alerts.</p>
+                    <a href="/weather/" class="module-btn">
+                        Open <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <h3>Government Schemes</h3>
+                    <p>Manage scheme details, eligibility and farmer benefits.</p>
+                    <a href="{% url 'admin_government_scheme_create_form' %}" class="module-btn">
+                        Open <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">
+                        <i class="fa-solid fa-tractor"></i>
+                    </div>
+                    <h3>Equipment</h3>
+                    <p>Manage farming equipment listings and details.</p>
+                    <a href="{% url 'admin-equipment-form-page' %}" class="module-btn">
+                        Open <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </div>
+
+        </section>
+
+        <footer class="footer">
+            © 2026 Smart Sheti Admin Dashboard. All Rights Reserved.
+        </footer>
+
+    </main>
+
+</div>
+
+<script>
+    const menuToggle = document.getElementById("menuToggle");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+    const settingsToggle = document.getElementById("settingsToggle");
+    const settingsSubmenu = document.getElementById("settingsSubmenu");
+
+    if (menuToggle) {
+        menuToggle.addEventListener("click", function () {
+            sidebar.classList.toggle("active");
+            sidebarOverlay.classList.toggle("active");
+        });
+    }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener("click", function () {
+            sidebar.classList.remove("active");
+            sidebarOverlay.classList.remove("active");
+        });
+    }
+
+    if (settingsToggle && settingsSubmenu) {
+        settingsToggle.addEventListener("click", function () {
+            settingsSubmenu.classList.toggle("open");
+            settingsToggle.classList.toggle("active");
+        });
+    }
+
+    document.querySelectorAll(".sidebar a").forEach(function (link) {
+        link.addEventListener("click", function () {
+            if (window.innerWidth <= 900) {
+                sidebar.classList.remove("active");
+                sidebarOverlay.classList.remove("active");
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

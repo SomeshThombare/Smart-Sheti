@@ -1,0 +1,300 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Farmer Disease History</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #1b5e20;
+            --primary-mid: #43a047;
+            --primary-glow: rgba(46, 125, 50, 0.16);
+            --text: #2f3a33;
+            --border: #dbe8dc;
+            --shadow-md: 0 16px 36px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.12);
+            --radius-xl: 26px;
+            --transition: all 0.35s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(129,199,132,0.14), transparent 18%),
+                radial-gradient(circle at bottom left, rgba(46,125,50,0.08), transparent 20%),
+                linear-gradient(180deg, #f8fcf8 0%, #eff6f0 100%);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        header {
+            background: rgba(46,125,50,0.96);
+            color: white;
+            padding: 16px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+        }
+
+        .logo {
+            color: white;
+            font-size: 28px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 10px 16px;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: white;
+            color: var(--primary);
+        }
+
+        .page {
+            max-width: 1220px;
+            margin: 30px auto;
+            padding: 0 18px 42px;
+        }
+
+        .topbar {
+            background: linear-gradient(135deg, #2f8a35 0%, #1b5e20 100%);
+            color: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 28px 30px;
+            margin-bottom: 24px;
+        }
+
+        .topbar h1 {
+            font-size: 32px;
+            font-weight: 900;
+        }
+
+        .topbar p {
+            margin-top: 8px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .card-box {
+            background: rgba(255,255,255,0.96);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            padding: 30px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+            overflow: hidden;
+            border-radius: 18px;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary-mid), var(--primary-dark));
+            color: white;
+            padding: 14px 12px;
+            font-size: 14px;
+            font-weight: 900;
+            text-align: center;
+        }
+
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            background: white;
+        }
+
+        tr:hover td {
+            background: #f6fbf6;
+        }
+
+        .history-img {
+            width: 75px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 18px rgba(15,23,42,0.08);
+        }
+
+        .success {
+            color: #166534;
+            font-weight: 900;
+        }
+
+        .failed {
+            color: #b91c1c;
+            font-weight: 900;
+        }
+
+        .empty-row {
+            padding: 30px;
+            color: #6b7280;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        footer {
+            background: linear-gradient(180deg, #243227 0%, #1e2a20 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 16px;
+                justify-content: center;
+                text-align: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .page {
+                margin: 18px auto;
+                padding: 0 14px 28px;
+            }
+
+            .topbar {
+                padding: 22px 20px;
+            }
+
+            .topbar h1 {
+                font-size: 24px;
+            }
+
+            .card-box {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+{% include 'accounts/farmer/farmer_sidebar.html' %}
+
+<div class="main-content">
+<header>
+    <a href="/farmer/dashboard/" class="logo">
+        <i class="fa-solid fa-seedling"></i>
+        Smart Sheti
+    </a>
+
+    <nav>
+        <a href="{% url 'farmer_dashboard' %}">Dashboard</a>
+        <a href="/disease/farmer/disease-detection/">Disease Detection</a>
+        <a href="/disease/farmer/disease-history/" class="active">History</a>
+    </nav>
+</header>
+
+<main class="page">
+
+    <section class="topbar">
+        <h1>
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            My Disease Detection History
+        </h1>
+        <p>
+            View all your previous crop disease detection records with image, crop, disease, confidence, status, and date.
+        </p>
+    </section>
+
+    <section class="card-box">
+
+        <table>
+            <tr>
+                <th>Image</th>
+                <th>Crop</th>
+                <th>Disease</th>
+                <th>Confidence</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+
+            {% for p in predictions %}
+            <tr>
+                <td>
+                    {% if p.image %}
+                        <img src="{{ p.image.url }}" alt="Crop Image" class="history-img">
+                    {% else %}
+                        No Image
+                    {% endif %}
+                </td>
+
+                <td>{{ p.crop_name }}</td>
+                <td>{{ p.disease_name }}</td>
+                <td>{{ p.confidence }}%</td>
+
+                <td class="{% if p.status == 'SUCCESS' %}success{% else %}failed{% endif %}">
+                    {{ p.status }}
+                </td>
+
+                <td>{{ p.created_at|date:"d M Y h:i A" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="empty-row">
+                    No prediction history found.
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </section>
+
+</main>
+
+<footer>
+    © 2026 Smart Sheti | Farmer Disease History
+</footer>
+
+</body>
+</html>

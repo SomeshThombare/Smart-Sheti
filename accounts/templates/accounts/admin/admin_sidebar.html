@@ -1,0 +1,449 @@
+{% load static %}
+
+<style>
+:root {
+    --primary: #15803d;
+    --primary-dark: #14532d;
+    --primary-light: #dcfce7;
+    --white: #ffffff;
+    --bg: #f4f8f5;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #d9eadf;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    --sidebar-width: 290px;
+    --radius: 18px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+.sidebar-overlay {
+    display: none;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    padding: 22px 16px;
+    overflow-y: auto;
+    z-index: 1000;
+    background:
+        radial-gradient(circle at top left, rgba(220, 252, 231, 0.95), transparent 35%),
+        linear-gradient(180deg, #ffffff 0%, #f0fdf4 55%, #dcfce7 100%);
+    border-right: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.brand {
+    text-align: center;
+    padding: 12px 8px 24px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.brand-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 14px;
+    display: grid;
+    place-items: center;
+    border-radius: 24px;
+    background: linear-gradient(135deg, var(--primary-dark), var(--success));
+    color: var(--white);
+    font-size: 34px;
+    box-shadow: 0 14px 34px rgba(21, 128, 61, 0.35);
+}
+
+.brand h2 {
+    font-size: 27px;
+    font-weight: 900;
+    color: var(--primary-dark);
+    margin-bottom: 6px;
+}
+
+.brand p {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+}
+
+.menu-title {
+    margin: 18px 8px 10px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--primary-dark);
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    margin-bottom: 8px;
+}
+
+.sidebar-menu a,
+.settings-toggle {
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: var(--radius);
+    border-left: 5px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.78);
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.sidebar-menu a:hover,
+.settings-toggle:hover {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    transform: translateX(5px);
+    box-shadow: 0 10px 24px rgba(21, 128, 61, 0.16);
+}
+
+.menu-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.menu-left i {
+    width: 22px;
+    font-size: 16px;
+    color: var(--primary);
+}
+
+.sidebar-menu a.active {
+    background: linear-gradient(135deg, var(--primary-dark), var(--success));
+    color: var(--white);
+    border-left-color: #facc15;
+    box-shadow: 0 12px 28px rgba(21, 128, 61, 0.28);
+}
+
+.sidebar-menu a.active i,
+.sidebar-menu a.active span {
+    color: var(--white);
+}
+
+.chevron {
+    font-size: 12px;
+    color: var(--muted);
+    transition: 0.25s ease;
+}
+
+.settings-toggle.active {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+.settings-toggle.active .chevron {
+    transform: rotate(180deg);
+}
+
+.submenu {
+    display: none;
+    list-style: none;
+    padding-left: 16px;
+    margin-top: 8px;
+}
+
+.submenu.open {
+    display: block;
+}
+
+.submenu a {
+    padding: 11px 12px;
+    font-size: 14px;
+    border-radius: 14px;
+}
+
+.logout-link {
+    color: var(--danger) !important;
+}
+
+.logout-link i,
+.logout-link span {
+    color: var(--danger) !important;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--success);
+    border-radius: 20px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 30px;
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: 0.3s ease;
+    }
+
+    .sidebar.active,
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 83, 45, 0.45);
+        z-index: 999;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+}
+</style>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+        <div class="brand-icon">
+            <i class="fa-solid fa-seedling"></i>
+        </div>
+        <h2>Smart Sheti</h2>
+        <p>Admin Management Panel</p>
+    </div>
+
+    <div class="menu-title">Admin Modules</div>
+
+    <ul class="sidebar-menu">
+
+        <li>
+            <a href="{% url 'admin_dashboard' %}"
+               class="{% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+                <div class="menu-left">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'admin_search_farmers' %}"
+               class="{% if request.resolver_match.url_name == 'admin_search_farmers' %}active{% endif %}">
+                <div class="menu-left">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span>Farmer Management</span>
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'admin_crop_dashboard' %}"
+               class="{% if request.resolver_match.url_name == 'admin_crop_dashboard' %}active{% endif %}">
+                <div class="menu-left">
+                    <i class="fa-solid fa-seedling"></i>
+                    <span>Crop Management</span>
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'fertilizer:admin_dashboard' %}"
+               class="{% if request.resolver_match.namespace == 'fertilizer' %}active{% endif %}">
+                <div class="menu-left">
+                    <i class="fa-solid fa-flask"></i>
+                    <span>Fertilizer Management</span>
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'disease_detection:admin-disease-dashboard' %}"
+               class="{% if request.resolver_match.namespace == 'disease_detection' %}active{% endif %}">
+                <div class="menu-left">
+                    <i class="fa-solid fa-virus"></i>
+                    <span>Disease Management</span>
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'pest_detection:admin_pest_dashboard' %}"
+               class="{% if request.resolver_match.namespace == 'pest_detection' %}active{% endif %}">
+                <div class="menu-left">
+                    <i class="fa-solid fa-bug"></i>
+                    <span>Pest Detection</span>
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'government_scheme:admin-scheme-dashboard' %}"
+               class="{% if request.resolver_match.namespace == 'government_scheme' %}active{% endif %}">
+                <div class="menu-left">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span>Government Scheme</span>
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'equipment:admin-dashboard-page' %}"
+               class="{% if request.resolver_match.namespace == 'equipment' %}active{% endif %}">
+                <div class="menu-left">
+                    <i class="fa-solid fa-tractor"></i>
+                    <span>Equipment Rental</span>
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'admin_chatbot_dashboard' %}"
+               class="{% if request.resolver_match.url_name == 'admin_chatbot_dashboard' or request.resolver_match.url_name == 'admin_chatbot_page' %}active{% endif %}">
+                <div class="menu-left">
+                    <i class="fa-solid fa-robot"></i>
+                    <span>AI Chatbot</span>
+                </div>
+            </a>
+        </li>
+
+    </ul>
+
+    <div class="menu-title">Settings</div>
+
+    <ul class="sidebar-menu">
+
+        <li>
+            <div class="settings-toggle" id="settingsToggle">
+                <div class="menu-left">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </div>
+                <i class="fa-solid fa-chevron-down chevron"></i>
+            </div>
+
+            <ul class="submenu" id="settingsSubmenu">
+
+                <li>
+                    <a href="{% url 'current_profile_update_web' %}"
+                       class="{% if request.resolver_match.url_name == 'current_profile_update_web' %}active{% endif %}">
+                        <div class="menu-left">
+                            <i class="fa-solid fa-user-pen"></i>
+                            <span>Profile Update</span>
+                        </div>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'change_password' %}"
+                       class="{% if request.resolver_match.url_name == 'change_password' %}active{% endif %}">
+                        <div class="menu-left">
+                            <i class="fa-solid fa-key"></i>
+                            <span>Change Password</span>
+                        </div>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'logout' %}" class="logout-link">
+                        <div class="menu-left">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </div>
+                    </a>
+                </li>
+
+            </ul>
+        </li>
+
+    </ul>
+
+</aside>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const menuToggle = document.getElementById("menuToggle");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const settingsToggle = document.getElementById("settingsToggle");
+    const settingsSubmenu = document.getElementById("settingsSubmenu");
+
+    if (menuToggle && sidebar && sidebarOverlay) {
+        menuToggle.addEventListener("click", function () {
+            sidebar.classList.toggle("active");
+            sidebar.classList.toggle("open");
+            sidebarOverlay.classList.toggle("active");
+        });
+    }
+
+    if (sidebarOverlay && sidebar) {
+        sidebarOverlay.addEventListener("click", function () {
+            sidebar.classList.remove("active");
+            sidebar.classList.remove("open");
+            sidebarOverlay.classList.remove("active");
+        });
+    }
+
+    if (settingsToggle && settingsSubmenu) {
+        settingsToggle.addEventListener("click", function () {
+            settingsSubmenu.classList.toggle("open");
+            settingsToggle.classList.toggle("active");
+        });
+    }
+
+    const activeSubmenuLink = document.querySelector(".submenu a.active");
+
+    if (activeSubmenuLink && settingsSubmenu && settingsToggle) {
+        settingsSubmenu.classList.add("open");
+        settingsToggle.classList.add("active");
+    }
+
+    document.querySelectorAll(".sidebar a").forEach(function (link) {
+        link.addEventListener("click", function () {
+            if (window.innerWidth <= 992 && sidebar && sidebarOverlay) {
+                sidebar.classList.remove("active");
+                sidebar.classList.remove("open");
+                sidebarOverlay.classList.remove("active");
+            }
+        });
+    });
+});
+</script>

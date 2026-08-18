@@ -1,0 +1,43 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Datasets
+**/dataset/
+**/datasets/
+
+# Training outputs
+**/runs/
+
+# Temporary uploads
+**/uploads/
+
+# Downloaded data
+**/data/
+
+# Jupyter
+.ipynb_checkpoints/
+
+#model files-- larger that why ignore him
+ai_engine/models/fertilizer_classifier.pkl
+ai_engine/models/quantity_regressor.pkl

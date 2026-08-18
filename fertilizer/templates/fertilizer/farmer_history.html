@@ -1,0 +1,442 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Fertilizer History | Smart Sheti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root{
+            --primary:#2e7d32;
+            --primary-dark:#14532d;
+            --soft-green:#e8f5e9;
+            --white:#ffffff;
+            --text:#1f2937;
+            --muted:#6b7280;
+            --border:#dbe8dc;
+            --shadow:0 12px 30px rgba(0,0,0,0.08);
+            --transition:all 0.3s ease;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Roboto",sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            background:
+                radial-gradient(circle at top right, rgba(76,175,80,0.16), transparent 25%),
+                linear-gradient(180deg,#f8fcf8,#eef7ef);
+            color:var(--text);
+        }
+
+        a{
+            text-decoration:none;
+            color:inherit;
+        }
+
+        header{
+            background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+            color:white;
+            padding:16px 50px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:20px;
+            flex-wrap:wrap;
+            position:sticky;
+            top:0;
+            z-index:999;
+            box-shadow:0 8px 22px rgba(0,0,0,0.12);
+        }
+
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            font-size:28px;
+            font-weight:900;
+        }
+
+        .logo span{
+            width:45px;
+            height:45px;
+            border-radius:50%;
+            background:rgba(255,255,255,0.18);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        nav{
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        nav a{
+            padding:10px 15px;
+            border-radius:12px;
+            font-size:14px;
+            font-weight:800;
+            transition:var(--transition);
+        }
+
+        nav a:hover,
+        nav a.active{
+            background:white;
+            color:var(--primary-dark);
+        }
+
+        .page{
+            max-width:1250px;
+            margin:34px auto;
+            padding:0 18px 40px;
+        }
+
+        .hero{
+            background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+            color:white;
+            border-radius:28px;
+            padding:32px;
+            box-shadow:var(--shadow);
+            margin-bottom:26px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:25px;
+            flex-wrap:wrap;
+        }
+
+        .hero h1{
+            font-size:32px;
+            font-weight:900;
+            margin-bottom:8px;
+        }
+
+        .hero p{
+            color:rgba(255,255,255,0.9);
+            font-size:15px;
+            line-height:1.6;
+        }
+
+        .hero-badge{
+            background:rgba(255,255,255,0.16);
+            padding:16px 22px;
+            border-radius:18px;
+            font-weight:900;
+        }
+
+        .card{
+            background:rgba(255,255,255,0.96);
+            border:1px solid var(--border);
+            border-radius:28px;
+            box-shadow:var(--shadow);
+            overflow:hidden;
+        }
+
+        .card-header{
+            padding:26px 30px;
+            border-bottom:1px solid #e5e7eb;
+            background:linear-gradient(180deg,#ffffff,#f8fff8);
+        }
+
+        .card-header h2{
+            color:var(--primary-dark);
+            font-size:25px;
+            font-weight:900;
+        }
+
+        .card-header p{
+            color:var(--muted);
+            margin-top:6px;
+            font-size:14px;
+        }
+
+        .card-body{
+            padding:28px;
+        }
+
+        .table-toolbar{
+            display:flex;
+            justify-content:space-between;
+            gap:15px;
+            flex-wrap:wrap;
+            margin-bottom:20px;
+        }
+
+        .search-box{
+            max-width:390px;
+            width:100%;
+            position:relative;
+        }
+
+        .search-box i{
+            position:absolute;
+            top:50%;
+            left:15px;
+            transform:translateY(-50%);
+            color:var(--muted);
+        }
+
+        .search-box input{
+            width:100%;
+            min-height:48px;
+            padding:12px 14px 12px 42px;
+            border:1px solid var(--border);
+            border-radius:15px;
+            font-size:14px;
+            outline:none;
+            transition:var(--transition);
+        }
+
+        .search-box input:focus{
+            border-color:var(--primary);
+            box-shadow:0 0 0 4px rgba(46,125,50,0.12);
+        }
+
+        .record-count{
+            background:var(--soft-green);
+            color:var(--primary-dark);
+            padding:13px 18px;
+            border-radius:15px;
+            font-weight:900;
+        }
+
+        .table-wrap{
+            width:100%;
+            overflow-x:auto;
+            border:1px solid #dfeade;
+            border-radius:20px;
+            background:white;
+        }
+
+        table{
+            width:100%;
+            min-width:1000px;
+            border-collapse:collapse;
+        }
+
+        th{
+            background:var(--primary-dark);
+            color:white;
+            padding:15px 13px;
+            text-align:left;
+            font-size:14px;
+            white-space:nowrap;
+        }
+
+        td{
+            padding:14px 13px;
+            border-bottom:1px solid #e5e7eb;
+            font-size:14px;
+            color:var(--text);
+            white-space:nowrap;
+            vertical-align:middle;
+        }
+
+        tbody tr:hover{
+            background:#f7fcf8;
+        }
+
+        .crop-name{
+            font-weight:900;
+            color:var(--primary-dark);
+        }
+
+        .empty{
+            text-align:center;
+            color:var(--muted);
+            font-weight:800;
+            padding:32px;
+        }
+
+        footer{
+            background:linear-gradient(180deg,#243227,#172016);
+            color:white;
+            padding:22px;
+            text-align:center;
+            margin-top:40px;
+            font-size:14px;
+        }
+
+        @media(max-width:768px){
+            header{
+                padding:14px 18px;
+                justify-content:center;
+                text-align:center;
+            }
+
+            nav{
+                justify-content:center;
+            }
+
+            .hero{
+                padding:24px;
+                text-align:center;
+                justify-content:center;
+            }
+
+            .hero h1{
+                font-size:25px;
+            }
+
+            .card-body{
+                padding:18px;
+            }
+
+            .table-toolbar{
+                flex-direction:column;
+            }
+
+            .record-count{
+                text-align:center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+{% include 'accounts/farmer/farmer_sidebar.html' %}
+
+<div class="main-content">
+<header>
+    <a href="/" class="logo">
+        <span>
+            <i class="fa-solid fa-seedling"></i>
+        </span>
+        Smart Sheti
+    </a>
+
+    <nav>
+        <a href="{% url 'fertilizer:farmer_fertilizer' %}">
+            <i class="fa-solid fa-flask"></i>
+            Recommendation
+        </a>
+
+        <a href="{% url 'fertilizer:farmer_history' %}" class="active">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            My History
+        </a>
+    </nav>
+</header>
+
+<main class="page">
+
+    <section class="hero">
+        <div>
+            <h1>My Fertilizer Recommendation History</h1>
+            <p>
+                View your previous fertilizer recommendations with crop, soil,
+                nutrient, rainfall, pH, and temperature details.
+            </p>
+        </div>
+
+        <div class="hero-badge">
+            <i class="fa-solid fa-user"></i>
+            Farmer History
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="card-header">
+            <h2>My Fertilizer Records</h2>
+            <p>Complete list of your generated fertilizer recommendation history.</p>
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-toolbar">
+
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="text"
+                        id="historySearch"
+                        placeholder="Search by crop, soil, rainfall, temperature..."
+                    >
+                </div>
+
+                <div class="record-count">
+                    Total Records : {{ history|length }}
+                </div>
+
+            </div>
+
+            <div class="table-wrap">
+                <table id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Sr No.</th>
+                            <th>Crop</th>
+                            <th>Soil</th>
+                            <th>N</th>
+                            <th>P</th>
+                            <th>K</th>
+                            <th>pH</th>
+                            <th>Rainfall</th>
+                            <th>Temperature</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in history %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td class="crop-name">{{ item.crop|default:"-" }}</td>
+                                <td>{{ item.soil_color|default:"-" }}</td>
+                                <td>{{ item.nitrogen|default:"0" }}</td>
+                                <td>{{ item.phosphorus|default:"0" }}</td>
+                                <td>{{ item.potassium|default:"0" }}</td>
+                                <td>{{ item.ph|default:"0" }}</td>
+                                <td>{{ item.rainfall|default:"0" }}</td>
+                                <td>{{ item.temperature|default:"0" }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="10" class="empty">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    No fertilizer recommendation history found.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    © 2026 Smart Sheti. All rights reserved.
+</footer>
+
+<script>
+    const searchInput = document.getElementById("historySearch");
+    const table = document.getElementById("historyTable");
+
+    if (searchInput && table) {
+        searchInput.addEventListener("keyup", function () {
+            const filter = searchInput.value.toLowerCase();
+            const rows = table.querySelectorAll("tbody tr");
+
+            rows.forEach(function (row) {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? "" : "none";
+            });
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,817 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Profile | Smart Sheti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #14532d;
+            --primary-light: #66bb6a;
+            --accent: #f9a825;
+            --soil: #795548;
+            --leaf-soft: #e8f5e9;
+            --white: #ffffff;
+            --text: #263238;
+            --muted: #6b7280;
+            --border: #b7dfb9;
+            --danger: #dc3545;
+            --success: #198754;
+            --shadow: rgba(20, 83, 45, 0.22);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 35px 15px;
+            background:
+                linear-gradient(rgba(232, 245, 233, 0.90), rgba(255, 253, 231, 0.92)),
+                url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.96);
+            padding: 34px;
+            border-radius: 26px;
+            box-shadow: 0 18px 45px var(--shadow);
+            border: 1px solid rgba(46, 125, 50, 0.20);
+            border-top: 8px solid var(--primary);
+            position: relative;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .container::before {
+            content: "🌾";
+            position: absolute;
+            top: 14px;
+            right: 22px;
+            font-size: 52px;
+            opacity: 0.18;
+        }
+
+        .top-action {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .back-index-btn,
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--leaf-soft);
+            color: var(--primary-dark);
+            border: 1px solid var(--border);
+            padding: 10px 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .logout-btn {
+            background: #fff5f5;
+            color: var(--danger);
+            border-color: #f5c2c7;
+        }
+
+        .back-index-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .logout-btn:hover {
+            background: var(--danger);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-icon {
+            width: 86px;
+            height: 86px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #a5d6a7;
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.18);
+        }
+
+        .header-icon i {
+            font-size: 42px;
+            color: var(--primary);
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            margin: 0;
+            font-size: 31px;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .tagline {
+            display: inline-block;
+            margin-top: 10px;
+            background: #fff8e1;
+            color: var(--soil);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 13px;
+            border-radius: 999px;
+            border: 1px solid #ffe082;
+        }
+
+        form {
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .required {
+            color: var(--danger);
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .left-icon {
+            position: absolute;
+            top: 50%;
+            left: 13px;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 15px;
+            z-index: 2;
+        }
+
+        input,
+        select {
+            width: 100%;
+            min-height: 46px;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            background: #fbfff7;
+            color: var(--text);
+            transition: 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.13);
+            background: white;
+        }
+
+        .country-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .country-selected {
+            width: 100%;
+            min-height: 46px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fbfff7;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .country-selected:hover,
+        .country-selected.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.13);
+            background: white;
+        }
+
+        .country-left {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .country-left img,
+        .country-option img {
+            width: 25px;
+            height: 18px;
+            object-fit: cover;
+            border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+        }
+
+        .country-options {
+            display: none;
+            position: absolute;
+            top: 54px;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 14px 30px rgba(0,0,0,0.16);
+            max-height: 280px;
+            overflow-y: auto;
+            z-index: 9999;
+        }
+
+        .country-options.show {
+            display: block;
+        }
+
+        .country-search {
+            padding: 10px;
+            border-bottom: 1px solid #edf7ed;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 2;
+        }
+
+        .country-search input {
+            min-height: 40px;
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+
+        .country-option {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text);
+            border-bottom: 1px solid #edf7ed;
+        }
+
+        .country-option:hover {
+            background: #e8f5e9;
+        }
+
+        .country-name {
+            font-weight: 600;
+        }
+
+        .country-code {
+            margin-left: auto;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .field-error {
+            color: var(--danger);
+            font-size: 13px;
+            margin-top: 6px;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .message-box {
+            padding: 12px 14px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            font-weight: 700;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .message-hide {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+
+        .message-success {
+            background: #e8f5e9;
+            color: var(--success);
+            border: 1px solid #a5d6a7;
+        }
+
+        .message-error {
+            background: #fff5f5;
+            color: var(--danger);
+            border: 1px solid #f5c2c7;
+        }
+
+        .message-otp {
+            background: #fff8e1;
+            color: #8a6d00;
+            border: 1px solid #ffe082;
+        }
+
+        .message-otp a {
+            color: var(--primary-dark);
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .errors-box {
+            margin-bottom: 20px;
+            background: #fff5f5;
+            color: var(--danger);
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #f5c2c7;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+            line-height: 1.6;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--primary-light));
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+            box-shadow: 0 10px 24px rgba(46, 125, 50, 0.32);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(46, 125, 50, 0.38);
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+            color: var(--muted);
+            position: relative;
+            z-index: 1;
+        }
+
+        .links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer-note {
+            margin-top: 18px;
+            text-align: center;
+            color: var(--soil);
+            font-size: 13px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .container {
+                padding: 24px;
+                border-radius: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .top-action {
+                flex-direction: column;
+            }
+
+            .back-index-btn,
+            .logout-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top-action">
+        <a href="/accounts/admin/dashboard/" class="back-index-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Dashboard
+        </a>
+
+        <a href="{% url 'logout' %}" class="logout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+        </a>
+    </div>
+
+    <div class="header">
+        <div class="header-icon">
+            <i class="fa-solid fa-user-pen"></i>
+        </div>
+
+        <h2>Update Profile</h2>
+
+        <p class="subtitle">
+            Update your Smart Sheti account details carefully.
+        </p>
+
+        <div class="tagline">
+            <i class="fa-solid fa-leaf"></i>
+            Secure Profile Management
+        </div>
+    </div>
+
+    {% if message %}
+        <div id="profileMessage"
+             class="message-box {% if success %}message-success{% else %}message-error{% endif %}">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    {% if otp_required %}
+        <div id="otpMessage" class="message-box message-otp">
+            <i class="fa-solid fa-shield-halved"></i>
+            OTP verification is required because email or mobile number changed.
+            <br>
+            <a href="/accounts/verify-otp/">Verify OTP</a>
+        </div>
+    {% endif %}
+
+    {% if errors %}
+        <div class="errors-box">
+            {% for field, field_errors in errors.items %}
+                <strong>{{ field }}:</strong>
+                {% for error in field_errors %}
+                    {{ error }}
+                {% endfor %}
+                <br>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" action="">
+        {% csrf_token %}
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">
+                    Username <span class="required">*</span>
+                </label>
+                <div class="input-box">
+                    <i class="fa-solid fa-user left-icon"></i>
+                    {{ form.username }}
+                </div>
+                {% for error in form.username.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">
+                    Email <span class="required">*</span>
+                </label>
+                <div class="input-box">
+                    <i class="fa-solid fa-envelope left-icon"></i>
+                    {{ form.email }}
+                </div>
+                {% for error in form.email.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="{{ form.first_name.id_for_label }}">
+                    First Name <span class="required">*</span>
+                </label>
+                <div class="input-box">
+                    <i class="fa-solid fa-id-card left-icon"></i>
+                    {{ form.first_name }}
+                </div>
+                {% for error in form.first_name.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.last_name.id_for_label }}">
+                    Last Name <span class="required">*</span>
+                </label>
+                <div class="input-box">
+                    <i class="fa-solid fa-id-card-clip left-icon"></i>
+                    {{ form.last_name }}
+                </div>
+                {% for error in form.last_name.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>
+                    Country Code <span class="required">*</span>
+                </label>
+
+                <input
+                    type="hidden"
+                    name="country_code"
+                    id="countryCodeInput"
+                    value="{{ form.country_code.value|default:'+91' }}"
+                >
+
+                <div class="country-dropdown">
+                    <div class="country-selected" id="countrySelected">
+                        <div class="country-left">
+                            <img id="selectedFlag" src="https://flagcdn.com/w40/in.png" alt="India Flag">
+                            <span id="selectedCountry">India</span>
+                            <strong id="selectedDialCode">+91</strong>
+                        </div>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+
+                    <div class="country-options" id="countryOptions">
+                        <div class="country-search">
+                            <input type="text" id="countrySearch" placeholder="Search country or code...">
+                        </div>
+
+                        <div id="countryList"></div>
+                    </div>
+                </div>
+
+                {% for error in form.country_code.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.mobile_number.id_for_label }}">
+                    Mobile Number <span class="required">*</span>
+                </label>
+                <div class="input-box">
+                    <i class="fa-solid fa-phone left-icon"></i>
+                    {{ form.mobile_number }}
+                </div>
+                {% for error in form.mobile_number.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.language_preference.id_for_label }}">
+                Language Preference
+            </label>
+            <div class="input-box">
+                <i class="fa-solid fa-language left-icon"></i>
+                {{ form.language_preference }}
+            </div>
+            {% for error in form.language_preference.errors %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Update Profile
+        </button>
+    </form>
+
+    <div class="links">
+        Want to change password?
+        <a href="{% url 'change_password' %}">Change Password</a>
+    </div>
+
+    <div class="footer-note">
+        🌱 Smart Sheti | Digital Farming Platform
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const profileMessage = document.getElementById("profileMessage");
+        const otpMessage = document.getElementById("otpMessage");
+
+        function hideMessage(messageElement) {
+            if (messageElement) {
+                setTimeout(function () {
+                    messageElement.classList.add("message-hide");
+
+                    setTimeout(function () {
+                        messageElement.style.display = "none";
+                    }, 500);
+                }, 5000);
+            }
+        }
+
+        hideMessage(profileMessage);
+        hideMessage(otpMessage);
+
+        const countries = [
+            { name: "India", code: "+91", iso: "in" },
+            { name: "United States", code: "+1", iso: "us" },
+            { name: "United Kingdom", code: "+44", iso: "gb" },
+            { name: "Canada", code: "+1", iso: "ca" },
+            { name: "Australia", code: "+61", iso: "au" },
+            { name: "United Arab Emirates", code: "+971", iso: "ae" },
+            { name: "Saudi Arabia", code: "+966", iso: "sa" },
+            { name: "Singapore", code: "+65", iso: "sg" },
+            { name: "Japan", code: "+81", iso: "jp" },
+            { name: "Germany", code: "+49", iso: "de" },
+            { name: "France", code: "+33", iso: "fr" },
+            { name: "Italy", code: "+39", iso: "it" },
+            { name: "Brazil", code: "+55", iso: "br" },
+            { name: "South Africa", code: "+27", iso: "za" },
+            { name: "Nepal", code: "+977", iso: "np" },
+            { name: "Bangladesh", code: "+880", iso: "bd" },
+            { name: "Sri Lanka", code: "+94", iso: "lk" },
+            { name: "Pakistan", code: "+92", iso: "pk" }
+        ];
+
+        const countrySelected = document.getElementById("countrySelected");
+        const countryOptions = document.getElementById("countryOptions");
+        const countryList = document.getElementById("countryList");
+        const countrySearch = document.getElementById("countrySearch");
+
+        const countryCodeInput = document.getElementById("countryCodeInput");
+        const selectedFlag = document.getElementById("selectedFlag");
+        const selectedCountry = document.getElementById("selectedCountry");
+        const selectedDialCode = document.getElementById("selectedDialCode");
+
+        function setCountry(country) {
+            countryCodeInput.value = country.code;
+            selectedFlag.src = `https://flagcdn.com/w40/${country.iso}.png`;
+            selectedFlag.alt = `${country.name} Flag`;
+            selectedCountry.textContent = country.name;
+            selectedDialCode.textContent = country.code;
+            countryOptions.classList.remove("show");
+            countrySelected.classList.remove("active");
+        }
+
+        function renderCountries(filterText = "") {
+            countryList.innerHTML = "";
+
+            const searchValue = filterText.toLowerCase();
+
+            const filteredCountries = countries.filter(function (country) {
+                return (
+                    country.name.toLowerCase().includes(searchValue) ||
+                    country.code.includes(searchValue)
+                );
+            });
+
+            if (filteredCountries.length === 0) {
+                countryList.innerHTML = `
+                    <div class="country-option">
+                        <span class="country-name">No country found</span>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredCountries.forEach(function (country) {
+                const option = document.createElement("div");
+                option.className = "country-option";
+
+                option.innerHTML = `
+                    <img src="https://flagcdn.com/w40/${country.iso}.png" alt="${country.name} Flag">
+                    <span class="country-name">${country.name}</span>
+                    <span class="country-code">${country.code}</span>
+                `;
+
+                option.addEventListener("click", function () {
+                    setCountry(country);
+                });
+
+                countryList.appendChild(option);
+            });
+        }
+
+        if (countrySelected) {
+            countrySelected.addEventListener("click", function () {
+                countryOptions.classList.toggle("show");
+                countrySelected.classList.toggle("active");
+
+                if (countrySearch) {
+                    countrySearch.focus();
+                }
+            });
+        }
+
+        if (countrySearch) {
+            countrySearch.addEventListener("input", function () {
+                renderCountries(countrySearch.value);
+            });
+        }
+
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest(".country-dropdown")) {
+                countryOptions.classList.remove("show");
+                countrySelected.classList.remove("active");
+            }
+        });
+
+        renderCountries();
+
+        const currentCode = countryCodeInput.value || "+91";
+        const currentCountry = countries.find(function (country) {
+            return country.code === currentCode;
+        }) || countries[0];
+
+        setCountry(currentCountry);
+    });
+</script>
+
+</body>
+</html>

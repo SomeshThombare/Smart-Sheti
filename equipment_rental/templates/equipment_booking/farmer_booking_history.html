@@ -1,0 +1,277 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Booking History</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="{% static 'equipment/css/farmer_booking_history.css' %}?v=99999">
+</head>
+
+<body>
+
+{% include 'accounts/farmer/farmer_sidebar.html' %}
+
+<div class="main-content">
+
+    <div class="page-wrapper">
+
+        <div class="page-header">
+
+            <div>
+                <h1>Booking History</h1>
+                <p>View all completed, cancelled and old bookings</p>
+            </div>
+
+            <div class="header-actions">
+
+                <a href="{% url 'equipment:farmer-booking-list' %}"
+                   class="btn-bookings">
+                    <i class="fas fa-list-check"></i>
+                    My Bookings
+                </a>
+
+                <a href="{% url 'equipment:farmer-equipment-list' %}"
+                   class="btn-equipment">
+                    <i class="fas fa-tractor"></i>
+                    Equipment List
+                </a>
+
+            </div>
+
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if message %}
+            <div class="alert {% if success %}alert-success{% else %}alert-danger{% endif %}">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        <div class="filter-card">
+
+            <div class="row g-3">
+
+                <div class="col-lg-4">
+                    <input type="text"
+                           id="searchInput"
+                           class="form-control"
+                           placeholder="Search booking or equipment...">
+                </div>
+
+                <div class="col-lg-3">
+                    <select id="bookingStatusFilter"
+                            class="form-select">
+                        <option value="">All Booking Status</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-3">
+                    <select id="paymentStatusFilter"
+                            class="form-select">
+                        <option value="">All Payment Status</option>
+                        <option value="paid">Paid</option>
+                        <option value="failed">Failed</option>
+                        <option value="refunded">Refunded</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2">
+                    <button type="button"
+                            id="resetFilters"
+                            class="btn-reset">
+                        <i class="fas fa-rotate-left"></i>
+                        Reset
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="summary-grid">
+
+            <div class="summary-card">
+                <span>Total History</span>
+                <strong id="historyCount">{{ bookings|length }}</strong>
+            </div>
+
+            <div class="summary-card completed">
+                <span>Completed</span>
+                <strong>{{ completed_count|default:0 }}</strong>
+            </div>
+
+            <div class="summary-card cancelled">
+                <span>Cancelled</span>
+                <strong>{{ cancelled_count|default:0 }}</strong>
+            </div>
+
+            <div class="summary-card paid">
+                <span>Paid</span>
+                <strong>{{ paid_count|default:0 }}</strong>
+            </div>
+
+        </div>
+
+        <div class="table-card">
+
+            <div class="table-responsive">
+
+                <table class="table booking-table align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Sr No</th>
+                            <th>Equipment</th>
+                            <th>Booking Code</th>
+                            <th>Booking Dates</th>
+                            <th>Amount</th>
+                            <th>Booking Status</th>
+                            <th>Payment</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="bookingTableBody">
+
+                    {% for booking in bookings %}
+
+                        <tr class="booking-row"
+                            data-search="{{ booking.booking_code|default:''|lower }} {{ booking.equipment.equipment_name|default:''|lower }} {{ booking.equipment.equipment_code|default:''|lower }}"
+                            data-booking-status="{{ booking.booking_status|default:''|lower }}"
+                            data-payment-status="{{ booking.payment_status|default:''|lower }}">
+
+                            <td>{{ forloop.counter }}</td>
+
+                            <td>
+                                <div class="equipment-box">
+
+                                    {% if booking.equipment and booking.equipment.equipment_image %}
+                                        <img src="{{ booking.equipment.equipment_image.url }}"
+                                             alt="{{ booking.equipment.equipment_name|default:'Equipment Image' }}">
+                                    {% else %}
+                                        <div class="no-img">
+                                            <i class="fas fa-tractor"></i>
+                                        </div>
+                                    {% endif %}
+
+                                    <div>
+                                        <strong>{{ booking.equipment.equipment_name|default:"Equipment" }}</strong>
+                                        <small>{{ booking.equipment.equipment_code|default:"-" }}</small>
+                                    </div>
+
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="booking-code">
+                                    {{ booking.booking_code }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="date-box">
+                                    <strong>{{ booking.booking_start_date|date:"d M Y" }}</strong>
+                                    <small>To</small>
+                                    <strong>{{ booking.booking_end_date|date:"d M Y" }}</strong>
+                                </div>
+                            </td>
+
+                            <td>
+                                <strong class="amount">
+                                    ₹{{ booking.booking_total_amount }}
+                                </strong>
+                            </td>
+
+                            <td>
+                                <span class="status-badge {{ booking.booking_status|lower }}">
+                                    {{ booking.booking_status|title }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="payment-badge {{ booking.payment_status|lower }}">
+                                    {{ booking.payment_status|title }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{% url 'equipment:farmer-booking-detail' booking.booking_code %}"
+                                       class="btn-view">
+                                        <i class="fas fa-eye"></i>
+                                        View Details
+                                    </a>
+                                </div>
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr id="emptyRow">
+                            <td colspan="8">
+                                <div class="empty-box">
+                                    <i class="fas fa-clock-rotate-left"></i>
+                                    <h4>No Booking History Found</h4>
+                                    <p>Your completed or cancelled bookings will appear here.</p>
+
+                                    <a href="{% url 'equipment:farmer-equipment-list' %}"
+                                       class="btn-equipment-list">
+                                        <i class="fas fa-tractor"></i>
+                                        Browse Equipment
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <div class="empty-box d-none"
+             id="emptySearchResult">
+            <i class="fas fa-search"></i>
+            <h4>No Matching History</h4>
+            <p>Try changing search or filters.</p>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="{% static 'equipment/js/farmer_booking_history.js' %}?v=10"></script>
+
+</body>
+
+</html>

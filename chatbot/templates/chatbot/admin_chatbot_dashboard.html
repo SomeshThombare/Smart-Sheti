@@ -1,0 +1,236 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Chatbot Dashboard - Smart Sheti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'chatbot/css/admin_chatbot_dashboard.css' %}">
+</head>
+
+<body>
+
+{% include 'accounts/admin/admin_sidebar.html' %}
+
+<div class="main-content">
+
+    <section class="dashboard-header">
+        <div>
+            <h1><i class="fa-solid fa-robot"></i> Admin Chatbot Dashboard</h1>
+            <p>Monitor chatbot usage, AI responses, image/PDF chats and recent conversations.</p>
+        </div>
+
+        <a href="{% url 'admin_chatbot_page' %}" class="chat-btn">
+            <i class="fa-solid fa-comments"></i>
+            Open Chatbot
+        </a>
+    </section>
+
+
+
+    <section class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="fa-solid fa-comments"></i></div>
+            <div>
+                <p>Total Chats</p>
+                <h2>{{ total_chats|default:0 }}</h2>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon blue"><i class="fa-solid fa-calendar-day"></i></div>
+            <div>
+                <p>Today's Chats</p>
+                <h2>{{ today_chats|default:0 }}</h2>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon purple"><i class="fa-solid fa-image"></i></div>
+            <div>
+                <p>Image Chats</p>
+                <h2>{{ image_chats|default:0 }}</h2>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon red"><i class="fa-solid fa-file-pdf"></i></div>
+            <div>
+                <p>PDF Chats</p>
+                <h2>{{ pdf_chats|default:0 }}</h2>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon success"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+                <p>Success Chats</p>
+                <h2>{{ success_chats|default:0 }}</h2>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon danger"><i class="fa-solid fa-circle-xmark"></i></div>
+            <div>
+                <p>Failed Chats</p>
+                <h2>{{ failed_chats|default:0 }}</h2>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon admin"><i class="fa-solid fa-user-shield"></i></div>
+            <div>
+                <p>Admin Chats</p>
+                <h2>{{ admin_chats|default:0 }}</h2>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon farmer"><i class="fa-solid fa-user"></i></div>
+            <div>
+                <p>Farmer Chats</p>
+                <h2>{{ farmer_chats|default:0 }}</h2>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="dashboard-grid">
+
+        <div class="panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-chart-pie"></i> Chatbot Usage Summary</h2>
+            </div>
+
+            <div class="usage-list">
+                <div class="usage-item">
+                    <span>Success Rate</span>
+                    <strong id="successRate"
+                            data-success="{{ success_chats|default:0 }}"
+                            data-total="{{ total_chats|default:0 }}">0%</strong>
+                </div>
+
+                <div class="usage-item">
+                    <span>Failed Rate</span>
+                    <strong id="failedRate"
+                            data-failed="{{ failed_chats|default:0 }}"
+                            data-total="{{ total_chats|default:0 }}">0%</strong>
+                </div>
+
+                <div class="usage-item">
+                    <span>Image Usage</span>
+                    <strong id="imageRate"
+                            data-image="{{ image_chats|default:0 }}"
+                            data-total="{{ total_chats|default:0 }}">0%</strong>
+                </div>
+
+                <div class="usage-item">
+                    <span>PDF Usage</span>
+                    <strong id="pdfRate"
+                            data-pdf="{{ pdf_chats|default:0 }}"
+                            data-total="{{ total_chats|default:0 }}">0%</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-lightbulb"></i> Admin Tips</h2>
+            </div>
+
+            <ul class="tips-list">
+                <li>Check failed chats to identify API key, token, or OpenRouter issues.</li>
+                <li>Image chats help track disease detection usage.</li>
+                <li>PDF chats help track report analysis usage.</li>
+                <li>Use recent chats to understand common farmer/admin queries.</li>
+            </ul>
+        </div>
+
+    </section>
+
+    <section class="panel recent-panel">
+
+        <div class="panel-header table-header">
+            <h2><i class="fa-solid fa-clock-rotate-left"></i> Recent Chat History</h2>
+
+            <input type="text" id="chatSearch" placeholder="Search recent chats...">
+        </div>
+
+        <div class="table-wrapper">
+            <table id="recentChatsTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>User</th>
+                        <th>User Type</th>
+                        <th>Question</th>
+                        <th>Image</th>
+                        <th>PDF</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for chat in recent_chats %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ chat.created_at|date:"d M Y, h:i A" }}</td>
+                        <td>
+                            {% if chat.user %}
+                                {{ chat.user.get_full_name|default:chat.user.username }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge user-type {{ chat.user_type }}">
+                                {{ chat.user_type|title }}
+                            </span>
+                        </td>
+                        <td class="question-cell">
+                            {{ chat.short_message|default:chat.message|truncatechars:90 }}
+                        </td>
+                        <td>
+                            {% if chat.has_image %}
+                                <span class="yes"><i class="fa-solid fa-check"></i></span>
+                            {% else %}
+                                <span class="no"><i class="fa-solid fa-minus"></i></span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if chat.has_pdf %}
+                                <span class="yes"><i class="fa-solid fa-check"></i></span>
+                            {% else %}
+                                <span class="no"><i class="fa-solid fa-minus"></i></span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge status {{ chat.status }}">
+                                {{ chat.status|title }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="empty-row">
+                            <i class="fa-solid fa-inbox"></i>
+                            No chatbot conversations found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</div>
+
+<script src="{% static 'chatbot/js/admin_chatbot_dashboard.js' %}"></script>
+</body>
+</html>

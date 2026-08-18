@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>
+        Farmer Crop Recommendation | Smart Sheti
+    </title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #14532d;
+            --soft-green: #e8f5e9;
+            --white: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #dbe8dc;
+            --shadow: 0 12px 30px rgba(0,0,0,0.08);
+            --danger: #dc3545;
+            --success: #198754;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Roboto", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(76,175,80,0.16),
+                    transparent 25%
+                ),
+                linear-gradient(
+                    180deg,
+                    #f8fcf8,
+                    #eef7ef
+                );
+
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* =========================================
+           HEADER
+        ========================================== */
+        header {
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+
+            color: white;
+
+            padding: 16px 50px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+
+            position: sticky;
+            top: 0;
+            z-index: 999;
+
+            box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        .logo span {
+            width: 45px;
+            height: 45px;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,0.18);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            padding: 10px 15px;
+
+            border-radius: 12px;
+
+            font-size: 14px;
+            font-weight: 800;
+
+            transition: var(--transition);
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: white;
+            color: var(--primary-dark);
+        }
+
+        /* =========================================
+           PAGE
+        ========================================== */
+        .page {
+            max-width: 1180px;
+            margin: 34px auto;
+            padding: 0 18px 40px;
+        }
+
+        /* =========================================
+           HERO
+        ========================================== */
+        .hero {
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+
+            color: white;
+
+            border-radius: 28px;
+
+            padding: 32px;
+
+            box-shadow: var(--shadow);
+
+            margin-bottom: 26px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            color: rgba(255,255,255,0.9);
+
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .hero-badge {
+            background: rgba(255,255,255,0.16);
+
+            padding: 16px 22px;
+
+            border-radius: 18px;
+
+            font-weight: 900;
+        }
+
+        /* =========================================
+           CARD
+        ========================================== */
+        .card {
+            background: rgba(255,255,255,0.96);
+
+            border: 1px solid var(--border);
+
+            border-radius: 28px;
+
+            box-shadow: var(--shadow);
+
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 26px 30px;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            background: linear-gradient(
+                180deg,
+                #ffffff,
+                #f8fff8
+            );
+        }
+
+        .card-header h2 {
+            color: var(--primary-dark);
+
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .card-header p {
+            color: var(--muted);
+
+            margin-top: 6px;
+
+            font-size: 14px;
+        }
+
+        .card-body {
+            padding: 28px;
+        }
+
+        /* =========================================
+           MESSAGE
+        ========================================== */
+        .message {
+            padding: 15px 18px;
+
+            border-radius: 16px;
+
+            margin-bottom: 20px;
+
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .message-success {
+            background: #e8f5e9;
+            color: var(--success);
+            border: 1px solid #b8dfbd;
+        }
+
+        .message-error {
+            background: #fdecea;
+            color: var(--danger);
+            border: 1px solid #f5c2c7;
+        }
+
+        /* =========================================
+           FORM
+        ========================================== */
+        .form-section {
+            border: 1px solid #dfeade;
+
+            border-radius: 22px;
+
+            margin-bottom: 24px;
+
+            overflow: hidden;
+
+            background: white;
+        }
+
+        .form-section-title {
+            background: var(--soft-green);
+
+            padding: 17px 22px;
+
+            color: var(--primary-dark);
+
+            font-size: 17px;
+            font-weight: 900;
+        }
+
+        .form-section-title i {
+            margin-right: 8px;
+        }
+
+        .form-section-body {
+            padding: 22px;
+        }
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns: repeat(2, 1fr);
+
+            gap: 20px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            color: var(--primary-dark);
+
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .required {
+            color: var(--danger);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+
+            min-height: 52px;
+
+            padding: 13px 15px;
+
+            border: 1px solid #d7e3d8;
+
+            border-radius: 15px;
+
+            font-size: 15px;
+
+            background: #fcfffc;
+
+            transition: var(--transition);
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+
+            border-color: var(--primary);
+
+            box-shadow: 0 0 0 4px rgba(46,125,50,0.12);
+
+            background: white;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* =========================================
+           BUTTONS
+        ========================================== */
+        .submit-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 14px;
+
+            border-top: 1px solid #e5e7eb;
+
+            padding-top: 22px;
+        }
+
+        .btn {
+            min-height: 52px;
+
+            padding: 14px 20px;
+
+            border-radius: 15px;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 15px;
+            font-weight: 900;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+
+            color: white;
+
+            box-shadow: 0 10px 24px rgba(46,125,50,0.20);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+
+            box-shadow: 0 14px 30px rgba(46,125,50,0.28);
+        }
+
+        .btn-light {
+            background: #f3f4f6;
+            color: var(--text);
+            border: 1px solid #e5e7eb;
+        }
+
+        .btn-light:hover {
+            background: #e5e7eb;
+        }
+
+        /* =========================================
+           FOOTER
+        ========================================== */
+        footer {
+            background: linear-gradient(
+                180deg,
+                #243227,
+                #172016
+            );
+
+            color: white;
+
+            padding: 22px;
+
+            text-align: center;
+
+            margin-top: 40px;
+
+            font-size: 14px;
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================== */
+        @media (max-width: 768px) {
+
+            header {
+                padding: 14px 18px;
+
+                justify-content: center;
+
+                text-align: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .hero {
+                padding: 24px;
+
+                text-align: center;
+
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-body {
+                padding: 18px;
+            }
+
+            .submit-row {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+{% include 'accounts/farmer/farmer_sidebar.html' %}
+
+<div class="main-content">
+<header>
+    <div class="logo">
+        <span>
+            🌾
+        </span>
+
+        Smart Sheti
+    </div>
+
+<nav>
+    <a href="#"
+       class="active">
+        <i class="fa-solid fa-seedling"></i>
+        Crop Recommendation
+    </a>
+
+    <a href="{% url 'farmer_crop_history' %}">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        My History
+    </a>
+
+    <a href="{% url 'farmer_dashboard' %}">
+        <i class="fa-solid fa-chart-line"></i>
+        Dashboard
+    </a>
+</nav>
+</header>
+
+<div class="page">
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <div>
+            <h1>
+                🌱 Farmer Crop Recommendation
+            </h1>
+
+            <p>
+                Enter soil nutrients and weather details
+                to get the best crop recommendation
+                using Machine Learning.
+            </p>
+        </div>
+
+        <div class="hero-badge">
+            AI Powered Prediction
+        </div>
+
+    </section>
+
+    <!-- CARD -->
+    <div class="card">
+
+        <div class="card-header">
+            <h2>
+                Crop Prediction Form
+            </h2>
+
+            <p>
+                Fill all required soil and weather values.
+            </p>
+        </div>
+
+        <div class="card-body">
+
+            {% if message %}
+                <div class="message message-success">
+                    {{ message }}
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <div class="message message-error">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <!-- SOIL SECTION -->
+                <div class="form-section">
+
+                    <div class="form-section-title">
+                        <i class="fa-solid fa-seedling"></i>
+                        Soil Nutrient Details
+                    </div>
+
+                    <div class="form-section-body">
+
+                        <div class="form-grid">
+
+                            <div class="field">
+                                <label>
+                                    Nitrogen (N)
+                                    <span class="required">*</span>
+                                </label>
+
+                                {{ form.nitrogen }}
+
+                                <span class="hint">
+                                    Enter nitrogen value.
+                                </span>
+                            </div>
+
+                            <div class="field">
+                                <label>
+                                    Phosphorus (P)
+                                    <span class="required">*</span>
+                                </label>
+
+                                {{ form.phosphorus }}
+
+                                <span class="hint">
+                                    Enter phosphorus value.
+                                </span>
+                            </div>
+
+                            <div class="field">
+                                <label>
+                                    Potassium (K)
+                                    <span class="required">*</span>
+                                </label>
+
+                                {{ form.potassium }}
+
+                                <span class="hint">
+                                    Enter potassium value.
+                                </span>
+                            </div>
+
+                            <div class="field">
+                                <label>
+                                    Soil pH
+                                    <span class="required">*</span>
+                                </label>
+
+                                {{ form.ph }}
+
+                                <span class="hint">
+                                    pH must be between 0 and 14.
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- WEATHER SECTION -->
+                <div class="form-section">
+
+                    <div class="form-section-title">
+                        <i class="fa-solid fa-cloud-sun"></i>
+                        Weather Details
+                    </div>
+
+                    <div class="form-section-body">
+
+                        <div class="form-grid">
+
+                            <div class="field">
+                                <label>
+                                    Temperature
+                                    <span class="required">*</span>
+                                </label>
+
+                                {{ form.temperature }}
+
+                                <span class="hint">
+                                    Temperature in °C.
+                                </span>
+                            </div>
+
+                            <div class="field">
+                                <label>
+                                    Humidity
+                                    <span class="required">*</span>
+                                </label>
+
+                                {{ form.humidity }}
+
+                                <span class="hint">
+                                    Humidity between 0 and 100.
+                                </span>
+                            </div>
+
+                            <div class="field">
+                                <label>
+                                    Rainfall
+                                    <span class="required">*</span>
+                                </label>
+
+                                {{ form.rainfall }}
+
+                                <span class="hint">
+                                    Rainfall in mm.
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTON -->
+                <div class="submit-row">
+
+                    <button type="reset"
+                            class="btn btn-light">
+
+                        <i class="fa-solid fa-rotate-left"></i>
+
+                        Reset
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="fa-solid fa-leaf"></i>
+
+                        Recommend Crop
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 Smart Sheti | AI Powered Crop Recommendation System
+</footer>
+
+</body>
+
+</html>

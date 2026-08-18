@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin List</title>
+</head>
+<body>
+    <h2>{{ message }}</h2>
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Language</th>
+                <th>Role</th>
+                <th>Active</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for admin in admins %}
+            <tr>
+                <td>{{ admin.id }}</td>
+                <td>
+                    <a href="{% url 'admin_detail_web' admin.username %}">
+                        {{ admin.username }}
+                    </a>
+                </td>
+                <td>{{ admin.first_name }} {{ admin.last_name }}</td>
+                <td>{{ admin.email }}</td>
+                <td>{{ admin.country_code }} {{ admin.mobile_number }}</td>
+                <td>{{ admin.language_preference }}</td>
+                <td>{{ admin.role }}</td>
+                <td>{{ admin.is_active }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8">No admins found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

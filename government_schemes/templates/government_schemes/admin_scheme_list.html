@@ -1,0 +1,275 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Government Schemes - Smart Sheti</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{% static 'schemes/css/admin_government_scheme_list.css' %}?v=1">
+</head>
+
+<body>
+
+{% include 'accounts/admin/admin_sidebar.html' %}
+
+<div class="main-content" id="mainContent">
+
+    <header class="top-header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle" type="button">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <a href="/" class="logo">
+                <span><i class="fa-solid fa-seedling"></i></span>
+                Smart Sheti
+            </a>
+        </div>
+
+        <nav>
+            <a href="{% url 'government_scheme:admin-scheme-dashboard' %}">
+                <i class="fa-solid fa-gauge-high"></i> Dashboard
+            </a>
+
+            <a href="{% url 'government_scheme:admin_government_scheme_list' %}" class="active">
+                <i class="fa-solid fa-file-lines"></i> Schemes
+            </a>
+
+            <a href="{% url 'government_scheme:admin_government_scheme_create_form' %}">
+                <i class="fa-solid fa-plus"></i> Add Scheme
+            </a>
+        </nav>
+    </header>
+
+    <main class="page">
+
+        <section class="hero">
+            <span class="hero-badge">Government Scheme Management</span>
+
+            <h1>
+                <i class="fa-solid fa-building-columns"></i>
+                Admin Government Schemes
+            </h1>
+
+            <p>
+                Manage scheme details, eligibility, benefits, required documents and official apply links.
+            </p>
+
+            <div class="hero-actions">
+                <a href="{% url 'government_scheme:admin-scheme-dashboard' %}" class="hero-btn secondary">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    Dashboard
+                </a>
+
+                <a href="{% url 'government_scheme:admin_government_scheme_create_form' %}" class="hero-btn primary">
+                    <i class="fa-solid fa-plus"></i>
+                    Add Scheme
+                </a>
+            </div>
+        </section>
+
+        <section class="card">
+
+            <div class="section-head">
+                <div>
+                    <h2>Scheme List</h2>
+                    <p>Total Government Schemes: <strong id="schemeCount">{{ schemes|length }}</strong></p>
+                </div>
+
+                <div class="section-actions">
+                    <a href="{% url 'government_scheme:admin-scheme-dashboard' %}" class="btn dashboard-btn">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        Dashboard
+                    </a>
+
+                    <a href="{% url 'government_scheme:admin_government_scheme_create_form' %}" class="btn add-btn">
+                        <i class="fa-solid fa-plus"></i>
+                        Add Scheme
+                    </a>
+                </div>
+            </div>
+
+            <div id="jsSuccessBox" class="message message-success hidden"></div>
+            <div id="jsErrorBox" class="message message-error hidden"></div>
+
+            {% if message and success %}
+                <div id="autoMessage" class="message message-success">
+                    <i class="fa-solid fa-circle-check"></i>
+                    {{ message }}
+                </div>
+            {% endif %}
+
+            {% if errors %}
+                <div id="autoErrorMessage" class="message message-error">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    {{ errors }}
+                </div>
+            {% endif %}
+
+            {% if schemes %}
+
+                <div class="toolbar">
+                    <div class="field">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="searchInput" placeholder="Search by name, code, category, state, country..." autocomplete="off">
+                    </div>
+
+                    <div class="field">
+                        <i class="fa-solid fa-toggle-on"></i>
+                        <select id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <i class="fa-solid fa-star"></i>
+                        <select id="featuredFilter">
+                            <option value="">All Schemes</option>
+                            <option value="featured">Featured</option>
+                            <option value="normal">Not Featured</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn reset-btn" id="resetFilters">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Reset
+                    </button>
+                </div>
+
+                <div class="table-wrap" id="tableWrap">
+                    <table id="schemeTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Scheme Name</th>
+                                <th>Code</th>
+                                <th>Category</th>
+                                <th>State</th>
+                                <th>Country</th>
+                                <th>Status</th>
+                                <th>Featured</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th class="actions-heading">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for scheme in schemes %}
+                                <tr data-status="{{ scheme.status|default:''|lower }}"
+                                    data-featured="{% if scheme.is_featured %}featured{% else %}normal{% endif %}">
+
+                                    <td class="row-number">{{ forloop.counter }}</td>
+
+                                    <td>
+                                        <span class="scheme-name">{{ scheme.scheme_name|default:"-" }}</span>
+                                        <span class="scheme-sub">
+                                            {{ scheme.slug|default:"Government Scheme" }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="code-badge">{{ scheme.scheme_code|default:"-" }}</span>
+                                    </td>
+
+                                    <td>{{ scheme.category|default:"-" }}</td>
+                                    <td>{{ scheme.state|default:"-" }}</td>
+                                    <td>{{ scheme.country|default:"-" }}</td>
+
+                                    <td>
+                                        {% if scheme.status|lower == "active" %}
+                                            <span class="badge badge-active">
+                                                <i class="fa-solid fa-circle-check"></i> Active
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-inactive">
+                                                <i class="fa-solid fa-circle-xmark"></i> Inactive
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if scheme.is_featured %}
+                                            <span class="badge badge-featured">
+                                                <i class="fa-solid fa-star"></i> Featured
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-normal">Normal</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>{{ scheme.start_date|date:"d M Y"|default:"-" }}</td>
+                                    <td>{{ scheme.end_date|date:"d M Y"|default:"-" }}</td>
+
+                                    <td>
+                                        <div class="row-actions">
+                                            <a href="{% url 'government_scheme:admin_government_scheme_detail' scheme.scheme_code %}" class="small-btn view-btn">
+                                                <i class="fa-solid fa-eye"></i> View
+                                            </a>
+
+                                            <a href="{% url 'government_scheme:admin_government_scheme_detail' scheme.scheme_code %}" class="small-btn edit-btn">
+                                                <i class="fa-solid fa-pen"></i> Edit
+                                            </a>
+
+                                            <button type="button"
+                                                    class="small-btn delete-btn"
+                                                    data-delete-url="{% url 'government_scheme:admin_government_scheme_detail' scheme.scheme_code %}">
+                                                <i class="fa-solid fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="searchEmptyBox" class="empty hidden">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <h3>No Matching Schemes Found</h3>
+                    <p>Try changing your search text or filters.</p>
+
+                    <button type="button" class="btn reset-btn" id="clearFilters">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Clear Filters
+                    </button>
+                </div>
+
+            {% else %}
+
+                <div class="empty">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <h3>No Government Schemes Found</h3>
+                    <p>No schemes are available right now.</p>
+
+                    <a href="{% url 'government_scheme:admin_government_scheme_create_form' %}" class="btn add-btn">
+                        <i class="fa-solid fa-plus"></i>
+                        Add Scheme
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-bottom">
+            © 2026 Smart Sheti. All rights reserved.
+        </div>
+    </footer>
+
+</div>
+
+<script src="{% static 'schemes/js/admin_government_scheme_list.js' %}?v=1"></script>
+
+</body>
+</html>

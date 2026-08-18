@@ -1,0 +1,2 @@
+ai_engine/models/fertilizer_classifier.pkl filter=lfs diff=lfs merge=lfs -text
+pest_detection/ai_model/models/pest_model.keras filter=lfs diff=lfs merge=lfs -text

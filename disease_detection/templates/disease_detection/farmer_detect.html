@@ -1,0 +1,370 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Farmer Disease Detection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #1b5e20;
+            --primary-mid: #43a047;
+            --primary-glow: rgba(46, 125, 50, 0.16);
+            --text: #2f3a33;
+            --border: #dbe8dc;
+            --border-strong: #c3d8c5;
+            --shadow-md: 0 16px 36px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.12);
+            --shadow-green: 0 14px 30px rgba(46, 125, 50, 0.18);
+            --radius-xl: 26px;
+            --transition: all 0.35s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(129,199,132,0.14), transparent 18%),
+                radial-gradient(circle at bottom left, rgba(46,125,50,0.08), transparent 20%),
+                linear-gradient(180deg, #f8fcf8 0%, #eff6f0 100%);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        header {
+            background: rgba(46,125,50,0.96);
+            color: white;
+            padding: 16px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 10px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: white;
+            color: var(--primary);
+        }
+
+        .page {
+            max-width: 1220px;
+            margin: 30px auto;
+            padding: 0 18px 42px;
+        }
+
+        .topbar {
+            background: linear-gradient(135deg, #2f8a35 0%, #1b5e20 100%);
+            color: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 28px 30px;
+            margin-bottom: 24px;
+        }
+
+        .topbar h1 {
+            font-size: 32px;
+            font-weight: 900;
+        }
+
+        .topbar p {
+            margin-top: 8px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .card-box {
+            background: rgba(255,255,255,0.96);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            padding: 30px;
+        }
+
+        .message {
+            padding: 15px 18px;
+            border-radius: 16px;
+            margin-bottom: 22px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .message.success {
+            background: #ecfdf3;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .message.error {
+            background: #fff5f5;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        form p {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            min-height: 50px;
+            padding: 13px 15px;
+            border: 1px solid var(--border-strong);
+            border-radius: 15px;
+            background: linear-gradient(180deg, #ffffff 0%, #f9fcf9 100%);
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+
+        input[type="file"] {
+            padding: 11px 12px;
+            cursor: pointer;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 14px;
+            padding: 12px 22px;
+            min-height: 46px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-mid), var(--primary-dark));
+            color: white;
+            box-shadow: var(--shadow-green);
+        }
+
+        .result-card {
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 22px;
+            background: linear-gradient(180deg, #ffffff 0%, #f4faf5 100%);
+            border-left: 6px solid var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .result-card h2 {
+            color: var(--primary-dark);
+            margin-bottom: 18px;
+        }
+
+        .result-image {
+            max-width: 280px;
+            width: 100%;
+            border-radius: 18px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .result-row {
+            margin: 12px 0;
+            padding: 12px 14px;
+            background: white;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+        }
+
+        .result-row b {
+            color: var(--primary-dark);
+        }
+
+        footer {
+            background: linear-gradient(180deg, #243227 0%, #1e2a20 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 16px;
+                justify-content: center;
+                text-align: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .page {
+                margin: 18px auto;
+                padding: 0 14px 28px;
+            }
+
+            .topbar {
+                padding: 22px 20px;
+            }
+
+            .topbar h1 {
+                font-size: 24px;
+            }
+
+            .card-box {
+                padding: 20px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+{% include 'accounts/farmer/farmer_sidebar.html' %}
+
+<div class="main-content">
+<header>
+    <div class="logo">
+        <i class="fa-solid fa-seedling"></i>
+        Smart Sheti
+    </div>
+
+    <nav>
+        <a href="{% url 'farmer_dashboard' %}">Dashboard</a>
+        <a href="/disease/farmer/disease-detection/" class="active">Disease Detection</a>
+        <a href="/disease/farmer/disease-history/">History</a>
+    </nav>
+</header>
+
+<main class="page">
+
+    <section class="topbar">
+        <h1>
+            <i class="fa-solid fa-leaf"></i>
+            Farmer Disease Detection
+        </h1>
+        <p>
+            Upload crop image and get disease prediction, treatment, and useful farming suggestions.
+        </p>
+    </section>
+
+    <section class="card-box">
+
+        {% if message %}
+            <div class="message {% if success %}success{% else %}error{% endif %}">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        {% if errors %}
+            <div class="message error">
+                {% for field, err_list in errors.items %}
+                    <b>{{ field }}:</b>
+                    {% for err in err_list %}
+                        {{ err }}
+                    {% endfor %}
+                    <br>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                Detect Disease
+            </button>
+        </form>
+
+        {% if result %}
+            <div class="result-card">
+                <h2>
+                    <i class="fa-solid fa-circle-check"></i>
+                    Prediction Result
+                </h2>
+
+                {% if prediction_obj.image %}
+                    <img src="{{ prediction_obj.image.url }}" alt="Crop Image" class="result-image">
+                {% endif %}
+
+                <div class="result-row"><b>Crop:</b> {{ result.crop_name }}</div>
+                <div class="result-row"><b>Disease:</b> {{ result.disease_name }}</div>
+                <div class="result-row"><b>Confidence:</b> {{ result.confidence }}%</div>
+                <div class="result-row"><b>Treatment:</b> {{ result.treatment }}</div>
+                <div class="result-row"><b>Suggestion:</b> {{ result.suggestion }}</div>
+            </div>
+        {% endif %}
+
+    </section>
+
+</main>
+
+<footer>
+    © 2026 Smart Sheti | Farmer Disease Detection
+</footer>
+
+</body>
+</html>

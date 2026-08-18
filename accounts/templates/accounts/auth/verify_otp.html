@@ -1,0 +1,576 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify OTP | Smart Sheti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #14532d;
+            --primary-light: #66bb6a;
+            --accent: #f9a825;
+            --soil: #795548;
+            --leaf-soft: #e8f5e9;
+            --white: #ffffff;
+            --text: #263238;
+            --muted: #6b7280;
+            --border: #b7dfb9;
+            --danger: #dc3545;
+            --success-bg: #d1e7dd;
+            --success-text: #0f5132;
+            --error-bg: #f8d7da;
+            --error-text: #842029;
+            --shadow: rgba(20, 83, 45, 0.22);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 35px 15px;
+            background:
+                linear-gradient(rgba(232, 245, 233, 0.92), rgba(255, 253, 231, 0.94)),
+                url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 620px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.97);
+            padding: 35px;
+            border-radius: 26px;
+            box-shadow: 0 18px 45px var(--shadow);
+            border: 1px solid rgba(46, 125, 50, 0.20);
+            border-top: 8px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .container::before {
+            content: "🌾";
+            position: absolute;
+            top: 14px;
+            right: 22px;
+            font-size: 52px;
+            opacity: 0.18;
+        }
+
+        .container::after {
+            content: "";
+            position: absolute;
+            left: -60px;
+            bottom: -60px;
+            width: 170px;
+            height: 170px;
+            background: rgba(102, 187, 106, 0.15);
+            border-radius: 50%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-icon {
+            width: 86px;
+            height: 86px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #a5d6a7;
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.18);
+        }
+
+        .header-icon i {
+            font-size: 42px;
+            color: var(--primary);
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            margin: 0;
+            font-size: 31px;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .tagline {
+            display: inline-block;
+            margin-top: 10px;
+            background: #fff8e1;
+            color: var(--soil);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 13px;
+            border-radius: 999px;
+            border: 1px solid #ffe082;
+        }
+
+        form {
+            position: relative;
+            z-index: 1;
+        }
+
+        .message {
+            padding: 13px 15px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .success {
+            background: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid #badbcc;
+        }
+
+        .error {
+            background: var(--error-bg);
+            color: var(--error-text);
+            border: 1px solid #f5c2c7;
+        }
+
+        .redirect-text {
+            margin-top: -8px;
+            margin-bottom: 18px;
+            color: var(--success-text);
+            font-size: 13px;
+            text-align: center;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .required {
+            color: var(--danger);
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box i {
+            position: absolute;
+            top: 50%;
+            left: 13px;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 15px;
+            z-index: 2;
+        }
+
+        input {
+            width: 100%;
+            min-height: 46px;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            background: #fbfff7;
+            color: var(--text);
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.13);
+            background: var(--white);
+        }
+
+        input[readonly] {
+            background: #eef7f0;
+            color: #495057;
+            cursor: not-allowed;
+            font-weight: 700;
+        }
+
+        .otp-input {
+            text-align: center;
+            letter-spacing: 5px;
+            font-size: 18px;
+            font-weight: 800;
+            padding-left: 40px;
+        }
+
+        .field-error,
+        .client-error {
+            color: var(--danger);
+            font-size: 13px;
+            margin-top: 6px;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .client-error {
+            display: none;
+        }
+
+        .non-field-error {
+            background: #fff5f5;
+            border: 1px solid #f5c2c7;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--primary-light));
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+            box-shadow: 0 10px 24px rgba(46, 125, 50, 0.32);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(46, 125, 50, 0.38);
+        }
+
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+            color: var(--muted);
+            position: relative;
+            z-index: 1;
+        }
+
+        .links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-note {
+            margin-top: 18px;
+            text-align: center;
+            color: var(--soil);
+            font-size: 13px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+                background-attachment: scroll;
+            }
+
+            .container {
+                padding: 25px;
+                border-radius: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="header-icon">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h2>Verify OTP</h2>
+        <p class="subtitle">Verify Smart Sheti admin account using email and mobile OTP</p>
+        <p class="tagline">🌱 Digital Farming • Smart Agriculture • Secure Admin Access</p>
+    </div>
+
+    {% if message %}
+        <div class="message {% if success %}success{% else %}error{% endif %}">
+            {{ message }}
+        </div>
+
+        {% if success %}
+            <div class="redirect-text">
+                Registration verified successfully. Redirecting to admin registration page...
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <form method="post" id="verifyOtpForm" novalidate>
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Email Address <span class="required">*</span></label>
+            <div class="input-box">
+                <i class="fa-solid fa-envelope"></i>
+                <input
+                    type="email"
+                    name="email"
+                    id="id_email"
+                    value="{% if form.email.value %}{{ form.email.value }}{% elif data.email %}{{ data.email }}{% endif %}"
+                    readonly
+                    required
+                >
+            </div>
+
+            {% if errors.email %}
+                {% for err in errors.email %}
+                    <div class="field-error">{{ err }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>Mobile Number <span class="required">*</span></label>
+            <div class="input-box">
+                <i class="fa-solid fa-phone"></i>
+                <input
+                    type="text"
+                    name="mobile_number"
+                    id="id_mobile_number"
+                    value="{% if form.mobile_number.value %}{{ form.mobile_number.value }}{% elif data.mobile_number %}{{ data.mobile_number }}{% endif %}"
+                    readonly
+                    required
+                >
+            </div>
+
+            {% if errors.mobile_number %}
+                {% for err in errors.mobile_number %}
+                    <div class="field-error">{{ err }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Email OTP <span class="required">*</span></label>
+                <div class="input-box">
+                    <i class="fa-solid fa-key"></i>
+                    <input
+                        type="text"
+                        name="email_otp"
+                        id="id_email_otp"
+                        class="otp-input"
+                        maxlength="6"
+                        minlength="6"
+                        inputmode="numeric"
+                        pattern="[0-9]{6}"
+                        placeholder="______"
+                        autocomplete="one-time-code"
+                        required
+                    >
+                </div>
+                <div class="client-error" id="emailOtpError">Email OTP must be 6 digits.</div>
+
+                {% if errors.email_otp %}
+                    {% for err in errors.email_otp %}
+                        <div class="field-error">{{ err }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label>Mobile OTP <span class="required">*</span></label>
+                <div class="input-box">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                    <input
+                        type="text"
+                        name="mobile_otp"
+                        id="id_mobile_otp"
+                        class="otp-input"
+                        maxlength="6"
+                        minlength="6"
+                        inputmode="numeric"
+                        pattern="[0-9]{6}"
+                        placeholder="______"
+                        autocomplete="one-time-code"
+                        required
+                    >
+                </div>
+                <div class="client-error" id="mobileOtpError">Mobile OTP must be 6 digits.</div>
+
+                {% if errors.mobile_otp %}
+                    {% for err in errors.mobile_otp %}
+                        <div class="field-error">{{ err }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        {% if errors.detail %}
+            <div class="non-field-error">
+                {% for err in errors.detail %}
+                    <div class="field-error">{{ err }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="btn" id="verifyBtn">
+            <i class="fa-solid fa-circle-check"></i>
+            Verify OTP
+        </button>
+    </form>
+
+    <div class="links">
+        <p>Back to <a href="{% url 'admin_register' %}">Admin Registration</a></p>
+    </div>
+
+    <div class="footer-note">
+        Smart Sheti Admin Panel • Secure Farming Management System 🌿
+    </div>
+
+</div>
+
+{% if success %}
+<script>
+    setTimeout(function () {
+        window.location.href = "{% url 'admin_register' %}";
+    }, 2500);
+</script>
+{% endif %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("verifyOtpForm");
+        const emailOtp = document.getElementById("id_email_otp");
+        const mobileOtp = document.getElementById("id_mobile_otp");
+        const emailOtpError = document.getElementById("emailOtpError");
+        const mobileOtpError = document.getElementById("mobileOtpError");
+        const verifyBtn = document.getElementById("verifyBtn");
+
+        function onlyNumbers(input) {
+            if (!input) return;
+
+            input.addEventListener("input", function () {
+                this.value = this.value.replace(/[^0-9]/g, "").slice(0, 6);
+            });
+        }
+
+        function showError(errorElement) {
+            if (errorElement) {
+                errorElement.style.display = "block";
+            }
+        }
+
+        function hideError(errorElement) {
+            if (errorElement) {
+                errorElement.style.display = "none";
+            }
+        }
+
+        onlyNumbers(emailOtp);
+        onlyNumbers(mobileOtp);
+
+        if (form) {
+            form.addEventListener("submit", function (event) {
+                let isValid = true;
+
+                hideError(emailOtpError);
+                hideError(mobileOtpError);
+
+                if (!emailOtp || !/^[0-9]{6}$/.test(emailOtp.value.trim())) {
+                    showError(emailOtpError);
+                    isValid = false;
+                }
+
+                if (!mobileOtp || !/^[0-9]{6}$/.test(mobileOtp.value.trim())) {
+                    showError(mobileOtpError);
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                    return;
+                }
+
+                if (verifyBtn) {
+                    verifyBtn.disabled = true;
+                    verifyBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying OTP...';
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

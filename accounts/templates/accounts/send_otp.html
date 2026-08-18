@@ -1,0 +1,200 @@
+<!-- templates/accounts/send_otp.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Send OTP</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+        }
+
+        .container {
+            width: 420px;
+            margin: 80px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #222;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+        }
+
+        .field-error {
+            color: #dc2626;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .note {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .data-box {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            padding: 12px;
+            border-radius: 7px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .data-box h4 {
+            margin: 0 0 8px 0;
+            color: #1e293b;
+        }
+
+        .data-box p {
+            margin: 6px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Send OTP</h2>
+
+    {% if success and message %}
+        <div class="alert success">
+            {{ message }}
+        </div>
+    {% elif not success and message %}
+        <div class="alert error">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    {% if success and data %}
+        <div class="data-box">
+            <h4>Response Data</h4>
+            <p><strong>Email:</strong> {{ data.email }}</p>
+            <p><strong>Mobile Number:</strong> {{ data.mobile_number }}</p>
+        </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <label for="{{ form.email.id_for_label }}">Email Address</label>
+        {{ form.email }}
+
+        {% if form.email.errors %}
+            {% for error in form.email.errors %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if errors.email %}
+            {% for error in errors.email %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <label for="{{ form.mobile_number.id_for_label }}">Mobile Number</label>
+        {{ form.mobile_number }}
+
+        {% if form.mobile_number.errors %}
+            {% for error in form.mobile_number.errors %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if errors.mobile_number %}
+            {% for error in errors.mobile_number %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if errors.server %}
+            {% for error in errors.server %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if errors.detail %}
+            {% for error in errors.detail %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <button type="submit">Send OTP</button>
+    </form>
+
+    <p class="note">OTP will be valid for 10 minutes.</p>
+
+</div>
+
+</body>
+</html>

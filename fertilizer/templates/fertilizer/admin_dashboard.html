@@ -1,0 +1,477 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fertilizer Admin Dashboard | Smart Sheti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #14532d;
+            --primary-light: #4caf50;
+            --soft-green: #e8f5e9;
+            --bg: #f4faf5;
+            --white: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #dbe8dc;
+            --shadow: 0 12px 30px rgba(0,0,0,0.08);
+            --radius: 22px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Roboto", sans-serif;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top right, rgba(76,175,80,0.16), transparent 25%),
+                linear-gradient(180deg, #f8fcf8, #eef7ef);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 16px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        .logo span {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 800;
+            transition: var(--transition);
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: white;
+            color: var(--primary-dark);
+        }
+
+        .page {
+            max-width: 1220px;
+            margin: 34px auto;
+            padding: 0 18px 40px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 28px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            margin-bottom: 26px;
+            display: flex;
+            justify-content: space-between;
+            gap: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            color: rgba(255,255,255,0.9);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .hero-badge {
+            background: rgba(255,255,255,0.16);
+            padding: 16px 22px;
+            border-radius: 18px;
+            font-weight: 900;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 26px;
+        }
+
+        .action-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .action-card i {
+            width: 48px;
+            height: 48px;
+            border-radius: 15px;
+            background: var(--soft-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+            font-size: 20px;
+            margin-bottom: 14px;
+        }
+
+        .action-card h3 {
+            color: var(--primary-dark);
+            font-size: 17px;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        .action-card p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .section {
+            background: rgba(255,255,255,0.96);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 26px;
+        }
+
+        .section-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid #e5e7eb;
+            background: linear-gradient(180deg, #ffffff, #f8fff8);
+        }
+
+        .section-header h2 {
+            color: var(--primary-dark);
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        .section-header p {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        .section-body {
+            padding: 26px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .stat-card {
+            border: 1px solid #dfeade;
+            border-radius: 22px;
+            padding: 24px;
+            background: linear-gradient(180deg, #ffffff, #fbfffb);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            background: var(--soft-green);
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card h3 {
+            font-size: 15px;
+            color: var(--muted);
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .stat-card p {
+            font-size: 30px;
+            font-weight: 900;
+            color: var(--primary-dark);
+            word-break: break-word;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .info-box {
+            background: #f9fff9;
+            border: 1px solid #dcebdd;
+            border-left: 5px solid var(--primary);
+            border-radius: 18px;
+            padding: 20px;
+        }
+
+        .info-box h3 {
+            color: var(--primary-dark);
+            font-size: 18px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .info-box ul {
+            padding-left: 20px;
+            color: var(--muted);
+            line-height: 1.9;
+            font-size: 14px;
+        }
+
+        .note {
+            margin-top: 22px;
+            padding: 18px;
+            border-radius: 18px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        footer {
+            background: linear-gradient(180deg, #243227, #172016);
+            color: white;
+            padding: 22px;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1000px) {
+            .actions,
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            header {
+                padding: 14px 18px;
+                justify-content: center;
+                text-align: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .hero {
+                padding: 24px;
+                text-align: center;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 25px;
+            }
+
+            .actions,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-body {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+{% include 'accounts/admin/admin_sidebar.html' %}
+
+<main class="main-content">
+
+<header>
+    <a href="/" class="logo">
+        <span><i class="fa-solid fa-seedling"></i></span>
+        Smart Sheti
+    </a>
+
+    <nav>
+
+    <nav>
+        <a href="{% url 'admin_dashboard' %}">
+            <i class="fa-solid fa-table-columns"></i> Dashboard
+        </a>
+        <a href="{% url 'fertilizer:admin_fertilizer_form' %}">
+            <i class="fa-solid fa-flask"></i> Form
+        </a>
+        <a href="{% url 'fertilizer:admin_history' %}">
+            <i class="fa-solid fa-clock-rotate-left"></i> History
+        </a>
+        <a href="{% url 'fertilizer:export_csv' %}">
+            <i class="fa-solid fa-file-csv"></i> Export
+        </a>
+    </nav>
+</header>
+
+<main class="page">
+
+    <section class="hero">
+        <div>
+            <h1>Fertilizer Admin Dashboard</h1>
+            <p>
+                Monitor fertilizer recommendation usage, farmer activity, crop trends,
+                soil trends, and export complete reports.
+            </p>
+        </div>
+
+        <div class="hero-badge">
+            <i class="fa-solid fa-shield-halved"></i>
+            Admin Panel
+        </div>
+    </section>
+
+
+    <section class="section">
+        <div class="section-header">
+            <h2>Fertilizer Management Overview</h2>
+            <p>Live summary from fertilizer recommendation history.</p>
+        </div>
+
+        <div class="section-body">
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <h3>Total Recommendations</h3>
+                    <p>{{ dashboard.total_recommendations|default:"0" }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h3>Farmer Recommendations</h3>
+                    <p>{{ dashboard.total_farmer_recommendations|default:"0" }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <h3>Admin Recommendations</h3>
+                    <p>{{ dashboard.total_admin_recommendations|default:"0" }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <h3>Total Farmers</h3>
+                    <p>{{ dashboard.total_unique_farmers|default:"0" }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <h3>Most Used Crop</h3>
+                    <p>{{ dashboard.most_used_crop|default:"-" }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-mountain"></i>
+                    </div>
+                    <h3>Most Used Soil</h3>
+                    <p>{{ dashboard.most_used_soil_color|default:"-" }}</p>
+                </div>
+
+            </div>
+
+            <div class="note">
+                <strong>Note:</strong>
+                If all values show zero, first generate fertilizer recommendations from the
+                recommendation form. This dashboard displays only saved recommendation history.
+            </div>
+        </div>
+    </section>
+
+
+</main>
+
+<footer>
+    © 2026 Smart Sheti. All rights reserved.
+</footer>
+
+</body>
+</html>

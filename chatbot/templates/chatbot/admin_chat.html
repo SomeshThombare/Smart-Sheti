@@ -1,0 +1,164 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin AI Chatbot - Smart Sheti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="{% static 'chatbot/css/admin_chat.css' %}">
+</head>
+
+<body>
+
+{% include 'accounts/admin/admin_sidebar.html' %}
+
+<div class="main-content">
+
+    <section class="chat-header">
+        <div>
+            <h1><i class="fa-solid fa-robot"></i> Admin AI Chatbot</h1>
+            <p>Ask questions about farmers, crops, schemes, equipment, reports, images and PDFs.</p>
+        </div>
+
+        <a href="{% url 'admin_chatbot_dashboard' %}" class="dashboard-btn">
+            <i class="fa-solid fa-chart-line"></i>
+            Dashboard
+        </a>
+    </section>
+
+    {% if message %}
+        <div class="alert {% if success %}success{% else %}error{% endif %}">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    {% if error %}
+        <div class="alert error">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <section class="chat-layout single-chat-layout">
+
+        <section class="chat-card">
+
+            <div class="chat-topbar">
+                <div class="bot-info">
+                    <div class="bot-avatar">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h2>Smart Sheti Admin Bot</h2>
+                        <span>Online • Admin support assistant</span>
+                    </div>
+                </div>
+
+                <span class="mode-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Admin Mode
+                </span>
+            </div>
+
+            <div class="chat-window" id="chatWindow">
+
+                {% if not user_message and not bot_response %}
+                    <div class="empty-chat">
+                        <i class="fa-solid fa-comments"></i>
+                        <h3>Start Chat</h3>
+                        <p>Ask about reports, crops, diseases, schemes, equipment or PDF/image analysis.</p>
+                    </div>
+                {% endif %}
+
+                {% if user_message %}
+                    <div class="message-row user">
+                        <div class="message-bubble">
+                            <span class="message-label">You</span>
+                            {{ user_message }}
+
+                            {% if image_uploaded %}
+                                <div class="upload-info">
+                                    <i class="fa-solid fa-image"></i> Image uploaded
+                                </div>
+                            {% endif %}
+
+                            {% if pdf_uploaded %}
+                                <div class="upload-info">
+                                    <i class="fa-solid fa-file-pdf"></i> PDF uploaded
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if bot_response %}
+                    <div class="message-row bot">
+                        <div class="message-bubble">
+                            <span class="message-label">Smart Sheti Bot</span>
+                            {{ bot_response|linebreaksbr }}
+                        </div>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <form method="post"
+                  enctype="multipart/form-data"
+                  class="chat-form"
+                  id="chatForm">
+
+                {% csrf_token %}
+
+                <textarea name="message"
+                          id="messageInput"
+                          placeholder="Ask admin chatbot..."
+                          rows="4"></textarea>
+
+                <div class="form-bottom">
+
+                    <div class="file-actions">
+
+                        <label class="file-btn">
+                            <i class="fa-solid fa-image"></i>
+                            Image
+                            <input type="file"
+                                   name="image_file"
+                                   id="imageInput"
+                                   accept="image/*">
+                        </label>
+
+                        <label class="file-btn">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            PDF
+                            <input type="file"
+                                   name="pdf_file"
+                                   id="pdfInput"
+                                   accept="application/pdf">
+                        </label>
+
+                        <span id="fileName" class="file-name"></span>
+                    </div>
+
+                    <button type="submit" class="send-btn">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Send
+                    </button>
+                </div>
+
+            </form>
+
+        </section>
+
+    </section>
+
+</div>
+
+<script src="{% static 'chatbot/js/admin_chat.js' %}"></script>
+
+</body>
+</html>

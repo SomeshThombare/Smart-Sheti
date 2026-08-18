@@ -1,0 +1,472 @@
+:root {
+    --primary: #2e7d32;
+    --primary-dark: #14532d;
+    --primary-soft: #e8f5e9;
+
+    --success: #16a34a;
+    --warning: #f59e0b;
+    --danger: #dc2626;
+    --info: #2563eb;
+
+    --white: #ffffff;
+    --bg: #f4f8f4;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #dcebdd;
+
+    --sidebar-width: 292px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg) !important;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: var(--text);
+}
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    padding: 30px;
+}
+
+.page-wrapper {
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+/* HEADER */
+
+.page-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: var(--white);
+    padding: 30px;
+    border-radius: 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 25px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+}
+
+.page-header h1 {
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 6px;
+}
+
+.page-header p {
+    margin: 0;
+    color: #dcfce7;
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-dashboard,
+.btn-back {
+    text-decoration: none !important;
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-weight: 900;
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-dashboard {
+    background: #dcfce7 !important;
+    color: var(--primary-dark) !important;
+}
+
+.btn-back {
+    background: var(--white) !important;
+    color: var(--primary-dark) !important;
+}
+
+.btn-dashboard:hover,
+.btn-back:hover {
+    transform: translateY(-3px);
+}
+
+/* ALERT */
+
+.alert {
+    border: none;
+    border-radius: 15px;
+    padding: 15px 18px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.alert-success {
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+}
+
+.alert-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* BOOKING CARD */
+
+.booking-card {
+    background: var(--white);
+    border-radius: 26px;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* BOOKING HEADER */
+
+.booking-header {
+    background: linear-gradient(135deg, var(--primary-soft), #f7fff8);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 24px;
+    margin-bottom: 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+}
+
+.booking-header span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.booking-header h2 {
+    color: var(--primary-dark);
+    font-size: 32px;
+    font-weight: 900;
+    margin: 0;
+}
+
+.badge-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* BADGES */
+
+.status-badge,
+.payment-badge {
+    display: inline-flex;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.status-badge.pending,
+.payment-badge.pending {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.status-badge.confirmed,
+.payment-badge.paid {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.cancelled,
+.payment-badge.failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-badge.completed,
+.payment-badge.refunded {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+/* INFO GRID */
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.info-card {
+    background: #f9fbf9;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.info-card i {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.info-card span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.info-card strong {
+    display: block;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 900;
+    word-break: break-word;
+}
+
+.info-card small {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 3px;
+}
+
+/* STATUS FORM */
+
+.status-form {
+    background: #f9fbf9;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 24px;
+    margin-top: 10px;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.form-control,
+.form-select,
+textarea {
+    width: 100%;
+    min-height: 50px;
+    border: 1px solid #d1d5db;
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--white);
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.16);
+}
+
+/* FORM ACTIONS */
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 14px;
+    margin-top: 26px;
+}
+
+.btn-submit,
+.btn-cancel {
+    border: none;
+    text-decoration: none !important;
+    min-height: 52px;
+    padding: 13px 24px;
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 900;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    transition: 0.3s ease;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: var(--white) !important;
+    min-width: 190px;
+}
+
+.btn-cancel {
+    background: #f3f4f6 !important;
+    color: #374151 !important;
+    border: 1px solid #d1d5db;
+    min-width: 140px;
+}
+
+.btn-submit:hover,
+.btn-cancel:hover {
+    transform: translateY(-3px);
+}
+
+/* PAYMENT SECTION */
+
+.payment-section {
+    margin-top: 30px;
+    background: #f9fbf9;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 24px;
+}
+
+.payment-section h3 {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.payment-section h3 i {
+    color: var(--primary);
+}
+
+.payment-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.payment-grid > div {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.payment-grid span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.payment-grid strong {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 900;
+    word-break: break-word;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 992px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .btn-dashboard,
+    .btn-back {
+        width: 100%;
+    }
+
+    .info-grid,
+    .payment-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-content {
+        padding: 14px;
+    }
+
+    .page-header {
+        padding: 22px;
+    }
+
+    .page-header h1 {
+        font-size: 26px;
+    }
+
+    .booking-card {
+        padding: 18px;
+    }
+
+    .status-form,
+    .payment-section {
+        padding: 18px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-submit,
+    .btn-cancel {
+        width: 100%;
+    }
+}

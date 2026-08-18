@@ -1,0 +1,596 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Farmer Management</title>
+
+    <!-- GOOGLE FONT -->
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- FONT AWESOME -->
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --primary: #2e7d32;
+        --primary-dark: #1b5e20;
+        --primary-mid: #43a047;
+        --primary-glow: rgba(46, 125, 50, 0.16);
+
+        --text: #2f3a33;
+        --border: #dbe8dc;
+
+        --shadow-md: 0 16px 36px rgba(15, 23, 42, 0.08);
+        --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.12);
+
+        --radius-xl: 26px;
+
+        --transition: all 0.35s ease;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(129, 199, 132, 0.14),
+            transparent 18%
+          ),
+          radial-gradient(
+            circle at bottom left,
+            rgba(46, 125, 50, 0.08),
+            transparent 20%
+          ),
+          linear-gradient(180deg, #f8fcf8 0%, #eff6f0 100%);
+
+        color: var(--text);
+
+        min-height: 100vh;
+        line-height: 1.6;
+
+        padding: 30px;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .container {
+        max-width: 1450px;
+        margin: auto;
+      }
+
+      /* =========================
+           TOPBAR
+        ========================= */
+
+      .topbar {
+        background: linear-gradient(135deg, #2f8a35 0%, #1b5e20 100%);
+
+        color: white;
+
+        border-radius: var(--radius-xl);
+
+        box-shadow: var(--shadow-lg);
+
+        padding: 28px 30px;
+
+        margin-bottom: 24px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+
+        gap: 20px;
+      }
+
+      .topbar-left h1 {
+        font-size: 32px;
+        font-weight: 900;
+      }
+
+      .topbar-left p {
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.92);
+        font-size: 15px;
+      }
+
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      /* =========================
+           SEARCH FORM
+        ========================= */
+
+      .search-form {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .search-form input {
+        width: 320px;
+
+        padding: 13px 15px;
+
+        border: none;
+        border-radius: 14px;
+
+        outline: none;
+
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .search-form input:focus {
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.25);
+      }
+
+      /* =========================
+           BUTTONS
+        ========================= */
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        padding: 13px 18px;
+
+        border: none;
+        border-radius: 14px;
+
+        text-decoration: none;
+
+        color: white;
+
+        font-weight: 800;
+        font-size: 14px;
+
+        cursor: pointer;
+
+        transition: var(--transition);
+      }
+
+      .btn-search {
+        background: #0f172a;
+      }
+
+      .btn-search:hover {
+        background: #020617;
+        transform: translateY(-2px);
+      }
+
+      .btn-reset {
+        background: #64748b;
+      }
+
+      .btn-reset:hover {
+        background: #475569;
+        transform: translateY(-2px);
+      }
+
+      .btn-dashboard {
+        background: #f59e0b;
+      }
+
+      .btn-dashboard:hover {
+        background: #d97706;
+        transform: translateY(-2px);
+      }
+
+      .btn-view {
+        background: #0284c7;
+      }
+
+      .btn-view:hover {
+        background: #0369a1;
+        transform: translateY(-2px);
+      }
+
+      .btn-active {
+        background: #2563eb;
+      }
+
+      .btn-active:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+      }
+
+      .btn-inactive {
+        background: #dc2626;
+      }
+
+      .btn-inactive:hover {
+        background: #b91c1c;
+        transform: translateY(-2px);
+      }
+
+      /* =========================
+           MESSAGE BOX
+        ========================= */
+
+      .message-box {
+        background: #dcfce7;
+        color: #166534;
+
+        padding: 15px 18px;
+
+        border-radius: 18px;
+
+        margin-bottom: 22px;
+
+        font-weight: 800;
+
+        border: 1px solid #bbf7d0;
+
+        box-shadow: 0 8px 18px rgba(34, 197, 94, 0.08);
+      }
+
+      /* =========================
+           TABLE CARD
+        ========================= */
+
+      .card-box {
+        background: rgba(255, 255, 255, 0.96);
+
+        border: 1px solid var(--border);
+
+        border-radius: var(--radius-xl);
+
+        box-shadow: var(--shadow-md);
+
+        padding: 24px;
+
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1300px;
+      }
+
+      th {
+        background: linear-gradient(
+          135deg,
+          var(--primary-mid),
+          var(--primary-dark)
+        );
+
+        color: white;
+
+        padding: 15px 14px;
+
+        font-size: 14px;
+        font-weight: 900;
+
+        text-align: center;
+      }
+
+      td {
+        padding: 15px 14px;
+
+        border-bottom: 1px solid var(--border);
+
+        text-align: center;
+
+        font-size: 14px;
+        font-weight: 700;
+
+        color: var(--text);
+
+        background: white;
+      }
+
+      tr:hover td {
+        background: #f6fbf6;
+      }
+
+      /* =========================
+           STATUS
+        ========================= */
+
+      .status {
+        padding: 7px 14px;
+
+        border-radius: 20px;
+
+        font-size: 13px;
+        font-weight: 900;
+
+        display: inline-block;
+      }
+
+      .status-active {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .status-inactive {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+
+      /* =========================
+           ACTION BUTTONS
+        ========================= */
+
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      /* =========================
+           EMPTY ROW
+        ========================= */
+
+      .empty {
+        padding: 30px;
+
+        color: #6b7280;
+
+        font-weight: 800;
+
+        text-align: center;
+      }
+
+      /* =========================
+           RESPONSIVE
+        ========================= */
+
+      @media (max-width: 900px) {
+        body {
+          padding: 15px;
+        }
+
+        .topbar {
+          padding: 22px 20px;
+        }
+
+        .topbar-left h1 {
+          font-size: 24px;
+        }
+
+        .topbar-right {
+          width: 100%;
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-form {
+          width: 100%;
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-form input {
+          width: 100%;
+        }
+
+        .btn {
+          width: 100%;
+        }
+
+        .card-box {
+          padding: 18px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- =========================
+         TOPBAR
+    ========================== -->
+
+      <div class="topbar">
+        <!-- LEFT -->
+
+        <div class="topbar-left">
+          <h1>
+            <i class="fa-solid fa-users"></i>
+
+            Farmer Management
+          </h1>
+
+          <p>Manage farmer accounts, profile information and status</p>
+        </div>
+
+        <!-- RIGHT -->
+
+        <div class="topbar-right">
+          <!-- DASHBOARD BUTTON -->
+
+          <a href="{% url 'admin_dashboard' %}" class="btn btn-dashboard">
+            <i class="fa-solid fa-table-columns"></i>
+
+            Dashboard
+          </a>
+
+          <!-- SEARCH -->
+
+          <form
+            method="GET"
+            action="{% url 'admin_search_farmers' %}"
+            class="search-form"
+          >
+            <input
+              type="text"
+              name="search"
+              value="{{ search }}"
+              placeholder="Search by name, username, email, mobile..."
+            />
+
+            <button type="submit" class="btn btn-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+
+              Search
+            </button>
+
+            <a href="{% url 'admin_search_farmers' %}" class="btn btn-reset">
+              <i class="fa-solid fa-rotate-right"></i>
+
+              Reset
+            </a>
+          </form>
+        </div>
+      </div>
+
+      <!-- =========================
+         SUCCESS MESSAGE
+    ========================== -->
+
+      {% if messages %} {% for message in messages %}
+
+      <div class="message-box">
+        <i class="fa-solid fa-circle-check"></i>
+
+        {{ message }}
+      </div>
+
+      {% endfor %} {% endif %}
+
+      <!-- =========================
+         TABLE
+    ========================== -->
+
+      <div class="card-box">
+        <table>
+          <thead>
+            <tr>
+              <th>Sr No</th>
+              <th>Full Name</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Village</th>
+              <th>District</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for farmer in farmers %}
+
+            <tr>
+              <td>{{ forloop.counter }}</td>
+
+              <td>
+                {{ farmer.first_name|default:"" }} {{
+                farmer.last_name|default:"" }}
+              </td>
+
+              <td>{{ farmer.username|default:"-" }}</td>
+
+              <td>{{ farmer.email|default:"-" }}</td>
+
+              <td>
+                {{ farmer.country_code|default:"" }} {{
+                farmer.mobile_number|default:"-" }}
+              </td>
+
+              <td>{{ farmer.farmer_profile.village|default:"-" }}</td>
+
+              <td>{{ farmer.farmer_profile.district|default:"-" }}</td>
+
+              <td>
+                {% if farmer.is_active %}
+
+                <span class="status status-active">
+                  <i class="fa-solid fa-circle-check"></i>
+
+                  Active
+                </span>
+
+                {% else %}
+
+                <span class="status status-inactive">
+                  <i class="fa-solid fa-circle-xmark"></i>
+
+                  Inactive
+                </span>
+
+                {% endif %}
+              </td>
+
+              <td>
+                <div class="action-buttons">
+                  <!-- VIEW -->
+
+                  <a
+                    href="{% url 'farmer_detail_web' farmer.username %}"
+                    class="btn btn-view"
+                  >
+                    <i class="fa-solid fa-eye"></i>
+
+                    View
+                  </a>
+
+                  <!-- ACTIVE / INACTIVE -->
+
+                  <a
+                    href="{% url 'admin_toggle_farmer_status' farmer.id %}"
+                    class="btn {% if farmer.is_active %}btn-inactive{% else %}btn-active{% endif %}"
+                  >
+                    {% if farmer.is_active %}
+
+                    <i class="fa-solid fa-user-slash"></i>
+
+                    Make Inactive {% else %}
+
+                    <i class="fa-solid fa-user-check"></i>
+
+                    Make Active {% endif %}
+                  </a>
+                </div>
+              </td>
+            </tr>
+
+            {% empty %}
+
+            <tr>
+              <td colspan="9" class="empty">
+                <i class="fa-solid fa-circle-info"></i>
+
+                No Farmers Found
+              </td>
+            </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
