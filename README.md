@@ -1468,12 +1468,6 @@ When modifying the project:
 10. Test the affected module before pushing.
 
 ---
-
-# 📄 License
-
-Add the project's applicable license here.
-
----
 ## 📄 Publication
 
 **Research Paper**: AI BASED SMART FARMING SUPPORT PLATFORM 
