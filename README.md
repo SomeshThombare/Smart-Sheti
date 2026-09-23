@@ -122,7 +122,7 @@ crop/ml/crop_model.pkl
 
 ---
 
-# 🤖 AI/ML Models
+#4. 🤖 AI/ML Models
 
 Smart Sheti contains multiple AI/ML components.
 
